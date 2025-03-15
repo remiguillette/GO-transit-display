@@ -1,0 +1,100 @@
+:root {
+    --go-green: #00853F;
+    --go-black: #000000;
+    --go-white: #FFFFFF;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: var(--go-black);
+    color: var(--go-white);
+}
+
+.display-board {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.board-header {
+    background-color: var(--go-green);
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.go-logo img {
+    height: 50px;
+}
+
+.station-info {
+    text-align: center;
+}
+
+.station-name {
+    font-size: 2.5rem;
+    margin: 0;
+}
+
+.time {
+    font-size: 1.5rem;
+}
+
+.schedule-container {
+    flex-grow: 1;
+    padding: 1rem;
+}
+
+.schedule-header {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr 1fr 1fr;
+    background-color: var(--go-green);
+    padding: 0.5rem;
+    font-weight: bold;
+}
+
+.schedule-row {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr 1fr 1fr;
+    padding: 0.5rem;
+    border-bottom: 1px solid #333;
+}
+
+.control-panel {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .station-name {
+        font-size: 1.8rem;
+    }
+
+    .time {
+        font-size: 1.2rem;
+    }
+
+    .schedule-header,
+    .schedule-row {
+        font-size: 0.9rem;
+    }
+}
+
+/* Accessibility */
+.btn:focus {
+    outline: 3px solid #fff;
+    outline-offset: 2px;
+}
+
+[role="alert"] {
+    background-color: #ff4444;
+    color: white;
+    padding: 0.5rem;
+    margin: 0.5rem 0;
+    border-radius: 4px;
+}
