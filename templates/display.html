@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="display-board">
+    <header class="board-header">
+        <div class="go-logo">
+            <img src="{{ url_for('static', filename='images/go-transit-logo.svg') }}" alt="GO Transit Logo">
+            <div class="station-info">
+                <span class="station-icon"> </span>
+                <h1 class="station-name">{{ station }} - Train Departures | Départs des Trains</h1>
+            </div>
+        </div>
+        <div class="time" id="currentTime">23:22:36</div>
+    </header>
+
+    <main class="schedule-container">
+        <div class="schedule-header">
+            <div class="col-scheduled">Scheduled <br /> Programmé</div>
+            <div class="col-to">To <br />  À</div>
+            <div class="col-stop">Stop <br /> Arrêts</div>
+            <div class="col-platform">Platform <br />  Quai</div>
+        </div>
+        <div id="scheduleRows" class="schedule-rows">
+            <!-- Dynamic content will be inserted here -->
+        </div>
+    </main>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/display.js') }}"></script>
+{% endblock %}
