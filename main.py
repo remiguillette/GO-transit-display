@@ -1,18 +1,22 @@
-import os
+﻿import os
 import logging
 from flask import Flask, render_template, request, jsonify, redirect, url_for, session
 from datetime import datetime
 import scraper
 
+
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
+
 
 # Initialize Flask application
 app = Flask(__name__)
 app.secret_key = os.environ.get("SESSION_SECRET", "dev_secret_key")
 
+
 # Default station to display
 DEFAULT_STATION = "Union"
+
 
 @app.route('/')
 def index():
@@ -35,6 +39,7 @@ def index():
                           current_time=current_time,
                           stations=stations)
 
+
 @app.route('/control')
 def control():
     """Control panel for station selection"""
@@ -48,6 +53,7 @@ def control():
                           selected_station=selected_station,
                           stations=stations)
 
+
 @app.route('/set_station', methods=['POST'])
 def set_station():
     """Set the station for display"""
@@ -56,6 +62,7 @@ def set_station():
         session['selected_station'] = station
         return redirect(url_for('index'))
     return redirect(url_for('control'))
+
 
 @app.route('/schedule')
 def schedule():
@@ -66,11 +73,13 @@ def schedule():
                           station=selected_station,
                           schedule=station_data)
 
+
 @app.route('/current_time')
 def current_time():
     """API endpoint to get the current time (for AJAX updates)"""
     current = datetime.now().strftime("%H:%M:%S")
     return jsonify({"time": current})
+
 
 @app.route('/api/schedule')
 def api_schedule():
@@ -78,6 +87,7 @@ def api_schedule():
     selected_station = session.get('selected_station', DEFAULT_STATION)
     station_data = scraper.get_station_schedule(selected_station)
     return jsonify(station_data)
+
 
 @app.context_processor
 def utility_processor():
@@ -93,6 +103,8 @@ def utility_processor():
         'get_line_color': get_line_color,
         'format_time': format_time
     }
+from app import app
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
