@@ -8,6 +8,14 @@ function updateClock() {
     timeElem.textContent = `${hours}:${minutes}:${seconds}`;
 }
 
+// Accessibility icon SVG
+const accessibilityIcon = `
+<span class="accessibility-icon">
+    <svg width="24" height="24" viewBox="0 0 24 24">
+        <path d="M12 2a2 2 0 1 1 0 4 2 2 0 0 1 0-4zm7 18v-2h-3v-5.604c0-.757-.615-1.373-1.372-1.373H9.372C8.615 11.023 8 11.639 8 12.396V18H5v2h14zM9.5 18v-5h5v5h-5z"/>
+    </svg>
+</span>`;
+
 // Update schedules
 async function updateSchedules() {
     try {
@@ -35,8 +43,9 @@ async function updateSchedules() {
             // Format the train info with route code span
             const [routeCode, ...destinationParts] = schedule.train.split(' ');
             const formattedTrain = `
-                <span class="route-code">${routeCode}</span>
+                <span class="route-code" style="background-color: ${schedule.color}">${routeCode}</span>
                 ${destinationParts.join(' ')}
+                ${schedule.accessible ? accessibilityIcon : ''}
             `;
 
             row.innerHTML = `
