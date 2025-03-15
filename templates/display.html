@@ -6,7 +6,7 @@
         <div class="go-logo">
             <img src="{{ url_for('static', filename='images/go-transit-logo.svg') }}" alt="GO Transit Logo">
             <div class="station-info">
-                <span class="station-icon">🚉</span>
+                <span class="station-icon"> </span>
                 <h1 class="station-name">{{ station }} - Train Departures | Départs des Trains</h1>
             </div>
         </div>
@@ -15,10 +15,10 @@
 
     <main class="schedule-container">
         <div class="schedule-header">
-            <div class="col-scheduled">Scheduled | Programmé</div>
+            <div class="col-scheduled">Scheduled <br /> Programmé</div>
             <div class="col-to">To | À</div>
-            <div class="col-stop">Stop | Arrêts</div>
-            <div class="col-platform">Platform | Quai</div>
+            <div class="col-stop">Stop <br /> Arrêts</div>
+            <div class="col-platform">Platform <br />  Quai</div>
         </div>
         <div id="scheduleRows" class="schedule-rows">
             <!-- Dynamic content will be inserted here -->
