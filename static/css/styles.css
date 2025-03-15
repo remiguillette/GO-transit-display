@@ -23,9 +23,11 @@
 :root {
     --go-black: #000000;
     --go-white: #FFFFFF;
-    --go-green: #333;
+    --go-green: #7db610;
     --delayed-red: #ff0000;
     --cancelled-red: #ff0000;
+    --time-yellow: #d5d695;
+    --ada-blue: #0052A5;
 }
 
 body {
@@ -86,6 +88,7 @@ body {
     margin-left: auto;
     padding-right: 30px;
     letter-spacing: -0.02em;
+    color: var(--time-yellow);
 }
 
 .schedule-container {
@@ -118,16 +121,27 @@ body {
 
 .route-code {
     font-family: 'Polaris Bold', sans-serif;
-    background-color: var(--go-green);
-    color: var(--go-white);
-    padding: 2px 8px;
+    font-size: 22px;
+    padding: 2px;
     border-radius: 4px;
     margin-right: 8px;
+    letter-spacing: -0.5px;
+    line-height: 1;
+    min-width: 36px;
+    min-height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .status-delayed {
     font-family: 'Polaris Bold', sans-serif;
     color: var(--delayed-red);
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    50% { opacity: 0.5; }
 }
 
 .status-cancelled {
@@ -135,20 +149,18 @@ body {
     color: var(--cancelled-red);
 }
 
-.language-toggle {
-    position: absolute;
-    top: 20px;
-    right: 20px;
+.accessibility-icon {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    margin-left: 8px;
+    vertical-align: middle;
+    background-color: var(--ada-blue);
+    border-radius: 2px;
 }
 
-.language-toggle button {
-    font-family: 'Polaris Medium', sans-serif;
-    background: transparent;
-    border: 1px solid var(--go-white);
-    color: var(--go-white);
-    padding: 8px 15px;
-    cursor: pointer;
-    font-size: 16px;
+.accessibility-icon svg {
+    fill: var(--go-white);
 }
 
 /* Responsive Design */
