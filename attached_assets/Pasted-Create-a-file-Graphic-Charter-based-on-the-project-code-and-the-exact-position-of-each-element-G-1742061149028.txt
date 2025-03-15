@@ -1,0 +1,62 @@
+Create a file (Graphic Charter) based on the project code and the exact position of each element.
+
+General Structure of the .md Document
+
+Introduction
+Presentation of the company's visual identity.
+Purpose of the guide (standardization, consistency, etc.).
+Logo and Variations
+Main logo (color, black and white, and inverted versions).
+Logo variations (formats, sizes, specific uses).
+Usage rules (protected areas, proportions, prohibitions).
+Color Code
+Main color palette (HEX, RGB, CMYK codes).
+Secondary color palette (specific uses).
+Application examples (backgrounds, text, buttons).
+
+Fonts
+Main fonts (titles, body text).
+Secondary fonts (quotes, captions).
+Usage rules (sizes, weights, spacing).
+
+Illustration and Image Processes
+Illustration style (lines, colors, shapes).
+Image style (photographs, icons).
+Usage guidelines (resolution, framing, filters).
+Baseline (Brand Signature)
+
+Baseline text.
+Usage guidelines (position, size, font).
+Communication Tools
+
+Web Application (for the development team)
+Textual reproduction of the website's visual elements.
+Technical specifications (CSS, HTML, JavaScript).
+User Interface (UI) style guide.
+
+Example:
+The website's logo icon name path /xxx is on the right (position x y) of xx px in color xx with a margin of xx.
+
+Application Examples
+Scenarios (concrete examples of using the visual identity).
+"Dos" and "Don'ts".
+
+Logo and Variations:
+Provide logo files in various formats (SVG, PNG, JPG).
+Indicate the minimum and maximum dimensions of the logo.
+Specify the protection zones around the logo (empty space required).
+Color Codes:
+Use tables to clearly present color codes alongside the HEX, RGB, and CMYK codes.
+Add visual examples of each color.
+Explain the contexts of use for each color.
+
+Fonts:
+Indicate font sources (Google Fonts, Adobe Fonts, etc.).
+Provide text examples with each font.
+Specify the rules for line spacing and letter spacing.
+Illustration and Image Processing:
+
+Web Application:
+Provide CSS code examples for visual elements (colors, fonts, buttons).
+Specify the dimensions and margins of the elements. Include screenshots of the website with annotations.
+Additional Tips

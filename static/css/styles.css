@@ -1,0 +1,211 @@
+/* Font Declarations */
+@font-face {
+    font-family: 'Polaris Bold';
+    src: url('../fonts/PolarisTrial-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Polaris Medium';
+    src: url('../fonts/PolarisTrial-Medium.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Polaris Light';
+    src: url('../fonts/PolarisTrial-Light.ttf') format('truetype');
+    font-weight: 300;
+    font-style: normal;
+}
+
+:root {
+    --go-black: #000000;
+    --go-white: #FFFFFF;
+    --go-gray: #4f4f4f;
+    --delayed-red: #ff0000;
+    --cancelled-red: #ff0000;
+    --time-yellow: #ffffff;
+    --ada-blue: #0052A5;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Polaris Light', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: var(--go-black);
+    color: var(--go-white);
+    -webkit-font-smoothing: antialiased;
+}
+
+.display-board {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.board-header {
+    background-color: var(--go-black);
+    padding: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid var(--go-green);
+}
+
+.go-logo {
+    display: flex;
+    align-items: center;
+}
+
+.go-logo img {
+    height: 40px;
+    margin-right: 20px;
+}
+
+.station-info {
+    display: flex;
+    align-items: center;
+}
+
+.station-icon {
+    font-size: 36px;
+    margin-right: 15px;
+}
+
+.station-name {
+    font-family: 'Polaris Bold', sans-serif;
+    font-size: 42px;
+    margin: 0;
+    letter-spacing: -0.02em;
+}
+
+.time {
+    font-family: 'Polaris Bold', monospace;
+    font-size: 48px;
+    font-weight: bold;
+    margin-left: auto;
+    padding-right: 30px;
+    letter-spacing: -0.02em;
+    color: var(--time-yellow);
+}
+
+.schedule-container {
+    flex-grow: 1;
+    padding: 1rem;
+}
+
+.schedule-header {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr 1.5fr 1fr;
+    background-color: var(--go-black);
+    padding: 0.8rem;
+    font-family: 'Polaris Medium', sans-serif;
+    font-size: 36px;
+    border-bottom: 1px solid var(--go-green);
+}
+
+.schedule-row {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr 1.5fr 1fr;
+    padding: 1rem 0.8rem;
+    border-bottom: 1px solid #333;
+    font-family: 'Polaris Light', sans-serif;
+    font-size: 36px;
+}
+
+.col-scheduled, .col-to, .col-stop, .col-platform {
+    padding: 0 15px;
+}
+
+.route-code {
+    font-family: 'Polaris Bold', sans-serif;
+    font-size: 22px;
+    padding: 2px;
+    border-radius: 4px;
+    margin-right: 8px;
+    letter-spacing: -0.5px;
+    line-height: 1;
+    min-width: 36px;
+    min-height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.status-delayed {
+    font-family: 'Polaris Bold', sans-serif;
+    color: var(--delayed-red);
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    50% { opacity: 0.5; }
+}
+
+.status-cancelled {
+    font-family: 'Polaris Bold', sans-serif;
+    color: var(--cancelled-red);
+}
+
+.accessibility-icon {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    margin-left: 8px;
+    vertical-align: middle;
+    background-color: var(--ada-blue);
+    border-radius: 2px;
+}
+
+.accessibility-icon svg {
+    fill: var(--go-white);
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .station-name {
+        font-size: 36px;
+    }
+
+    .time {
+        font-size: 36px;
+    }
+
+    .schedule-header,
+    .schedule-row {
+        font-size: 28px;
+    }
+}
+
+@media (max-width: 768px) {
+    .station-name {
+        font-size: 28px;
+    }
+
+    .time {
+        font-size: 28px;
+    }
+
+    .schedule-header,
+    .schedule-row {
+        font-size: 24px;
+        grid-template-columns: 1fr 1fr 1fr 0.5fr;
+    }
+}
+
+/* Accessibility */
+.btn:focus {
+    outline: 2px solid var(--go-green);
+    outline-offset: 2px;
+}
+
+[role="alert"] {
+    background-color: var(--cancelled-red);
+    color: var(--go-white);
+    padding: 0.5rem;
+    margin: 0.5rem 0;
+    border-radius: 4px;
+    font-family: 'Polaris Medium', sans-serif;
+}
