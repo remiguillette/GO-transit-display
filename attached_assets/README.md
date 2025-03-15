@@ -1,20 +1,38 @@
 # GO Transit Display Board
 
-A Flask-based GO Transit display board application that shows real-time train departures with proper branding and accessibility features.
+A Flask-based GO Transit display board application showing real-time train departures with proper branding and accessibility features.
 
 ## Features
 
 - Real-time train schedule display
-- GO Transit branding and colors
-- Bilingual support (English/French)
-- Accessibility features
-- Mobile-responsive design
+- GO Transit branded interface
+- Accessibility-compliant design
+- Mobile-responsive layout
 - Station selection control panel
+- Dark theme optimized display
+- Polaris font integration
 
-## Screenshots
+## Tech Stack
 
-![Display Board](https://via.placeholder.com/800x400?text=GO+Transit+Display+Board)
-![Control Panel](https://via.placeholder.com/800x400?text=Control+Panel)
+- Flask web framework
+- SQLAlchemy ORM
+- Bootstrap 5.3
+- Custom CSS with GO Transit theming
+- JavaScript for real-time updates
+
+## Color Scheme
+
+- Black background (#000000)
+- White text (#FFFFFF)
+- Delayed/Cancelled status (#FF0000)
+- ADA-compliant blue (#0052A5)
+
+## Quick Start
+
+1. Fork the project on Replit
+2. Click the "Run" button
+3. Access the display board at the project URL
+4. Use /control for the admin interface
 
 ## Installation
 
@@ -28,32 +46,10 @@ python main.py
 gunicorn --bind 0.0.0.0:5000 --workers=4 main:app
 ```
 
-## Usage
-
-1. Navigate to the main page to view the display board
-2. Use the control panel (`/control` endpoint) to select different stations
-3. The board auto-refreshes every minute to show updated schedules
-
-## Project Structure
-
-The project follows a standard Flask structure with the following key files:
-
-- `main.py` - Main Flask application entry point
-- `scraper.py` - GO Transit schedule data handling and demo data generation
-- `/templates` - HTML templates for the web interface
-- `/static` - Static assets including CSS, fonts and SVG icons
-
-For more details, see [Project Structure](attached_assets/PROJECT_STRUCTURE.md).
-
 ## Contributing
 
 Contributions are welcome! Please read [Contributing Guidelines](CONTRIBUTING.md) for details on how to contribute to this project.
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## Acknowledgments
-
-- GO Transit for branding inspiration
-- Polaris font family for typography
+MIT License - see LICENSE file

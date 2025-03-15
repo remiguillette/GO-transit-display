@@ -4,7 +4,58 @@ Thank you for considering contributing to the GO Transit Display project! This d
 
 ## Code of Conduct
 
-By participating in this project, you agree to abide by our [Code of Conduct](CODE_OF_CONDUCT.md).
+By participating in this project, you agree to abide by our Code of Conduct.
+
+## Project Structure
+
+The project follows this structure:
+```
+├── static/
+│   ├── css/
+│   │   ├── styles.css      # Main styling
+│   │   └── display.css     # Display board specific styles
+│   ├── fonts/             # Polaris font files
+│   ├── images/           # Project images
+│   └── js/              # JavaScript files
+├── templates/
+│   ├── base.html        # Base template
+│   ├── control.html     # Control panel template
+│   └── display.html     # Main display board
+├── app.py              # Flask application logic
+├── main.py            # Application entry point
+├── models.py         # Database models
+└── scraper.py       # Schedule data handling
+```
+
+## Style Guidelines
+
+### Python
+- Follow PEP 8
+- Use 4 spaces for indentation
+- Include type hints
+- Add docstrings for public functions
+
+### CSS
+- Use the defined color variables:
+  - --go-black: #000000
+  - --go-white: #FFFFFF
+  - --go-gray: #4f4f4f
+  - --delayed-red: #ff0000
+  - --time-yellow: #ffffff
+  - --ada-blue: #0052A5
+
+### HTML/JavaScript
+- Use semantic HTML elements
+- Follow Bootstrap conventions where applicable
+- Use ES6+ JavaScript features
+
+
+## Submitting Changes
+
+1. Create a fork of the project
+2. Make your changes
+3. Test thoroughly
+4. Submit a pull request
 
 ## How Can I Contribute?
 
@@ -82,6 +133,13 @@ This project uses labels to help organize and prioritize issues and pull request
 * `question` - Questions about the project
 
 ## Development Environment Setup
+
+The project uses:
+- Python 3.11+
+- Flask framework
+- SQLAlchemy for database
+- Bootstrap 5.3 for styling
+- Polaris font family
 
 1. Fork the repository
 2. Clone your fork:
