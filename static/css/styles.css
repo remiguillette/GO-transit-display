@@ -23,9 +23,9 @@
 :root {
     --go-black: #000000;
     --go-white: #FFFFFF;
-    --go-green: #00853F;
+    --go-green: #333;
     --delayed-red: #ff0000;
-    --cancelled-red: #ff4444;
+    --cancelled-red: #ff0000;
 }
 
 body {

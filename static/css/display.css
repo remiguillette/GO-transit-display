@@ -2,9 +2,10 @@
 /* Add your CSS styles here */
 .display-board {
     font-family: 'Polaris', Arial, sans-serif;
-    background: #000;
+    background: #000000;
     color: #fff;
     min-height: 100vh;
+    font-weight: bold;
 }
 
 .board-header {
@@ -12,7 +13,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 1rem;
-    background: #1c1c1c;
+    background: #000000;
 }
 
 .go-logo {
@@ -21,7 +22,7 @@
 }
 
 .go-logo img {
-    height: 40px;
+    height: 60px;
     margin-right: 1rem;
 }
 
@@ -31,8 +32,9 @@
 }
 
 .station-name {
-    font-size: 1.5rem;
+    font-size: 2rem;
     margin: 0;
+    font-weight: bold;
 }
 
 .time {
@@ -47,7 +49,7 @@
 .schedule-header {
     display: grid;
     grid-template-columns: 1fr 2fr 2fr 1fr;
-    background: #333;
+    background: #000000;
     padding: 0.5rem;
     margin-bottom: 1rem;
 }
@@ -61,5 +63,5 @@
     display: grid;
     grid-template-columns: 1fr 2fr 2fr 1fr;
     padding: 0.5rem;
-    background: #1c1c1c;
+    background: #000000;
 }
