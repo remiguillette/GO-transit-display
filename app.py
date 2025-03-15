@@ -7,6 +7,7 @@ from sqlalchemy.orm import DeclarativeBase
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -24,8 +25,9 @@ app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
 }
 db.init_app(app)
 
-# Import models after db initialization
+# Import models and scraper after db initialization
 from models import Station, Schedule, init_demo_data
+from scraper import scraper
 
 # Sample data for stations
 STATIONS = {
@@ -51,31 +53,26 @@ def control():
 def get_schedules():
     station = request.args.get('station', 'Union')
     try:
-        # Get current time
-        current_time = datetime.now()
+        # Get schedules from scraper
+        schedule_data = scraper.get_station_schedule(station)
 
-        # Query only future departures
-        schedules = Schedule.query.filter(
-            Schedule.station == station,
-            Schedule.departure_time > current_time
-        ).order_by(Schedule.departure_time).limit(8).all()
-
-        schedule_data = []
-        for schedule in schedules:
-            status = schedule.status
+        # Format schedules for display
+        formatted_schedules = []
+        for schedule in schedule_data:
+            status = schedule['status']
             if status == 'On Time':
-                status = schedule.platform if schedule.platform else '-'
+                status = schedule['platform'] if schedule['platform'] else '-'
 
-            schedule_data.append({
-                'departure': schedule.departure_time.strftime('%H:%M'),
-                'destination': schedule.destination.upper(),
-                'train': f'{schedule.route_code} {schedule.destination}',
+            formatted_schedules.append({
+                'departure': schedule['departure_time'].strftime('%H:%M'),
+                'destination': schedule['destination'].upper(),
+                'train': f"{schedule['route_code']} {schedule['destination']}",
                 'status': status
             })
 
-        return jsonify(schedule_data)
+        return jsonify(formatted_schedules)
     except Exception as e:
-        logging.error(f"Error fetching schedules: {str(e)}")
+        logger.error(f"Error fetching schedules: {str(e)}")
         return jsonify({'error': 'Failed to fetch schedules'}), 500
 
 @app.route('/api/set_station', methods=['POST'])
