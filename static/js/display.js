@@ -32,10 +32,17 @@ async function updateSchedules() {
                     ? 'status-cancelled' 
                     : '';
 
+            // Format the train info with route code span
+            const [routeCode, ...destinationParts] = schedule.train.split(' ');
+            const formattedTrain = `
+                <span class="route-code">${routeCode}</span>
+                ${destinationParts.join(' ')}
+            `;
+
             row.innerHTML = `
                 <div class="col-scheduled">${schedule.departure}</div>
                 <div class="col-to">${schedule.destination}</div>
-                <div class="col-stop">${schedule.train}</div>
+                <div class="col-stop">${formattedTrain}</div>
                 <div class="col-platform ${statusClass}">${schedule.status}</div>
             `;
             container.appendChild(row);
