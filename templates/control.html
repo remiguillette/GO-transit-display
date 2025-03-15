@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="control-panel">
+    <h1>GO Transit Display Control</h1>
+    
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Select Station</h5>
+            <form id="stationForm">
+                <div class="mb-3">
+                    <select class="form-select" name="station" id="stationSelect">
+                        {% for code, name in stations.items() %}
+                        <option value="{{ code }}" {% if code == selected_station %}selected{% endif %}>
+                            {{ name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Update Station</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <a href="/" class="btn btn-secondary" target="_blank">Open Display Board</a>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/control.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="display-board">
+    <header class="board-header">
+        <div class="go-logo">
+            <img src="https://cdn.freebiesupply.com/logos/large/2x/go-transit-logo-svg-vector.svg" alt="GO Transit Logo" class="logo">
+        </div>
+        <div class="station-info">
+            <h1 class="station-name" id="stationName">{{ station }}</h1>
+            <div class="time" id="currentTime"></div>
+        </div>
+        <div class="language-toggle">
+            <button onclick="toggleLanguage()" class="btn btn-outline-light">
+                {{ 'FR' if session.get('language') == 'en' else 'EN' }}
+            </button>
+        </div>
+    </header>
+
+    <main class="schedule-container">
+        <div class="schedule-header">
+            <div class="col-train">{{ 'Train' if session.get('language') == 'en' else 'Train' }}</div>
+            <div class="col-destination">{{ 'Destination' if session.get('language') == 'en' else 'Destination' }}</div>
+            <div class="col-time">{{ 'Departure' if session.get('language') == 'en' else 'Départ' }}</div>
+            <div class="col-status">{{ 'Status' if session.get('language') == 'en' else 'Statut' }}</div>
+            <div class="col-track">{{ 'Track' if session.get('language') == 'en' else 'Voie' }}</div>
+        </div>
+        <div id="scheduleRows" class="schedule-rows">
+            <!-- Dynamic content will be inserted here -->
+        </div>
+    </main>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/display.js') }}"></script>
+{% endblock %}
