@@ -38,10 +38,8 @@ STATIONS = {
 @app.route('/')
 def display():
     selected_station = session.get('selected_station', 'Union')
-    language = session.get('language', 'en')
     return render_template('display.html', 
-                         station=selected_station,
-                         language=language)
+                         station=selected_station)
 
 @app.route('/control')
 def control():
@@ -87,14 +85,6 @@ def set_station():
         session['selected_station'] = station
         return jsonify({'status': 'success'})
     return jsonify({'status': 'error', 'message': 'Invalid station'}), 400
-
-@app.route('/api/set_language', methods=['POST'])
-def set_language():
-    language = request.form.get('language')
-    if language in ['en', 'fr']:
-        session['language'] = language
-        return jsonify({'status': 'success'})
-    return jsonify({'status': 'error', 'message': 'Invalid language'}), 400
 
 # Initialize database and demo data
 with app.app_context():

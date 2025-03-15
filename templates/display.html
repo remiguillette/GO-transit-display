@@ -10,20 +10,15 @@
                 <h1 class="station-name">{{ station }} - Train Departures | Départs des Trains</h1>
             </div>
         </div>
-        <div class="time" id="currentTime"></div>
-        <div class="language-toggle">
-            <button onclick="toggleLanguage()" class="btn btn-outline-light">
-                {{ 'FR' if session.get('language') == 'en' else 'EN' }}
-            </button>
-        </div>
+        <div class="time" id="currentTime">23:22:36</div>
     </header>
 
     <main class="schedule-container">
         <div class="schedule-header">
-            <div class="col-scheduled">{{ 'Scheduled' if session.get('language') == 'en' else 'Programmé' }}</div>
-            <div class="col-to">{{ 'To' if session.get('language') == 'en' else 'À' }}</div>
-            <div class="col-stop">{{ 'Stop' if session.get('language') == 'en' else 'Arrêts' }}</div>
-            <div class="col-platform">{{ 'Platform' if session.get('language') == 'en' else 'Quai' }}</div>
+            <div class="col-scheduled">Scheduled | Programmé</div>
+            <div class="col-to">To | À</div>
+            <div class="col-stop">Stop | Arrêts</div>
+            <div class="col-platform">Platform | Quai</div>
         </div>
         <div id="scheduleRows" class="schedule-rows">
             <!-- Dynamic content will be inserted here -->
