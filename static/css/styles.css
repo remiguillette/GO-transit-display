@@ -23,10 +23,10 @@
 :root {
     --go-black: #000000;
     --go-white: #FFFFFF;
-    --go-green: #7db610;
+    --go-gray: #4f4f4f;
     --delayed-red: #ff0000;
     --cancelled-red: #ff0000;
-    --time-yellow: #d5d695;
+    --time-yellow: #ffffff;
     --ada-blue: #0052A5;
 }
 
