@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: GO Transit Display GitHub Discussions
+    url: https://github.com/yourusername/go-transit-display/discussions
+    about: Please ask and answer questions here.
+  - name: GO Transit Display Documentation
+    url: https://github.com/yourusername/go-transit-display#readme
+    about: Check out the project documentation for guides and usage information.

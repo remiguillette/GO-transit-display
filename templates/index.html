@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GO Transit - {{ station }} Schedule</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <meta http-equiv="refresh" content="60"> <!-- Auto-refresh every minute -->
+</head>
+<body>
+    <header>
+        <div class="main-header">
+            <div class="station-info">
+                <span class="station-name">{{ station }}</span>
+                <span class="header-separator">|</span>
+                <span class="departures-title">Train departures | Départs des trains</span>
+            </div>
+            <div class="go-logo-time">
+                <span class="current-time" id="current-time">{{ current_time }}</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <div id="schedule-container">
+            {% include 'schedule_partial.html' %}
+        </div>
+        
+        <div class="control-link" style="text-align: right; margin-top: 20px;">
+            <a href="{{ url_for('control') }}" style="color: white; text-decoration: none; font-family: 'Polaris Medium', Arial, sans-serif;">
+                Station Control
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Update current time every second to show the seconds ticking
+        setInterval(function() {
+            fetch('/current_time')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('current-time').innerText = data.time;
+            });
+        }, 1000);
+
+        // Update schedule every 60 seconds
+        setInterval(function() {
+            fetch('/schedule')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('schedule-container').innerHTML = html;
+            });
+        }, 60000);
+    </script>
+</body>
+</html>

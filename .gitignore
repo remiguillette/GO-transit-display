@@ -1,0 +1,53 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+ENV/
+.env
+
+# Flask
+instance/
+.webassets-cache
+
+# Replit specific
+.replit
+replit.nix
+.upm/
+.breakpoints
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Git credential files
+.git-credentials
+.github-token
+
+# IDE specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Logs
+*.log

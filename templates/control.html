@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GO Transit - Station Control</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="control-panel">
+            <h1>GO Transit Display Control</h1>
+            <p>Select a station to display on the schedule board.</p>
+            
+            <form class="control-form" action="{{ url_for('set_station') }}" method="post">
+                <label for="station">Station:</label>
+                <select id="station" name="station">
+                    {% for station in stations %}
+                    <option value="{{ station }}" {% if station == selected_station %}selected{% endif %}>{{ station }}</option>
+                    {% endfor %}
+                </select>
+                
+                <button type="submit">Update Display</button>
+            </form>
+            
+            <a href="{{ url_for('index') }}" class="return-link">Return to Display Board</a>
+        </div>
+    </div>
+</body>
+</html>
