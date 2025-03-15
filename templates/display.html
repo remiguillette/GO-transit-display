@@ -4,12 +4,13 @@
 <div class="display-board">
     <header class="board-header">
         <div class="go-logo">
-            <img src="https://cdn.freebiesupply.com/logos/large/2x/go-transit-logo-svg-vector.svg" alt="GO Transit Logo" class="logo">
+            <img src="{{ url_for('static', filename='images/go-transit-logo.svg') }}" alt="GO Transit Logo">
+            <div class="station-info">
+                <span class="station-icon">🚉</span>
+                <h1 class="station-name">{{ station }} - Train Departures | Départs des Trains</h1>
+            </div>
         </div>
-        <div class="station-info">
-            <h1 class="station-name" id="stationName">{{ station }}</h1>
-            <div class="time" id="currentTime"></div>
-        </div>
+        <div class="time" id="currentTime"></div>
         <div class="language-toggle">
             <button onclick="toggleLanguage()" class="btn btn-outline-light">
                 {{ 'FR' if session.get('language') == 'en' else 'EN' }}
@@ -19,11 +20,10 @@
 
     <main class="schedule-container">
         <div class="schedule-header">
-            <div class="col-train">{{ 'Train' if session.get('language') == 'en' else 'Train' }}</div>
-            <div class="col-destination">{{ 'Destination' if session.get('language') == 'en' else 'Destination' }}</div>
-            <div class="col-time">{{ 'Departure' if session.get('language') == 'en' else 'Départ' }}</div>
-            <div class="col-status">{{ 'Status' if session.get('language') == 'en' else 'Statut' }}</div>
-            <div class="col-track">{{ 'Track' if session.get('language') == 'en' else 'Voie' }}</div>
+            <div class="col-scheduled">{{ 'Scheduled' if session.get('language') == 'en' else 'Programmé' }}</div>
+            <div class="col-to">{{ 'To' if session.get('language') == 'en' else 'À' }}</div>
+            <div class="col-stop">{{ 'Stop' if session.get('language') == 'en' else 'Arrêts' }}</div>
+            <div class="col-platform">{{ 'Platform' if session.get('language') == 'en' else 'Quai' }}</div>
         </div>
         <div id="scheduleRows" class="schedule-rows">
             <!-- Dynamic content will be inserted here -->

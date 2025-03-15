@@ -1,16 +1,19 @@
-// Update clock
+// Update clock with HH:MM:SS format
 function updateClock() {
     const now = new Date();
     const timeElem = document.getElementById('currentTime');
-    timeElem.textContent = now.toLocaleTimeString();
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    timeElem.textContent = `${hours}:${minutes}:${seconds}`;
 }
 
 // Update schedules
 async function updateSchedules() {
     try {
-        const station = document.getElementById('stationName').textContent;
-        const response = await fetch(`/api/schedules?station=${encodeURIComponent(station)}`);
-        
+        const stationName = document.querySelector('.station-name').textContent.split('-')[0].trim();
+        const response = await fetch(`/api/schedules?station=${encodeURIComponent(stationName)}`);
+
         if (!response.ok) {
             throw new Error('Failed to fetch schedules');
         }
@@ -22,12 +25,18 @@ async function updateSchedules() {
         schedules.forEach(schedule => {
             const row = document.createElement('div');
             row.className = 'schedule-row';
+
+            const statusClass = schedule.status.toLowerCase() === 'delayed' 
+                ? 'status-delayed' 
+                : schedule.status.toLowerCase() === 'cancelled' 
+                    ? 'status-cancelled' 
+                    : '';
+
             row.innerHTML = `
-                <div class="col-train">${schedule.train}</div>
-                <div class="col-destination">${schedule.destination}</div>
-                <div class="col-time">${schedule.departure}</div>
-                <div class="col-status">${schedule.status}</div>
-                <div class="col-track">${schedule.track}</div>
+                <div class="col-scheduled">${schedule.departure}</div>
+                <div class="col-to">${schedule.destination}</div>
+                <div class="col-stop">${schedule.train}</div>
+                <div class="col-platform ${statusClass}">${schedule.status}</div>
             `;
             container.appendChild(row);
         });
@@ -47,7 +56,7 @@ async function toggleLanguage() {
     try {
         const currentLang = document.documentElement.lang;
         const newLang = currentLang === 'en' ? 'fr' : 'en';
-        
+
         const response = await fetch('/api/set_language', {
             method: 'POST',
             headers: {
@@ -66,6 +75,6 @@ async function toggleLanguage() {
 
 // Initialize display
 setInterval(updateClock, 1000);
-setInterval(updateSchedules, 60000);
+setInterval(updateSchedules, 30000); // Update every 30 seconds
 updateClock();
 updateSchedules();

@@ -12,16 +12,20 @@ logging.basicConfig(level=logging.DEBUG)
 app = Flask(__name__)
 app.secret_key = os.environ.get("SESSION_SECRET", "dev_secret_key")
 
-# Configure SQLite database
+# Configure PostgreSQL database
 class Base(DeclarativeBase):
     pass
 
 db = SQLAlchemy(model_class=Base)
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///gotransit.db"
+app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL")
+app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
+    "pool_recycle": 300,
+    "pool_pre_ping": True,
+}
 db.init_app(app)
 
 # Import models after db initialization
-from models import Station, Schedule
+from models import Station, Schedule, init_demo_data
 
 # Sample data for stations
 STATIONS = {
@@ -31,7 +35,6 @@ STATIONS = {
     "Bloor": "Bloor GO"
 }
 
-# Route handlers
 @app.route('/')
 def display():
     selected_station = session.get('selected_station', 'Union')
@@ -49,21 +52,33 @@ def control():
 @app.route('/api/schedules')
 def get_schedules():
     station = request.args.get('station', 'Union')
-    schedules = Schedule.query.filter_by(station=station).all()
-    current_time = datetime.now()
-    
-    schedule_data = []
-    for schedule in schedules:
-        if schedule.departure_time > current_time:
+    try:
+        # Get current time
+        current_time = datetime.now()
+
+        # Query only future departures
+        schedules = Schedule.query.filter(
+            Schedule.station == station,
+            Schedule.departure_time > current_time
+        ).order_by(Schedule.departure_time).limit(8).all()
+
+        schedule_data = []
+        for schedule in schedules:
+            status = schedule.status
+            if status == 'On Time':
+                status = schedule.platform if schedule.platform else '-'
+
             schedule_data.append({
-                'train': schedule.train_number,
-                'destination': schedule.destination,
                 'departure': schedule.departure_time.strftime('%H:%M'),
-                'status': schedule.status,
-                'track': schedule.track
+                'destination': schedule.destination.upper(),
+                'train': f'{schedule.route_code} {schedule.destination}',
+                'status': status
             })
-    
-    return jsonify(schedule_data)
+
+        return jsonify(schedule_data)
+    except Exception as e:
+        logging.error(f"Error fetching schedules: {str(e)}")
+        return jsonify({'error': 'Failed to fetch schedules'}), 500
 
 @app.route('/api/set_station', methods=['POST'])
 def set_station():
@@ -81,6 +96,6 @@ def set_language():
         return jsonify({'status': 'success'})
     return jsonify({'status': 'error', 'message': 'Invalid language'}), 400
 
-# Initialize database
+# Initialize database and demo data
 with app.app_context():
-    db.create_all()
+    init_demo_data()

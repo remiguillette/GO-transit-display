@@ -1,7 +1,9 @@
 :root {
-    --go-green: #00853F;
     --go-black: #000000;
     --go-white: #FFFFFF;
+    --go-green: #00853F;
+    --delayed-red: #ff0000;
+    --cancelled-red: #ff4444;
 }
 
 body {
@@ -19,81 +21,124 @@ body {
 }
 
 .board-header {
-    background-color: var(--go-green);
+    background-color: var(--go-black);
     padding: 1rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    border-bottom: 2px solid var(--go-green);
+}
+
+.go-logo {
+    display: flex;
+    align-items: center;
 }
 
 .go-logo img {
-    height: 50px;
+    height: 40px;
+    margin-right: 15px;
 }
 
 .station-info {
-    text-align: center;
+    display: flex;
+    align-items: center;
+}
+
+.station-icon {
+    font-size: 24px;
+    margin-right: 10px;
 }
 
 .station-name {
-    font-size: 2.5rem;
+    font-size: 2rem;
     margin: 0;
+    text-transform: uppercase;
 }
 
 .time {
-    font-size: 1.5rem;
+    font-size: 2rem;
+    font-weight: bold;
+    margin-left: auto;
+    padding-right: 20px;
 }
 
 .schedule-container {
     flex-grow: 1;
-    padding: 1rem;
+    padding: 0.5rem;
 }
 
 .schedule-header {
     display: grid;
-    grid-template-columns: 1fr 2fr 1fr 1fr 1fr;
-    background-color: var(--go-green);
+    grid-template-columns: 1fr 1.5fr 1.5fr 1fr;
+    background-color: var(--go-black);
     padding: 0.5rem;
     font-weight: bold;
+    border-bottom: 1px solid var(--go-green);
+    text-transform: uppercase;
 }
 
 .schedule-row {
     display: grid;
-    grid-template-columns: 1fr 2fr 1fr 1fr 1fr;
-    padding: 0.5rem;
+    grid-template-columns: 1fr 1.5fr 1.5fr 1fr;
+    padding: 0.8rem 0.5rem;
     border-bottom: 1px solid #333;
+    font-size: 1.2rem;
 }
 
-.control-panel {
-    max-width: 800px;
-    margin: 2rem auto;
-    padding: 1rem;
+.col-scheduled, .col-to, .col-stop, .col-platform {
+    padding: 0 10px;
+}
+
+.status-delayed {
+    color: var(--delayed-red);
+    text-transform: uppercase;
+}
+
+.status-cancelled {
+    color: var(--cancelled-red);
+    text-transform: uppercase;
+}
+
+.language-toggle {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.language-toggle button {
+    background: transparent;
+    border: 1px solid var(--go-white);
+    color: var(--go-white);
+    padding: 5px 10px;
+    cursor: pointer;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
     .station-name {
-        font-size: 1.8rem;
+        font-size: 1.5rem;
     }
 
     .time {
-        font-size: 1.2rem;
+        font-size: 1.5rem;
     }
 
     .schedule-header,
     .schedule-row {
-        font-size: 0.9rem;
+        font-size: 1rem;
+        grid-template-columns: 1fr 1fr 1fr 0.5fr;
     }
 }
 
 /* Accessibility */
 .btn:focus {
-    outline: 3px solid #fff;
+    outline: 2px solid var(--go-green);
     outline-offset: 2px;
 }
 
 [role="alert"] {
-    background-color: #ff4444;
-    color: white;
+    background-color: var(--cancelled-red);
+    color: var(--go-white);
     padding: 0.5rem;
     margin: 0.5rem 0;
     border-radius: 4px;
