@@ -20,7 +20,7 @@
     font-style: normal;
 }
 
-:root {
+::root {
     --go-black: #000000;
     --go-white: #FFFFFF;
     --go-green: #00853F;
@@ -55,21 +55,18 @@ body {
 .go-logo {
     display: flex;
     align-items: center;
+    gap: 1.5rem;
 }
 
 .go-logo img {
-    height: 40px;
-    margin-right: 20px;
+    height: 48px;
+    width: auto;
 }
 
 .station-info {
     display: flex;
     align-items: center;
-}
-
-.station-icon {
-    font-size: 36px;
-    margin-right: 15px;
+    gap: 1rem;
 }
 
 .station-name {
@@ -77,8 +74,10 @@ body {
     font-size: 42px;
     margin: 0;
     letter-spacing: -0.02em;
+    color: var(--go-white);
 }
 
+/* Update the time display to match GO Transit style */
 .time {
     font-family: 'Polaris Bold', monospace;
     font-size: 48px;
@@ -86,6 +85,7 @@ body {
     margin-left: auto;
     padding-right: 30px;
     letter-spacing: -0.02em;
+    color: var(--go-white);
 }
 
 .schedule-container {
@@ -135,20 +135,9 @@ body {
     color: var(--cancelled-red);
 }
 
+/* Remove language toggle related styles since we're not using it anymore */
 .language-toggle {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-}
-
-.language-toggle button {
-    font-family: 'Polaris Medium', sans-serif;
-    background: transparent;
-    border: 1px solid var(--go-white);
-    color: var(--go-white);
-    padding: 8px 15px;
-    cursor: pointer;
-    font-size: 16px;
+    display: none;
 }
 
 /* Responsive Design */
