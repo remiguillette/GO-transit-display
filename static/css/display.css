@@ -64,18 +64,15 @@
         margin-left: 8px;
         width: 24px;
         height: 24px;
+        background-color: #0052A5;
+        border-radius: 4px;
+        padding: 4px;
     }
 
-    .accessibility-icon svg {
+    .accessibility-icon img {
         width: 100%;
         height: 100%;
-        fill: #FFFFFF;
-    }
-
-    .accessibility-icon svg {
-        fill: currentColor;
-        width: 24px;
-        height: 24px;
+        filter: brightness(0) invert(1);
     }
 
 .station-name {
