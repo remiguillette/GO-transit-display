@@ -42,17 +42,22 @@ async function updateSchedules() {
 
             // Format the train info with route code span
             const [routeCode, ...destinationParts] = schedule.train.split(' ');
-            const formattedTrain = `
-                <span class="route-code" style="background-color: ${schedule.color}">${routeCode}</span>
-                ${destinationParts.join(' ')}
-                ${schedule.accessible ? accessibilityIcon : ''}
-            `;
-
+            
+            // Route code colored span
+            const routeCodeSpan = `<span class="route-code" style="background-color: ${schedule.color}">${routeCode}</span>`;
+            
             row.innerHTML = `
                 <div class="col-scheduled">${schedule.departure}</div>
-                <div class="col-to">${schedule.destination}</div>
-                <div class="col-stop">${formattedTrain}</div>
-                <div class="col-platform ${statusClass}">${schedule.status}</div>
+                <div class="col-to">
+                    ${routeCodeSpan}
+                    ${schedule.destination}
+                </div>
+                <div class="col-stop">
+                    ${destinationParts.join(' ')}
+                </div>
+                <div class="col-platform ${statusClass}">
+                    ${schedule.status} ${schedule.accessible ? accessibilityIcon : ''}
+                </div>
             `;
             container.appendChild(row);
         });

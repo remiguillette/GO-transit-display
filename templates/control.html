@@ -1,12 +1,59 @@
-﻿GO Transit Display Control
-Select a station to display on the schedule board.
-Station: {% for station in stations %} {{ station }} {% endfor %} Update Display Return to Display Board
-{% extends "base.html" %} {% block content %}
-GO Transit Display Control
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <h1>GO Transit Display Control</h1>
+  
+  <p>Select a station to display on the schedule board.</p>
+  
+  <form id="station-form" action="/api/set_station" method="post">
+    <div class="form-group">
+      <label for="station-select">Station:</label>
+      <select id="station-select" name="station" class="form-control">
+        {% for code, name in stations.items() %}
+          <option value="{{ code }}" {% if code == selected_station %}selected{% endif %}>{{ name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">Update Display</button>
+      <a href="/" class="btn btn-secondary">Return to Display Board</a>
+    </div>
+  </form>
+</div>
+{% endblock %}
 
-
-Select Station
-{% for code, name in stations.items() %} {{ name }} {% endfor %}
-Update Station
-Open Display Board
-{% endblock %} {% block scripts %} {% endblock %}
+{% block scripts %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Handle form submission with AJAX
+    document.getElementById('station-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const stationSelect = document.getElementById('station-select');
+      const station = stationSelect.value;
+      
+      fetch('/api/set_station', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `station=${encodeURIComponent(station)}`
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.status === 'success') {
+          alert('Station updated successfully!');
+          window.location.href = '/';
+        } else {
+          alert('Error: ' + data.message);
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again.');
+      });
+    });
+  });
+</script>
+{% endblock %}
