@@ -99,14 +99,17 @@ class GoScraper:
         peak_interval = 10  # Minutes between trains during peak
         off_peak_interval = 20  # Minutes between trains during off-peak
         
-        # Generate both directions
-        directions = ['inbound', 'outbound']
-        trains_per_direction = num_trains // 2
+        # Initialize schedule
+        schedule = []
         
-        # Get station position info for determining direction
-        is_terminus = station in ['Union Station', 'Niagara Falls GO', 'Oshawa GO', 'Lincolnville GO', 
-                                'Richmond Hill GO', 'Allandale Waterfront GO', 'Kitchener GO', 'Milton GO']
-            # Generate departure time 
+        # Generate trains for the number requested
+        for i in range(num_trains):
+            # Determine if peak hours (7-10am and 4-7pm)
+            current_hour = (now + timedelta(minutes=i*10)).hour
+            is_peak = (7 <= current_hour <= 10) or (16 <= current_hour <= 19)
+            interval = peak_interval if is_peak else off_peak_interval
+            
+            # Generate departure time
             departure_time = now + timedelta(minutes=interval * i)
             
             # Select a random line for this train
