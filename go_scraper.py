@@ -58,13 +58,13 @@ class GoScraper:
         
         return train_schedule
     
-    def generate_schedule(self, station, num_trains=24):
+    def generate_schedule(self, station, num_trains=48):
         """
         Generate a realistic train schedule for a given station based on GTFS data
         
         Args:
             station (str): Station name
-            num_trains (int): Number of trains to generate
+            num_trains (int): Number of trains to generate (split between directions)
             
         Returns:
             list: List of train schedule dictionaries
@@ -94,6 +94,17 @@ class GoScraper:
         # If no lines found, use default lines
         if not available_lines:
             available_lines = ['LW', 'LE', 'ST', 'RH', 'BR', 'KI', 'MI']
+            
+        # Define key stations for each line
+        key_stations = {
+            'LW': ['Union Station', 'Exhibition GO', 'Mimico GO', 'Port Credit GO', 'Oakville GO', 'Burlington GO', 'Aldershot GO', 'Hamilton GO'],
+            'LE': ['Union Station', 'Danforth GO', 'Scarborough GO', 'Eglinton GO', 'Guildwood GO', 'Rouge Hill GO', 'Pickering GO', 'Ajax GO', 'Whitby GO', 'Oshawa GO'],
+            'ST': ['Union Station', 'Kennedy GO', 'Agincourt GO', 'Milliken GO', 'Unionville GO', 'Centennial GO', 'Markham GO', 'Mount Joy GO', 'Stouffville GO'],
+            'RH': ['Union Station', 'Old Cummer GO', 'Langstaff GO', 'Richmond Hill GO'],
+            'BR': ['Union Station', 'Downsview Park GO', 'Rutherford GO', 'Maple GO', 'King City GO', 'Aurora GO', 'Newmarket GO', 'East Gwillimbury GO', 'Bradford GO', 'Barrie South GO', 'Allandale Waterfront GO'],
+            'KI': ['Union Station', 'Bloor GO', 'Weston GO', 'Etobicoke North GO', 'Malton GO', 'Bramalea GO', 'Brampton GO', 'Mount Pleasant GO', 'Georgetown GO', 'Acton GO', 'Guelph Central GO', 'Kitchener GO'],
+            'MI': ['Union Station', 'Kipling GO', 'Dixie GO', 'Cooksville GO', 'Erindale GO', 'Streetsville GO', 'Meadowvale GO', 'Lisgar GO', 'Milton GO']
+        }
         
         # Time intervals for better distribution
         peak_interval = 10  # Minutes between trains during peak
@@ -112,25 +123,34 @@ class GoScraper:
             # Generate departure time
             departure_time = now + timedelta(minutes=interval * i)
             
-            # Select a random line for this train
+            # Generate trains in both directions
             line_code = random.choice(available_lines)
+            line_stations = key_stations.get(line_code, [])
             
-            # Get appropriate destination based on line and station
-            if station == "Union Station" or station == "Union":
-                # Outbound from Union
-                destinations = {
-                    "LW": ["Hamilton GO Centre", "Aldershot GO", "West Harbour GO", "Niagara Falls GO"],
-                    "LE": ["Oshawa GO"],
-                    "ST": ["Lincolnville GO", "Mount Joy GO", "Unionville GO"],
-                    "RH": ["Richmond Hill GO"],
-                    "BR": ["Barrie GO", "Aurora GO", "Bradford GO"],
-                    "KI": ["Kitchener GO", "Bramalea GO", "Mount Pleasant GO", "Georgetown GO"],
-                    "MI": ["Milton GO"]
-                }
-                destination = random.choice(destinations.get(line_code, ["Oakville GO"]))
-            else:
-                # Inbound to Union
-                destination = "Union Station"
+            # Determine train direction and stops
+            if i % 2 == 0:  # Outbound trains
+                if station == "Union Station":
+                    # Get terminus station for the line
+                    destination = line_stations[-1]
+                    # Get upcoming key stops
+                    stops = [s for s in line_stations[1:4]]  # Show next 3 key stops
+                else:
+                    station_idx = line_stations.index(station) if station in line_stations else 0
+                    if station_idx < len(line_stations) - 1:
+                        destination = line_stations[-1]
+                        stops = line_stations[station_idx+1:station_idx+4]  # Next 3 stops
+                    else:
+                        continue  # Skip if we're at terminus
+            else:  # Inbound trains
+                if station == "Union Station":
+                    continue  # Skip inbound for Union
+                else:
+                    destination = "Union Station"
+                    station_idx = line_stations.index(station) if station in line_stations else -1
+                    if station_idx > 0:
+                        stops = line_stations[max(0, station_idx-3):station_idx][::-1]  # Previous 3 stops
+                    else:
+                        continue  # Skip if no stops available
             
             # Randomly assign train status based on weights
             status = random.choices(STATUS_OPTIONS, STATUS_WEIGHTS)[0]
@@ -166,11 +186,14 @@ class GoScraper:
             else:
                 estimated = status
             
+            # Format stops for display
+            stops_display = " • ".join(stops) if stops else ""
+            
             # Add to schedule
             schedule.append({
                 "departure_time": departure_time,
-                "destination": destination,
-                "destination_fr": destination,  # Default to English if French not available
+                "destination": f"{line_code} {destination}{'  EXPRESS' if is_express else ''}",
+                "destination_fr": f"{line_code} {destination}{'  EXPRESS' if is_express else ''}",
                 "status": status,
                 "estimated": estimated,
                 "platform": platform if status in ["On time", "At Platform"] else None,
@@ -179,7 +202,8 @@ class GoScraper:
                 "train_number": train_number,
                 "color": self.get_line_color(line_code),
                 "is_express": is_express,
-                "at_platform": at_platform
+                "at_platform": at_platform,
+                "stops": stops_display
             })
         
         # Sort schedule:
