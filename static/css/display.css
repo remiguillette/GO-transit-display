@@ -6,7 +6,7 @@
     min-height: 100vh;
     font-weight: 300;
     letter-spacing: -0.02em;
-    line-height: 1.5;
+    line-height: 1.2;
 }
 
 .board-header {
@@ -28,7 +28,6 @@
 
 .go-logo img {
     height: 80px;
-    margin-right: 1rem;
 }
 
 .station-info {
@@ -58,10 +57,10 @@
 }
 
 .station-name {
-    font-size: 8rem;
+    font-size: 34px;
     margin: 0;
     font-weight: 700;
-    line-height: 1.2;
+    line-height: 1,2;
 }
 
 .time {
