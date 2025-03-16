@@ -1,0 +1,36 @@
+<table class="schedule-table">
+    <thead>
+        <tr>
+            <th>Scheduled | Programmé</th>
+            <th>To | À</th>
+            <th>Stop | Arrêts</th>
+            <th>Platform | Quai</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for train in schedule.trains %}
+        <tr>
+            <td>{{ train.time }}</td>
+            <td>
+                {{ train.destination }}
+            </td>
+            <td>
+                Osgoode, St. Andrew, Union
+            </td>
+            <td>
+                {% if train.status == "On time" %}
+                    <span class="platform">{{ train.platform }}</span>
+                    {% if train.accessible %}
+                    <span class="accessibility-icon">&#9855;</span>
+                    {% endif %}
+                {% else %}
+                    —
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<div style="text-align: right; color: #999; margin-top: 10px; font-size: 14px;">
+    Last updated: {{ schedule.updated }}
+</div>
