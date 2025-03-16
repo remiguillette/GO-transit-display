@@ -232,42 +232,192 @@ class GTFSData:
                 # If no stations were loaded, add default stations
                 if not self.stations:
                     default_stations = [
-                        ('UN', 'Union Station', 43.645195, -79.3806),
-                        ('MI', 'Mimico GO', 43.6211, -79.4954),
-                        ('EX', 'Exhibition GO', 43.6346, -79.4153),
-                        ('LO', 'Long Branch GO', 43.5950, -79.5408)
+                        # Lakeshore West
+                        ('UN', 'Union Station', 43.645195, -79.3806, ['LW', 'LE', 'ST', 'RH', 'BR', 'KI', 'MI']),
+                        ('EX', 'Exhibition GO', 43.6346, -79.4153, ['LW']),
+                        ('MI', 'Mimico GO', 43.6211, -79.4954, ['LW']),
+                        ('LO', 'Long Branch GO', 43.5950, -79.5408, ['LW']),
+                        ('PO', 'Port Credit GO', 43.5572, -79.5858, ['LW']),
+                        ('CL', 'Clarkson GO', 43.5110, -79.6347, ['LW']),
+                        ('OA', 'Oakville GO', 43.4561, -79.6832, ['LW']),
+                        ('BV', 'Bronte GO', 43.3944, -79.7562, ['LW']),
+                        ('AP', 'Appleby GO', 43.3819, -79.8019, ['LW']),
+                        ('BU', 'Burlington GO', 43.3386, -79.8027, ['LW']),
+                        ('AL', 'Aldershot GO', 43.3165, -79.8342, ['LW']),
+                        ('HA', 'Hamilton GO', 43.2543, -79.8813, ['LW']),
+                        ('WH', 'West Harbour GO', 43.2690, -79.8740, ['LW']),
+                        ('ST', 'St. Catharines GO', 43.1593, -79.2342, ['LW']),
+                        ('NF', 'Niagara Falls GO', 43.1088, -79.0632, ['LW']),
+                        
+                        # Lakeshore East
+                        ('DA', 'Danforth GO', 43.6883, -79.3262, ['LE']),
+                        ('SC', 'Scarborough GO', 43.7071, -79.2580, ['LE']),
+                        ('EG', 'Eglinton GO', 43.7256, -79.2262, ['LE']),
+                        ('GU', 'Guildwood GO', 43.7637, -79.1908, ['LE']),
+                        ('RO', 'Rouge Hill GO', 43.8012, -79.1510, ['LE']),
+                        ('PI', 'Pickering GO', 43.8342, -79.0887, ['LE']),
+                        ('AJ', 'Ajax GO', 43.8511, -79.0319, ['LE']),
+                        ('WH', 'Whitby GO', 43.8669, -78.9362, ['LE']),
+                        ('OS', 'Oshawa GO', 43.8789, -78.8990, ['LE']),
+                        
+                        # Stouffville
+                        ('KE', 'Kennedy GO', 43.7732, -79.2683, ['ST']),
+                        ('AG', 'Agincourt GO', 43.7835, -79.2839, ['ST']),
+                        ('ML', 'Milliken GO', 43.8276, -79.2984, ['ST']),
+                        ('UV', 'Unionville GO', 43.8543, -79.3131, ['ST']),
+                        ('CE', 'Centennial GO', 43.8767, -79.3132, ['ST']),
+                        ('MK', 'Markham GO', 43.8910, -79.2539, ['ST']),
+                        ('MJ', 'Mount Joy GO', 43.9143, -79.2590, ['ST']),
+                        ('SV', 'Stouffville GO', 43.9696, -79.3210, ['ST']),
+                        ('LI', 'Lincolnville GO', 44.0064, -79.1943, ['ST']),
+                        
+                        # Richmond Hill
+                        ('OC', 'Old Cummer GO', 43.7841, -79.3604, ['RH']),
+                        ('LA', 'Langstaff GO', 43.8121, -79.4084, ['RH']),
+                        ('RM', 'Richmond Hill GO', 43.8713, -79.4252, ['RH']),
+                        ('GO', 'Gormley GO', 43.9334, -79.3836, ['RH']),
+                        ('BL', 'Bloomington GO', 44.0004, -79.4150, ['RH']),
+                        
+                        # Barrie
+                        ('DW', 'Downsview Park GO', 43.7537, -79.4790, ['BR']),
+                        ('RD', 'Rutherford GO', 43.8371, -79.4980, ['BR']),
+                        ('MP', 'Maple GO', 43.8598, -79.5137, ['BR']),
+                        ('KI', 'King City GO', 43.9271, -79.5246, ['BR']),
+                        ('AU', 'Aurora GO', 43.9924, -79.4621, ['BR']),
+                        ('NE', 'Newmarket GO', 44.0510, -79.4611, ['BR']),
+                        ('EA', 'East Gwillimbury GO', 44.0813, -79.4622, ['BR']),
+                        ('BD', 'Bradford GO', 44.1206, -79.5612, ['BR']),
+                        ('BA', 'Barrie South GO', 44.3228, -79.6883, ['BR']),
+                        ('AC', 'Allandale Waterfront GO', 44.3854, -79.6883, ['BR']),
+                        
+                        # Kitchener
+                        ('WE', 'Weston GO', 43.7066, -79.5238, ['KI']),
+                        ('EP', 'Etobicoke North GO', 43.7064, -79.5546, ['KI']),
+                        ('MA', 'Malton GO', 43.7078, -79.6100, ['KI']),
+                        ('BP', 'Bramalea GO', 43.7234, -79.6882, ['KI']),
+                        ('BM', 'Brampton GO', 43.6828, -79.7560, ['KI']),
+                        ('MO', 'Mount Pleasant GO', 43.6881, -79.8046, ['KI']),
+                        ('GT', 'Georgetown GO', 43.6563, -79.9288, ['KI']),
+                        ('AC', 'Acton GO', 43.6368, -80.0321, ['KI']),
+                        ('GU', 'Guelph Central GO', 43.5448, -80.2461, ['KI']),
+                        ('KT', 'Kitchener GO', 43.4537, -80.4976, ['KI']),
+                        
+                        # Milton
+                        ('KP', 'Kipling GO', 43.6376, -79.5360, ['MI']),
+                        ('DI', 'Dixie GO', 43.6285, -79.5872, ['MI']),
+                        ('CO', 'Cooksville GO', 43.5893, -79.6216, ['MI']),
+                        ('ER', 'Erindale GO', 43.5643, -79.6599, ['MI']),
+                        ('SG', 'Streetsville GO', 43.5884, -79.7146, ['MI']),
+                        ('ME', 'Meadowvale GO', 43.6111, -79.7574, ['MI']),
+                        ('LI', 'Lisgar GO', 43.5980, -79.8005, ['MI']),
+                        ('MT', 'Milton GO', 43.5177, -79.8637, ['MI'])
                     ]
                     
-                    for code, name, lat, lon in default_stations:
+                    for code, name, lat, lon, lines in default_stations:
                         self.stations[code] = {
                             'name': name,
                             'lat': lat,
                             'lon': lon,
                             'code': code,
                             'accessible': True,
-                            'lines': ['LW']  # Default to Lakeshore West
+                            'lines': lines
                         }
                     
                     logger.info(f"Added {len(default_stations)} default stations")
                     
         except FileNotFoundError:
             logger.warning(f"Stops file not found: {filepath}")
-            # Add default stations
+            # Add default stations - use the same extensive list as above
             default_stations = [
-                ('UN', 'Union Station', 43.645195, -79.3806),
-                ('MI', 'Mimico GO', 43.6211, -79.4954),
-                ('EX', 'Exhibition GO', 43.6346, -79.4153),
-                ('LO', 'Long Branch GO', 43.5950, -79.5408)
+                # Lakeshore West
+                ('UN', 'Union Station', 43.645195, -79.3806, ['LW', 'LE', 'ST', 'RH', 'BR', 'KI', 'MI']),
+                ('EX', 'Exhibition GO', 43.6346, -79.4153, ['LW']),
+                ('MI', 'Mimico GO', 43.6211, -79.4954, ['LW']),
+                ('LO', 'Long Branch GO', 43.5950, -79.5408, ['LW']),
+                ('PO', 'Port Credit GO', 43.5572, -79.5858, ['LW']),
+                ('CL', 'Clarkson GO', 43.5110, -79.6347, ['LW']),
+                ('OA', 'Oakville GO', 43.4561, -79.6832, ['LW']),
+                ('BV', 'Bronte GO', 43.3944, -79.7562, ['LW']),
+                ('AP', 'Appleby GO', 43.3819, -79.8019, ['LW']),
+                ('BU', 'Burlington GO', 43.3386, -79.8027, ['LW']),
+                ('AL', 'Aldershot GO', 43.3165, -79.8342, ['LW']),
+                ('HA', 'Hamilton GO', 43.2543, -79.8813, ['LW']),
+                ('WH', 'West Harbour GO', 43.2690, -79.8740, ['LW']),
+                ('ST', 'St. Catharines GO', 43.1593, -79.2342, ['LW']),
+                ('NF', 'Niagara Falls GO', 43.1088, -79.0632, ['LW']),
+                
+                # Lakeshore East
+                ('DA', 'Danforth GO', 43.6883, -79.3262, ['LE']),
+                ('SC', 'Scarborough GO', 43.7071, -79.2580, ['LE']),
+                ('EG', 'Eglinton GO', 43.7256, -79.2262, ['LE']),
+                ('GU', 'Guildwood GO', 43.7637, -79.1908, ['LE']),
+                ('RO', 'Rouge Hill GO', 43.8012, -79.1510, ['LE']),
+                ('PI', 'Pickering GO', 43.8342, -79.0887, ['LE']),
+                ('AJ', 'Ajax GO', 43.8511, -79.0319, ['LE']),
+                ('WH', 'Whitby GO', 43.8669, -78.9362, ['LE']),
+                ('OS', 'Oshawa GO', 43.8789, -78.8990, ['LE']),
+                
+                # Stouffville
+                ('KE', 'Kennedy GO', 43.7732, -79.2683, ['ST']),
+                ('AG', 'Agincourt GO', 43.7835, -79.2839, ['ST']),
+                ('ML', 'Milliken GO', 43.8276, -79.2984, ['ST']),
+                ('UV', 'Unionville GO', 43.8543, -79.3131, ['ST']),
+                ('CE', 'Centennial GO', 43.8767, -79.3132, ['ST']),
+                ('MK', 'Markham GO', 43.8910, -79.2539, ['ST']),
+                ('MJ', 'Mount Joy GO', 43.9143, -79.2590, ['ST']),
+                ('SV', 'Stouffville GO', 43.9696, -79.3210, ['ST']),
+                ('LI', 'Lincolnville GO', 44.0064, -79.1943, ['ST']),
+                
+                # Richmond Hill
+                ('OC', 'Old Cummer GO', 43.7841, -79.3604, ['RH']),
+                ('LA', 'Langstaff GO', 43.8121, -79.4084, ['RH']),
+                ('RM', 'Richmond Hill GO', 43.8713, -79.4252, ['RH']),
+                ('GO', 'Gormley GO', 43.9334, -79.3836, ['RH']),
+                ('BL', 'Bloomington GO', 44.0004, -79.4150, ['RH']),
+                
+                # Barrie
+                ('DW', 'Downsview Park GO', 43.7537, -79.4790, ['BR']),
+                ('RD', 'Rutherford GO', 43.8371, -79.4980, ['BR']),
+                ('MP', 'Maple GO', 43.8598, -79.5137, ['BR']),
+                ('KI', 'King City GO', 43.9271, -79.5246, ['BR']),
+                ('AU', 'Aurora GO', 43.9924, -79.4621, ['BR']),
+                ('NE', 'Newmarket GO', 44.0510, -79.4611, ['BR']),
+                ('EA', 'East Gwillimbury GO', 44.0813, -79.4622, ['BR']),
+                ('BD', 'Bradford GO', 44.1206, -79.5612, ['BR']),
+                ('BA', 'Barrie South GO', 44.3228, -79.6883, ['BR']),
+                ('AC', 'Allandale Waterfront GO', 44.3854, -79.6883, ['BR']),
+                
+                # Kitchener
+                ('WE', 'Weston GO', 43.7066, -79.5238, ['KI']),
+                ('EP', 'Etobicoke North GO', 43.7064, -79.5546, ['KI']),
+                ('MA', 'Malton GO', 43.7078, -79.6100, ['KI']),
+                ('BP', 'Bramalea GO', 43.7234, -79.6882, ['KI']),
+                ('BM', 'Brampton GO', 43.6828, -79.7560, ['KI']),
+                ('MO', 'Mount Pleasant GO', 43.6881, -79.8046, ['KI']),
+                ('GT', 'Georgetown GO', 43.6563, -79.9288, ['KI']),
+                ('AC', 'Acton GO', 43.6368, -80.0321, ['KI']),
+                ('GU', 'Guelph Central GO', 43.5448, -80.2461, ['KI']),
+                ('KT', 'Kitchener GO', 43.4537, -80.4976, ['KI']),
+                
+                # Milton
+                ('KP', 'Kipling GO', 43.6376, -79.5360, ['MI']),
+                ('DI', 'Dixie GO', 43.6285, -79.5872, ['MI']),
+                ('CO', 'Cooksville GO', 43.5893, -79.6216, ['MI']),
+                ('ER', 'Erindale GO', 43.5643, -79.6599, ['MI']),
+                ('SG', 'Streetsville GO', 43.5884, -79.7146, ['MI']),
+                ('ME', 'Meadowvale GO', 43.6111, -79.7574, ['MI']),
+                ('LI', 'Lisgar GO', 43.5980, -79.8005, ['MI']),
+                ('MT', 'Milton GO', 43.5177, -79.8637, ['MI'])
             ]
             
-            for code, name, lat, lon in default_stations:
+            for code, name, lat, lon, lines in default_stations:
                 self.stations[code] = {
                     'name': name,
                     'lat': lat,
                     'lon': lon,
                     'code': code,
                     'accessible': True,
-                    'lines': ['LW']  # Default to Lakeshore West
+                    'lines': lines
                 }
             
             logger.info(f"Added {len(default_stations)} default stations")
