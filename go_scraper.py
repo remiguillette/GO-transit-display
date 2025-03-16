@@ -189,11 +189,11 @@ class GoScraper:
             # Format stops for display
             stops_display = " • ".join(stops) if stops else ""
             
-            # Add to schedule
+            # Add to schedule with cleaned up display
             schedule.append({
                 "departure_time": departure_time,
-                "destination": f"{line_code} {destination}{'  EXPRESS' if is_express else ''}",
-                "destination_fr": f"{line_code} {destination}{'  EXPRESS' if is_express else ''}",
+                "destination": destination + ('  EXPRESS' if is_express else ''),
+                "destination_fr": destination + ('  EXPRESS' if is_express else ''),
                 "status": status,
                 "estimated": estimated,
                 "platform": platform if status in ["On time", "At Platform"] else None,
@@ -203,7 +203,7 @@ class GoScraper:
                 "color": self.get_line_color(line_code),
                 "is_express": is_express,
                 "at_platform": at_platform,
-                "stops": stops_display
+                "stops": stops_display.replace('(BR)', '').replace('(LW)', '').replace('(LE)', '')
             })
         
         # Sort schedule:
