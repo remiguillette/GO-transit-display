@@ -20,7 +20,7 @@ function updateClock() {
 // Accessibility icon SVG
 const accessibilityIcon = `
 <span class="accessibility-icon">
-    <img src="/static/assets/accessibility-icon.svg" alt="Accessibility" width="24" height="24">
+    <img src="/static/images/Wheelchair_accessible_icon.svg" alt="Accessibility" width="24" height="24">
 </span>`;
 
 // Check if enough time has passed to allow an update
