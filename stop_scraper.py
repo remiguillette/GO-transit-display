@@ -21,15 +21,17 @@ class StopScraper:
     def get_stops_for_route(self, line_code, direction="outbound"):
         """Get ordered stops for a specific route line"""
         key_stations = {
-            'LW': ['Union Station', 'Exhibition', 'Mimico', 'Port Credit', 
-                  'Oakville', 'Burlington', 'Aldershot', 'Hamilton'],
+            'LW': ['Union Station', 'Exhibition', 'Mimico', 'Long Branch', 'Port Credit', 
+                  'Clarkson', 'Oakville', 'Bronte', 'Appleby', 'Burlington', 'Aldershot',
+                  'Hamilton', 'West Harbour', 'St. Catharines', 'Niagara Falls'],
             'LE': ['Union Station', 'Danforth', 'Scarborough', 'Eglinton',
                   'Guildwood', 'Rouge Hill', 'Pickering', 'Ajax', 
                   'Whitby', 'Oshawa'],
             'ST': ['Union Station', 'Kennedy', 'Agincourt', 'Milliken',
                   'Unionville', 'Centennial', 'Markham', 'Mount Joy', 
-                  'Stouffville'],
-            'RH': ['Union Station', 'Old Cummer', 'Langstaff', 'Richmond Hill'],
+                  'Stouffville', 'Old Elm', 'Lincolnville'],
+            'RH': ['Union Station', 'Old Cummer', 'Langstaff', 'Richmond Hill',
+                  'Gormley', 'Bloomington'],
             'BR': ['Union Station', 'Downsview Park', 'Rutherford', 'Maple',
                   'King City', 'Aurora', 'Newmarket', 'East Gwillimbury',
                   'Bradford', 'Barrie South', 'Allandale Waterfront'],
