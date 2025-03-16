@@ -1,0 +1,74 @@
+modules = ["python-3.11"]
+
+[nix]
+channel = "stable-24_05"
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Repository Analysis"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "repo_analysis"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "GO Transit Display"
+
+[[workflows.workflow]]
+name = "Repository Analysis"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python analyze_repo.py"
+
+[[workflows.workflow]]
+name = "repo_analysis"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python analyze_repo.py"
+
+[[workflows.workflow]]
+name = "GO Transit Display"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "packager.installForAll"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python app.py"
+waitForPort = 5000
+
+[deployment]
+run = ["sh", "-c", "python analyze_repo.py"]
+
+[[ports]]
+localPort = 5000
+externalPort = 80

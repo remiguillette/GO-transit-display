@@ -1,83 +1,107 @@
+import logging
 from datetime import datetime
-from app import db
+from db_init import db
+
+# Configure logging
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 class Station(db.Model):
+    """Station model representing a GO Transit station"""
     id = db.Column(db.Integer, primary_key=True)
     code = db.Column(db.String(10), unique=True, nullable=False)  # e.g., "ST" for Stouffville
     name = db.Column(db.String(100), nullable=False)
-    name_fr = db.Column(db.String(100), nullable=False)
+    name_fr = db.Column(db.String(100), nullable=True)
+    location_type = db.Column(db.Integer, default=1)  # 1 = station, 0 = stop
+    accessible = db.Column(db.Boolean, default=True)
+    latitude = db.Column(db.Float, nullable=True)
+    longitude = db.Column(db.Float, nullable=True)
+    lines = db.Column(db.String(100), nullable=True)  # comma-separated line codes
+    
+    def __repr__(self):
+        return f"<Station {self.code} - {self.name}>"
 
 class Schedule(db.Model):
+    """Schedule model representing a train schedule entry"""
     id = db.Column(db.Integer, primary_key=True)
     station = db.Column(db.String(100), nullable=False)
     train_number = db.Column(db.String(10), nullable=False)  # e.g., "ST01"
     destination = db.Column(db.String(100), nullable=False)
     departure_time = db.Column(db.DateTime, nullable=False)
-    status = db.Column(db.String(20), default='On Time')  # 'On Time', 'DELAYED', 'CANCELLED'
-    platform = db.Column(db.String(5))  # Platform number, e.g., "15"
+    status = db.Column(db.String(20), default='On time')  # 'On time', 'Delayed', 'Cancelled'
+    platform = db.Column(db.String(5), nullable=True)  # Platform number, e.g., "15"
     route_code = db.Column(db.String(5), nullable=False)  # ST, RH, BR, etc.
+    accessible = db.Column(db.Boolean, default=True)
+    delay_minutes = db.Column(db.Integer, default=0)
+    
+    def __repr__(self):
+        return f"<Schedule {self.train_number} - {self.destination} at {self.departure_time}>"
 
-# Initialize demo data
 def init_demo_data():
-    db.drop_all()
-    db.create_all()
-
-    # Add stations
-    stations = [
-        Station(code='ST', name='Stouffville', name_fr='Stouffville'),
-        Station(code='RH', name='Richmond Hill', name_fr='Richmond Hill'),
-        Station(code='BR', name='Barrie', name_fr='Barrie')
-    ]
-    db.session.bulk_save_objects(stations)
-
-    # Add schedules
-    current_time = datetime.now()
-    schedules = [
-        Schedule(
-            station='Union',
-            train_number='ST01',
-            destination='Stouffville',
-            departure_time=datetime.strptime(f"{current_time.date()} 06:33", "%Y-%m-%d %H:%M"),
-            status='On Time',
-            platform='15',
-            route_code='ST'
-        ),
-        Schedule(
-            station='Union',
-            train_number='ST02',
-            destination='Stouffville',
-            departure_time=datetime.strptime(f"{current_time.date()} 07:16", "%Y-%m-%d %H:%M"),
-            status='DELAYED',
-            platform=None,
-            route_code='ST'
-        ),
-        Schedule(
-            station='Union',
-            train_number='RH01',
-            destination='Richmond Hill',
-            departure_time=datetime.strptime(f"{current_time.date()} 07:17", "%Y-%m-%d %H:%M"),
-            status='On Time',
-            platform='12',
-            route_code='RH'
-        ),
-        Schedule(
-            station='Union',
-            train_number='BR01',
-            destination='Barrie',
-            departure_time=datetime.strptime(f"{current_time.date()} 07:41", "%Y-%m-%d %H:%M"),
-            status='DELAYED',
-            platform=None,
-            route_code='BR'
-        ),
-        Schedule(
-            station='Union',
-            train_number='ST03',
-            destination='Stouffville',
-            departure_time=datetime.strptime(f"{current_time.date()} 08:03", "%Y-%m-%d %H:%M"),
-            status='CANCELLED',
-            platform=None,
-            route_code='ST'
-        )
-    ]
-    db.session.bulk_save_objects(schedules)
-    db.session.commit()
+    """Initialize demo data for testing purposes"""
+    try:
+        # Check if there's any data
+        if Station.query.count() > 0:
+            logger.info("Database already contains data, skipping initialization")
+            return
+        
+        logger.info("Initializing demo data")
+        
+        # Create some station entries
+        stations = [
+            Station(
+                code="UN",
+                name="Union Station",
+                name_fr="Union",
+                accessible=True,
+                lines="LW,LE,ST,RH,BR,KI,MI"
+            ),
+            Station(
+                code="MI",
+                name="Mimico GO",
+                name_fr="Mimico",
+                accessible=True,
+                lines="LW"
+            ),
+            Station(
+                code="EX",
+                name="Exhibition GO",
+                name_fr="Exhibition",
+                accessible=True,
+                lines="LW"
+            ),
+            Station(
+                code="PC",
+                name="Port Credit GO",
+                name_fr="Port Credit",
+                accessible=True,
+                lines="LW"
+            ),
+            Station(
+                code="AJ",
+                name="Ajax GO",
+                name_fr="Ajax",
+                accessible=True,
+                lines="LE"
+            ),
+            Station(
+                code="WH",
+                name="Whitby GO",
+                name_fr="Whitby",
+                accessible=True,
+                lines="LE"
+            )
+        ]
+        
+        # Add stations to session
+        for station in stations:
+            db.session.add(station)
+        
+        # Commit changes
+        db.session.commit()
+        logger.info(f"Added {len(stations)} stations to the database")
+        
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Error initializing demo data: {e}")
+        raise

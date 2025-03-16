@@ -1,59 +1,60 @@
+
 # GO Transit Display Board
 
-A Flask-based GO Transit display board application that shows real-time train departures with proper branding and accessibility features.
+A Flask-based GO Transit display board application showing real-time train departures with proper branding and accessibility features.
 
 ## Features
 
 - Real-time train schedule display
-- GO Transit branding and colors
+- GO Transit branded interface with Polaris typography
 - Bilingual support (English/French)
-- Accessibility features
-- Mobile-responsive design
+- Accessibility-compliant design
+- Mobile-responsive layout with precise measurements
 - Station selection control panel
+- WebSocket-based real-time updates
 
-## Screenshots
+## Layout Structure
 
-![Display Board](https://via.placeholder.com/800x400?text=GO+Transit+Display+Board)
-![Control Panel](https://via.placeholder.com/800x400?text=Control+Panel)
+### Display Board (/):
+- Fixed header (6rem height)
+- Real-time clock display (3rem font)
+- Grid-based schedule display
+- Responsive columns (4-column grid)
+- Station name display (2.625rem font)
 
-## Installation
+### Control Panel (/control):
+- Centered container (max-width: 50rem)
+- Station selector dropdown
+- Update button with status indicator
+- Live preview link
+- Feedback notifications
 
-Please refer to the [Installation Guide](INSTALLATION.md) for detailed setup instructions.
+## Quick Start
 
-```bash
-# Quick start with Flask development server
-python main.py
-
-# Or with Gunicorn (recommended for production)
-gunicorn --bind 0.0.0.0:5000 --workers=4 main:app
-```
-
-## Usage
-
-1. Navigate to the main page to view the display board
-2. Use the control panel (`/control` endpoint) to select different stations
-3. The board auto-refreshes every minute to show updated schedules
+1. Fork the project on Replit
+2. Click the "Run" button
+3. Access the display board at your Replit URL
+4. Use /control for the admin interface
 
 ## Project Structure
 
-The project follows a standard Flask structure with the following key files:
-
-- `main.py` - Main Flask application entry point
-- `scraper.py` - GO Transit schedule data handling and demo data generation
-- `/templates` - HTML templates for the web interface
-- `/static` - Static assets including CSS, fonts and SVG icons
-
-For more details, see [Project Structure](attached_assets/PROJECT_STRUCTURE.md).
+- `main.py` - Flask application entry point
+- `scraper.py` - Schedule data handling
+- `/templates` - HTML templates
+- `/static` - Assets (CSS, fonts, SVG icons)
+  - `/css` - Stylesheets with precise measurements
+  - `/fonts` - Polaris font family
+  - `/images` - SVG icons and logos
 
 ## Contributing
 
-Contributions are welcome! Please read [Contributing Guidelines](CONTRIBUTING.md) for details on how to contribute to this project.
+See [Contributing Guidelines](CONTRIBUTING.md) for details.
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+MIT License - see LICENSE file
 
 ## Acknowledgments
 
-- GO Transit for branding inspiration
+- GO Transit for branding guidelines
 - Polaris font family for typography

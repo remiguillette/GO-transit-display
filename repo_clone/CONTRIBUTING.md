@@ -1,107 +1,61 @@
+
 # Contributing to GO Transit Display
 
-Thank you for considering contributing to the GO Transit Display project! This document provides guidelines and instructions for contributing.
+## Layout Standards
 
-## Code of Conduct
+### Display Board
+- Header height must be exactly 6rem
+- Font sizes must follow the scale:
+  - Main headers: 2.625rem
+  - Time display: 3rem
+  - Schedule text: 2.25rem
+- Grid gaps must be:
+  - Columns: 1rem
+  - Rows: 0.5rem
 
-By participating in this project, you agree to abide by our [Code of Conduct](CODE_OF_CONDUCT.md).
+### Control Panel
+- Container width: 50rem max
+- Form element spacing: 1rem
+- Button padding: 0.625rem 1rem
+- Notifications: 1.25rem padding
 
-## How Can I Contribute?
+## Code Guidelines
 
-### Reporting Bugs
+### CSS
+- Use rem units for typography and spacing
+- Use CSS Grid for schedule layout
+- Follow GO Transit color scheme
+- Maintain responsive breakpoints
 
-- **Ensure the bug was not already reported** by searching on GitHub under [Issues](https://github.com/yourusername/go-transit-display/issues).
-- If you're unable to find an open issue addressing the problem, [open a new one](https://github.com/yourusername/go-transit-display/issues/new/choose) using the bug report template.
-- Include a **title and clear description**, as much relevant information as possible, and a **code sample** or an **executable test case** demonstrating the expected behavior that is not occurring.
+### HTML
+- Use semantic elements
+- Follow accessibility guidelines
+- Maintain bilingual structure
+- Use proper font weights
 
-### Suggesting Enhancements
+### JavaScript
+- Handle WebSocket connections
+- Manage real-time updates
+- Follow schedule refresh logic
+- Handle station switching
 
-- **Check if the enhancement has already been suggested** by searching on GitHub under [Issues](https://github.com/yourusername/go-transit-display/issues).
-- If not, [open a new issue](https://github.com/yourusername/go-transit-display/issues/new/choose) using the feature request template.
-- Provide a **clear and detailed explanation** of the feature you want and why it would be beneficial.
+## Development Setup
 
-### Pull Requests
+1. Fork on Replit
+2. Install dependencies
+3. Run the application
+4. Test all features
 
-- Fill in the required template.
-- Do not include issue numbers in the PR title.
-- Include screenshots and animated GIFs in your pull request whenever possible.
-- Follow the [Python styleguide](#python-styleguide).
-- Include thoughtfully-worded, well-structured tests.
-- Document new code.
-- End all files with a newline.
+## Testing Guidelines
 
-## Styleguides
+- Verify all measurements
+- Check responsive behavior
+- Test bilingual display
+- Validate accessibility
 
-### Git Commit Messages
+## Pull Request Process
 
-* Use the present tense ("Add feature" not "Added feature")
-* Use the imperative mood ("Move cursor to..." not "Moves cursor to...")
-* Limit the first line to 72 characters or less
-* Reference issues and pull requests liberally after the first line
-* Consider starting the commit message with an applicable emoji:
-    * 🎨 `:art:` when improving the format/structure of the code
-    * 🐎 `:racehorse:` when improving performance
-    * 🚱 `:non-potable_water:` when plugging memory leaks
-    * 📝 `:memo:` when writing docs
-    * 🐛 `:bug:` when fixing a bug
-    * 🔥 `:fire:` when removing code or files
-    * 💚 `:green_heart:` when fixing the CI build
-    * ✅ `:white_check_mark:` when adding tests
-    * 🔒 `:lock:` when dealing with security
-    * ⬆️ `:arrow_up:` when upgrading dependencies
-    * ⬇️ `:arrow_down:` when downgrading dependencies
-
-### Python Styleguide
-
-All Python code must adhere to [PEP 8](https://www.python.org/dev/peps/pep-0008/).
-
-* Use 4 spaces for indentation (not tabs).
-* Use docstrings for all public classes, methods, and functions.
-* Keep line length to a maximum of 88 characters.
-* Use meaningful variable names.
-* Add type hints where appropriate.
-
-### HTML/CSS Styleguide
-
-* Use 2 spaces for indentation (not tabs).
-* Use descriptive class names.
-* Prioritize semantic HTML.
-* Avoid inline styles where possible.
-
-## Additional Notes
-
-### Issue and Pull Request Labels
-
-This project uses labels to help organize and prioritize issues and pull requests. Here's what they mean:
-
-* `bug` - Issues that report broken functionality
-* `documentation` - Issues or PRs related to documentation
-* `enhancement` - Issues that request or PRs that implement a new feature
-* `good first issue` - Issues that are good for newcomers
-* `help wanted` - Issues where we're looking for help
-* `question` - Questions about the project
-
-## Development Environment Setup
-
-1. Fork the repository
-2. Clone your fork:
-   ```
-   git clone https://github.com/your-username/go-transit-display.git
-   cd go-transit-display
-   ```
-3. Set up your development environment:
-   ```
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   pip install -r requirements.txt
-   ```
-   Or with Poetry:
-   ```
-   poetry install
-   ```
-4. Run the application:
-   ```
-   python main.py
-   ```
-
-Thank you for your contributions!
+1. Follow layout standards
+2. Test all viewports
+3. Validate measurements
+4. Update documentation

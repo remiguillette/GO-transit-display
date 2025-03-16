@@ -1,12 +1,164 @@
-﻿GO Transit Display Control
-Select a station to display on the schedule board.
-Station: {% for station in stations %} {{ station }} {% endfor %} Update Display Return to Display Board
-{% extends "base.html" %} {% block content %}
-GO Transit Display Control
+{% extends "base.html" %}
+{% block content %}
+<div class="container control-panel">
+  <header>
+    <h1>GO Transit Display Control Panel</h1>
+    <p class="control-description">Select a station to display on the remote schedule board.</p>
+  </header>
+  
+  <form id="station-form" action="/api/set_station" method="post">
+    <div class="form-group">
+      <label for="station-select">Station:</label>
+      <select id="station-select" name="station" class="form-control">
+        {% for code, name in stations.items() %}
+          <option value="{{ code }}" {% if code == selected_station %}selected{% endif %}>{{ name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">Update Remote Display</button>
+      <a href="/" class="btn btn-secondary" target="_blank">Open Display in New Window</a>
+    </div>
+    
+    <div class="control-status">
+      <p>Currently displaying: <strong id="current-station">{{ selected_station }}</strong></p>
+      <p class="help-text">The remote display will update automatically once you select a new station.</p>
+    </div>
+  </form>
+</div>
+{% endblock %}
 
+{% block scripts %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Handle form submission with AJAX
+    document.getElementById('station-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const stationSelect = document.getElementById('station-select');
+      const station = stationSelect.value;
+      const statusElement = document.getElementById('current-station');
+      
+      fetch('/api/set_station', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `station=${encodeURIComponent(station)}`
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.status === 'success') {
+          // Update the current station display
+          statusElement.textContent = station;
+          
+          // Show success notification
+          const notification = document.createElement('div');
+          notification.className = 'notification success';
+          notification.textContent = 'Remote display updated successfully!';
+          document.body.appendChild(notification);
+          
+          // Remove notification after 3 seconds
+          setTimeout(() => {
+            notification.remove();
+          }, 3000);
+        } else {
+          alert('Error: ' + data.message);
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred. Please try again.');
+      });
+    });
+  });
+</script>
 
-Select Station
-{% for code, name in stations.items() %} {{ name }} {% endfor %}
-Update Station
-Open Display Board
-{% endblock %} {% block scripts %} {% endblock %}
+<style>
+  .control-panel {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .control-description {
+    font-size: 18px;
+    margin-bottom: 20px;
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .form-control {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .form-actions {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .btn {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  .btn-primary {
+    background-color: #00853F;
+    color: white;
+  }
+  
+  .btn-secondary {
+    background-color: #333;
+    color: white;
+    text-decoration: none;
+  }
+  
+  .control-status {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+  }
+  
+  .help-text {
+    color: #666;
+    font-style: italic;
+  }
+  
+  .notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 20px;
+    border-radius: 4px;
+    color: white;
+    z-index: 1000;
+    animation: fadeIn 0.3s, fadeOut 0.3s 2.7s;
+  }
+  
+  .success {
+    background-color: #00853F;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  @keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+  }
+</style>
+{% endblock %}
