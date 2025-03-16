@@ -1259,16 +1259,20 @@ MIT License - see LICENSE file
 ```
 
 ## File Structure Analysis
-Total files: 59
+Total files: 87
 
 File types:
-- No extension: 7 files
+- No extension: 18 files
 - .md: 14 files
 - .py: 5 files
 - .png: 5 files
 - .lock: 2 files
 - .toml: 2 files
 - .nix: 1 files
+- .sample: 14 files
+- .pack: 1 files
+- .rev: 1 files
+- .idx: 1 files
 - .yml: 2 files
 - .txt: 1 files
 - .ttf: 6 files
