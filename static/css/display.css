@@ -57,6 +57,19 @@
         filter: invert(100%);
     }
 
+    .accessibility-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        margin-left: 8px;
+    }
+
+    .accessibility-icon svg {
+        fill: currentColor;
+        width: 24px;
+        height: 24px;
+    }
+
 .station-name {
     font-size: 2.125rem;
     margin: 0;
