@@ -30,6 +30,17 @@
     align-items: center;
 }
 
+.station-icon {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+    vertical-align: middle;
+    background-image: url('../images/station-icon.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
 .station-name {
     font-size: 2rem;
     margin: 0;
