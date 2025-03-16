@@ -1,4 +1,3 @@
-
 import requests
 import logging
 import csv
@@ -94,7 +93,7 @@ class StopScraper:
         try:
             current_time = datetime.now()
             schedule = []
-            
+
             # Get station info
             station_info = None
             for info in self.station_data.values():
@@ -120,7 +119,7 @@ class StopScraper:
                 try:
                     line_code = available_lines[i % len(available_lines)]
                     route_stops = self.get_stops_for_route(line_code)
-                    
+
                     if not route_stops:
                         continue
 
@@ -142,27 +141,28 @@ class StopScraper:
 
                     # Generate departure time
                     departure_time = current_time + timedelta(minutes=15 * i)
-                    
+
                     # Random status generation (mostly on time)
                     status = "On time"
                     platform = str(random.randint(1, 12))
-                    
+
                     if line_code not in self.routes:
                         logger.warning(f"Route {line_code} not found in routes data")
                         continue
 
                     # Create schedule entry
-                    schedule.append({
+                    schedule_entry = {
                         "departure_time": departure_time,
                         "destination": destination,
                         "route_code": line_code,
-                        "route_id": line_code,  # Add route_id for GTFS compatibility
+                        "route_id": line_code,  # Add route_id for compatibility
                         "status": status,
                         "platform": platform,
                         "accessible": station_info.get('wheelchair_boarding', True),
                         "train_number": f"{line_code}{random.randint(100, 999)}",
                         "color": f"#{self.routes[line_code]['color']}"
-                    })
+                    }
+                    schedule.append(schedule_entry)
                 except Exception as e:
                     logger.error(f"Error generating schedule entry: {e}")
                     continue
