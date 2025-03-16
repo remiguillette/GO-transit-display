@@ -176,9 +176,9 @@ class GoScraper:
                 estimated = status
 
             # Clean destination name
-            destination = destination.replace(" GO", "").replace(" Station", "")
+            destination = stop_scraper.clean_station_name(destination)
             # Format stops for display with bullet points
-            stops_display = " • ".join(stops) if stops else "Express Service"
+            stops_display = stops_display.replace('(BR)', '').replace('(LW)', '').replace('(LE)', '')
 
             # Add to schedule with cleaned up display
             schedule.append({

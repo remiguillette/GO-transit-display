@@ -8,33 +8,37 @@ logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 class StopScraper:
-    """Scraper specifically for stop/station data"""
+    """Scraper specifically for stop/station data with protections"""
     
     def __init__(self):
         if not gtfs_data.stations:
             gtfs_data.load_data()
             
+    def clean_station_name(self, station_name):
+        """Clean station name by removing unnecessary suffixes"""
+        return station_name.replace(" GO", "").replace(" Station", "")
+            
     def get_stops_for_route(self, line_code, direction="outbound"):
         """Get ordered stops for a specific route line"""
         key_stations = {
-            'LW': ['Union Station', 'Exhibition GO', 'Mimico GO', 'Port Credit GO', 
-                  'Oakville GO', 'Burlington GO', 'Aldershot GO', 'Hamilton GO'],
-            'LE': ['Union Station', 'Danforth GO', 'Scarborough GO', 'Eglinton GO',
-                  'Guildwood GO', 'Rouge Hill GO', 'Pickering GO', 'Ajax GO', 
-                  'Whitby GO', 'Oshawa GO'],
-            'ST': ['Union Station', 'Kennedy GO', 'Agincourt GO', 'Milliken GO',
-                  'Unionville GO', 'Centennial GO', 'Markham GO', 'Mount Joy GO', 
-                  'Stouffville GO'],
-            'RH': ['Union Station', 'Old Cummer GO', 'Langstaff GO', 'Richmond Hill GO'],
-            'BR': ['Union Station', 'Downsview Park GO', 'Rutherford GO', 'Maple GO',
-                  'King City GO', 'Aurora GO', 'Newmarket GO', 'East Gwillimbury GO',
-                  'Bradford GO', 'Barrie South GO', 'Allandale Waterfront GO'],
-            'KI': ['Union Station', 'Bloor GO', 'Weston GO', 'Etobicoke North GO',
-                  'Malton GO', 'Bramalea GO', 'Brampton GO', 'Mount Pleasant GO',
-                  'Georgetown GO', 'Acton GO', 'Guelph Central GO', 'Kitchener GO'],
-            'MI': ['Union Station', 'Kipling GO', 'Dixie GO', 'Cooksville GO',
-                  'Erindale GO', 'Streetsville GO', 'Meadowvale GO', 'Lisgar GO', 
-                  'Milton GO']
+            'LW': ['Union Station', 'Exhibition', 'Mimico', 'Port Credit', 
+                  'Oakville', 'Burlington', 'Aldershot', 'Hamilton'],
+            'LE': ['Union Station', 'Danforth', 'Scarborough', 'Eglinton',
+                  'Guildwood', 'Rouge Hill', 'Pickering', 'Ajax', 
+                  'Whitby', 'Oshawa'],
+            'ST': ['Union Station', 'Kennedy', 'Agincourt', 'Milliken',
+                  'Unionville', 'Centennial', 'Markham', 'Mount Joy', 
+                  'Stouffville'],
+            'RH': ['Union Station', 'Old Cummer', 'Langstaff', 'Richmond Hill'],
+            'BR': ['Union Station', 'Downsview Park', 'Rutherford', 'Maple',
+                  'King City', 'Aurora', 'Newmarket', 'East Gwillimbury',
+                  'Bradford', 'Barrie South', 'Allandale Waterfront'],
+            'KI': ['Union Station', 'Bloor', 'Weston', 'Etobicoke North',
+                  'Malton', 'Bramalea', 'Brampton', 'Mount Pleasant',
+                  'Georgetown', 'Acton', 'Guelph Central', 'Kitchener'],
+            'MI': ['Union Station', 'Kipling', 'Dixie', 'Cooksville',
+                  'Erindale', 'Streetsville', 'Meadowvale', 'Lisgar', 
+                  'Milton']
         }
         
         if line_code not in key_stations:
@@ -48,10 +52,16 @@ class StopScraper:
         
     def get_upcoming_stops(self, origin_station, destination, line_code):
         """Get list of upcoming stops between origin and destination"""
+        # Clean station names for comparison
+        clean_origin = self.clean_station_name(origin_station)
+        clean_destination = self.clean_station_name(destination)
+        
         all_stops = self.get_stops_for_route(line_code)
+        all_stops_clean = [self.clean_station_name(stop) for stop in all_stops]
+        
         try:
-            start_idx = all_stops.index(origin_station)
-            end_idx = all_stops.index(destination)
+            start_idx = all_stops_clean.index(clean_origin)
+            end_idx = all_stops_clean.index(clean_destination)
             
             if start_idx < end_idx:  # Outbound
                 return all_stops[start_idx + 1:end_idx + 1]
@@ -65,8 +75,8 @@ class StopScraper:
         if not stops:
             return "Express Service"
             
-        display_stops = [stop.replace(" GO", "").replace(" Station", "") 
-                        for stop in stops[:max_stops]]
+        # Already clean names in get_stops_for_route
+        display_stops = stops[:max_stops]
         return " • ".join(display_stops)
 
 # Create an instance for importing
