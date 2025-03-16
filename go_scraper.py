@@ -61,7 +61,7 @@ class GoScraper:
         off_peak_interval = 20  # Minutes between trains during off-peak
 
         # Generate schedule
-        for i in range(48):  # 48 trains total
+        for i in range(24):  # Reduced number of trains for better display
             # Determine peak hours
             current_hour = (now + timedelta(minutes=i*10)).hour
             is_peak = (7 <= current_hour <= 10) or (16 <= current_hour <= 19)
