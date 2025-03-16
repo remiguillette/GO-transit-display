@@ -1,0 +1,24 @@
+pour stop_scraper.py ajoute c’est lien 
+
+real time data
+https://www.gotracker.ca/gotracker/web/
+https://www.gotransit.com/en
+
+pour afficher comme le code le prevoir les information synchronisé avec le mouvement des train
+
+Column 3 (Third column): Stop / Arrêts
+This column indicates the destination or stops along the route.
+This column likely displays names of locations or destinations.
+Understanding the "Stops" Section
+The "Stops" section on the Go Transit display lists the intermediate stations where the train will stop between the origin (where the display is located) and the final destination.
+Logic Behind Station Selection
+Here's the breakdown of what determines which stations are displayed:
+Direction of Travel: The display only shows stops that are along the train's route after it departs from the station where the display is located. It doesn't show stops the train has already made before arriving at that station.
+Key or Major Stops: The display typically lists the most significant stops or major transfer points along the route. It's not designed to show every single stop, especially if there are numerous small stations.
+Destination Proximity: The closer the train is to its final destination, the more likely the display will show the immediately upcoming stops. This helps passengers know when to prepare to disembark.
+Display Limitations: The display has limited space. It needs to fit information concisely. Therefore, it might only show a subset of the most relevant stops.
+Predefined Selection: Go Transit likely has a predefined list of "key" or "major" stops for each route. These are the ones prioritized for display.
+Determine the train's direction based on the route and the origin station.
+Filter the list of all stations to include only those after the origin station in the direction of travel.
+Select the "key" or "major" stops from the filtered list.
+If using real-time data, adjust the displayed stops based on the train's current position to show the next upcoming stops.
