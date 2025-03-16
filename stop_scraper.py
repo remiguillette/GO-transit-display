@@ -156,6 +156,7 @@ class StopScraper:
                         "departure_time": departure_time,
                         "destination": destination,
                         "route_code": line_code,
+                        "route_id": line_code,  # Add route_id for GTFS compatibility
                         "status": status,
                         "platform": platform,
                         "accessible": station_info.get('wheelchair_boarding', True),

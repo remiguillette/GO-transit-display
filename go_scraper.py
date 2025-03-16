@@ -68,8 +68,16 @@ class GoScraper:
         Returns:
             list: List of schedule dictionaries ready for display
         """
-        from stop_scraper import stop_scraper
-        return stop_scraper.generate_schedule(station_name)
+        try:
+            from stop_scraper import stop_scraper
+            schedule = stop_scraper.generate_schedule(station_name)
+            if not schedule:
+                logger.warning(f"No schedule generated for {station_name}")
+                return []
+            return schedule
+        except Exception as e:
+            logger.error(f"Error generating schedule: {str(e)}")
+            return []
 
 # Create an instance for importing
 scraper = GoScraper()
