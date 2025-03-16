@@ -58,7 +58,7 @@ class GoScraper:
         
         return train_schedule
     
-    def generate_schedule(self, station, num_trains=12):
+    def generate_schedule(self, station, num_trains=24):
         """
         Generate a realistic train schedule for a given station based on GTFS data
         
@@ -95,11 +95,17 @@ class GoScraper:
         if not available_lines:
             available_lines = ['LW', 'LE', 'ST', 'RH', 'BR', 'KI', 'MI']
         
-        # Time interval between trains (minutes)
-        interval = 15
+        # Time intervals for better distribution
+        peak_interval = 10  # Minutes between trains during peak
+        off_peak_interval = 20  # Minutes between trains during off-peak
         
-        # Generate schedule entries
-        for i in range(num_trains):
+        # Generate both directions
+        directions = ['inbound', 'outbound']
+        trains_per_direction = num_trains // 2
+        
+        # Get station position info for determining direction
+        is_terminus = station in ['Union Station', 'Niagara Falls GO', 'Oshawa GO', 'Lincolnville GO', 
+                                'Richmond Hill GO', 'Allandale Waterfront GO', 'Kitchener GO', 'Milton GO']
             # Generate departure time 
             departure_time = now + timedelta(minutes=interval * i)
             
@@ -134,8 +140,9 @@ class GoScraper:
             # Randomly assign platform
             platform = f"{random.randint(1, 12)}"
             
-            # Generate train number
+            # Generate train number and determine if express
             train_number = f"{line_code}{random.randint(100, 999)}"
+            is_express = random.random() < 0.3  # 30% chance of being express
             
             # Get accessibility info
             if station_info:
@@ -143,21 +150,39 @@ class GoScraper:
             else:
                 is_accessible = True
             
+            # Determine if train is at platform
+            at_platform = random.random() < 0.1  # 10% chance of being at platform
+            if at_platform:
+                status = "At Platform"
+            
+            # Calculate estimated arrival for upcoming trains
+            if not at_platform and status == "On time":
+                estimated = "On time"
+            elif status == "Delayed":
+                estimated = f"{delay_minutes} min delay"
+            else:
+                estimated = status
+            
             # Add to schedule
             schedule.append({
                 "departure_time": departure_time,
                 "destination": destination,
                 "destination_fr": destination,  # Default to English if French not available
                 "status": status,
-                "platform": platform if status == "On time" else None,
+                "estimated": estimated,
+                "platform": platform if status in ["On time", "At Platform"] else None,
                 "route_code": line_code,
                 "accessible": is_accessible,
                 "train_number": train_number,
-                "color": self.get_line_color(line_code)
+                "color": self.get_line_color(line_code),
+                "is_express": is_express,
+                "at_platform": at_platform
             })
         
-        # Sort by departure time
-        schedule.sort(key=lambda x: x["departure_time"])
+        # Sort schedule:
+        # 1. Trains at platform first
+        # 2. Then by departure time
+        schedule.sort(key=lambda x: (not x["at_platform"], x["departure_time"]))
         
         return schedule
 
