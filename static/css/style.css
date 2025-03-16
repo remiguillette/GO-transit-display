@@ -1,29 +1,24 @@
 /* GO Transit Display Board Stylesheet */
 
 /* Font Declarations */
-/* Using web-safe fonts as fallback until GO Transit Polaris fonts can be properly loaded */
-
-/* Bold font style */
 @font-face {
-    font-family: 'Polaris Bold';
-    src: local('Arial Bold'), local('Arial-Bold');
-    font-weight: 700;
+    font-family: 'Polaris';
+    src: url('../fonts/Polaris Trial Light.woff2') format('woff2');
+    font-weight: 300;
     font-style: normal;
 }
 
-/* Medium font style */
 @font-face {
-    font-family: 'Polaris Medium';
-    src: local('Arial'), local('Arial-Regular');
+    font-family: 'Polaris';
+    src: url('../fonts/Polaris Trial Medium.woff2') format('woff2');
     font-weight: 500;
     font-style: normal;
 }
 
-/* Light font style */
 @font-face {
-    font-family: 'Polaris Light';
-    src: local('Arial Light'), local('Arial-Light'), local('Arial');
-    font-weight: 300;
+    font-family: 'Polaris';
+    src: url('../fonts/Polaris Trial Bold.woff2') format('woff2');
+    font-weight: 700;
     font-style: normal;
 }
 
