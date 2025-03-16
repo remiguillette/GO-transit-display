@@ -574,6 +574,24 @@ class GTFSData:
             if stop.get('parent_station') == station_id:
                 stops_list.append(stop)
         return stops_list
+        
+    def get_terminals(self, line_code: str) -> List[str]:
+        """Get terminal stations for a line"""
+        if line_code == 'LW':
+            return ['Union Station', 'Niagara Falls GO']
+        elif line_code == 'LE':
+            return ['Union Station', 'Oshawa GO']
+        elif line_code == 'ST':
+            return ['Union Station', 'Lincolnville GO']
+        elif line_code == 'RH':
+            return ['Union Station', 'Bloomington GO']
+        elif line_code == 'BR':
+            return ['Union Station', 'Allandale Waterfront GO']
+        elif line_code == 'KI':
+            return ['Union Station', 'Kitchener GO']
+        elif line_code == 'MI':
+            return ['Union Station', 'Milton GO']
+        return ['Union Station']
 
 # Create a singleton instance
 gtfs_data = GTFSData()
