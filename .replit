@@ -63,7 +63,7 @@ task = "packager.installForAll"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "cd repo_clone && python main.py"
+args = "python app.py"
 waitForPort = 5000
 
 [deployment]

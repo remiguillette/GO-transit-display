@@ -1,0 +1,12 @@
+﻿GO Transit Display Control
+Select a station to display on the schedule board.
+Station: {% for station in stations %} {{ station }} {% endfor %} Update Display Return to Display Board
+{% extends "base.html" %} {% block content %}
+GO Transit Display Control
+
+
+Select Station
+{% for code, name in stations.items() %} {{ name }} {% endfor %}
+Update Station
+Open Display Board
+{% endblock %} {% block scripts %} {% endblock %}
