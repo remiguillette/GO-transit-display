@@ -95,16 +95,7 @@ class GoScraper:
         if not available_lines:
             available_lines = ['LW', 'LE', 'ST', 'RH', 'BR', 'KI', 'MI']
 
-        # Define key stations for each line
-        key_stations = {
-            'LW': ['Union Station', 'Exhibition GO', 'Mimico GO', 'Port Credit GO', 'Oakville GO', 'Burlington GO', 'Aldershot GO', 'Hamilton GO'],
-            'LE': ['Union Station', 'Danforth GO', 'Scarborough GO', 'Eglinton GO', 'Guildwood GO', 'Rouge Hill GO', 'Pickering GO', 'Ajax GO', 'Whitby GO', 'Oshawa GO'],
-            'ST': ['Union Station', 'Kennedy GO', 'Agincourt GO', 'Milliken GO', 'Unionville GO', 'Centennial GO', 'Markham GO', 'Mount Joy GO', 'Stouffville GO'],
-            'RH': ['Union Station', 'Old Cummer GO', 'Langstaff GO', 'Richmond Hill GO'],
-            'BR': ['Union Station', 'Downsview Park GO', 'Rutherford GO', 'Maple GO', 'King City GO', 'Aurora GO', 'Newmarket GO', 'East Gwillimbury GO', 'Bradford GO', 'Barrie South GO', 'Allandale Waterfront GO'],
-            'KI': ['Union Station', 'Bloor GO', 'Weston GO', 'Etobicoke North GO', 'Malton GO', 'Bramalea GO', 'Brampton GO', 'Mount Pleasant GO', 'Georgetown GO', 'Acton GO', 'Guelph Central GO', 'Kitchener GO'],
-            'MI': ['Union Station', 'Kipling GO', 'Dixie GO', 'Cooksville GO', 'Erindale GO', 'Streetsville GO', 'Meadowvale GO', 'Lisgar GO', 'Milton GO']
-        }
+        from stop_scraper import stop_scraper
 
         # Time intervals for better distribution
         peak_interval = 10  # Minutes between trains during peak
@@ -125,48 +116,30 @@ class GoScraper:
 
             # Generate trains in both directions
             line_code = random.choice(available_lines)
-            line_stations = key_stations.get(line_code, [])
-
-            # Determine train direction and stops
-            try:
-                station_idx = line_stations.index(station)
-            except ValueError:
-                continue  # Skip if station not on this line
-
-            if i % 2 == 0:  # Outbound trains
+            # Get line stations and determine direction
+            is_outbound = (i % 2 == 0)
+            if is_outbound:
                 if station == "Union Station":
-                    destination = line_stations[-1]
-                    # Get next 3 major stops after Union
-                    stops = []
-                    for s in line_stations[1:]:
-                        if len(stops) >= 3:
-                            break
-                        clean_name = s.replace(" GO", "").replace(" Station", "")
-                        stops.append(clean_name)
+                    destination = stop_scraper.get_stops_for_route(line_code)[-1]
+                    stops = stop_scraper.get_upcoming_stops(station, destination, line_code)
+                    stops_display = stop_scraper.format_stops_display(stops)
                 else:
-                    if station_idx >= len(line_stations) - 1:
-                        continue  # Skip if at terminus
-                    destination = line_stations[-1]
-                    # Get next 3 major stops after current station
-                    stops = []
-                    for s in line_stations[station_idx + 1:]:
-                        if len(stops) >= 3:
-                            break
-                        clean_name = s.replace(" GO", "").replace(" Station", "")
-                        stops.append(clean_name)
-            else:  # Inbound trains
+                    line_stations = stop_scraper.get_stops_for_route(line_code)
+                    try:
+                        if line_stations.index(station) >= len(line_stations) - 1:
+                            continue  # Skip if at terminus
+                        destination = line_stations[-1]
+                        stops = stop_scraper.get_upcoming_stops(station, destination, line_code)
+                        stops_display = stop_scraper.format_stops_display(stops)
+                    except ValueError:
+                        continue
+            else:  # Inbound
                 if station == "Union Station":
                     continue  # Skip inbound for Union
                 else:
                     destination = "Union Station"
-                    # Get up to 3 stops before current station in reverse
-                    stops = []
-                    for s in reversed(line_stations[:station_idx]):
-                        if len(stops) >= 3:
-                            break
-                        clean_name = s.replace(" GO", "").replace(" Station", "")
-                        stops.append(clean_name)
-                    stops.reverse()  # Put stops in correct order
+                    stops = stop_scraper.get_upcoming_stops(station, destination, line_code)
+                    stops_display = stop_scraper.format_stops_display(stops)
 
             # Randomly assign train status based on weights
             status = random.choices(STATUS_OPTIONS, STATUS_WEIGHTS)[0]
