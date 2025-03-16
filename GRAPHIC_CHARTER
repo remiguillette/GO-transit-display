@@ -1,0 +1,104 @@
+
+# GO Transit Display Board - Graphic Charter
+
+## Brand Colors
+
+Primary Colors:
+- Black: #000000 (Background, Headers)
+- White: #FFFFFF (Text, Content)
+- Red: #FF0000 (Delays, Cancellations)
+- Blue: #0052A5 (Accessibility Indicators)
+
+Status Colors:
+- Delayed: #FF0000
+- On Time: #FFFFFF
+- Platform: #FFFFFF
+
+## Typography & Spacing
+
+Font Family: Polaris (Custom Font)
+Variations:
+- Polaris Bold: Headers, Important Information
+- Polaris Medium: Navigation, Subheaders
+- Polaris Light: Body Text, General Content
+
+Font Sizes and Spacing:
+- Station Name: 2.625rem (42px)
+- Time Display: 3rem (48px)
+- Schedule Headers: 2.25rem (36px)
+- Schedule Rows: 2.25rem (36px)
+- Line Height: 1.5
+- Letter Spacing: -0.02em
+
+## Layout Elements
+
+### Header Section
+- Position: Fixed at top
+- Height: 6rem (96px)
+- Padding: 1.5rem 2rem
+- Background: Black (#000000)
+- Border Bottom: 0.125rem (2px) solid var(--go-green)
+- Z-index: 100
+
+### Logo Section
+- Position: Left side of header
+- Height: 2.5rem (40px)
+- Margin Right: 1.25rem (20px)
+- Aspect Ratio: Auto
+
+### Station Info
+- Position: Center of header
+- Icon Size: 2.25rem (36px)
+- Name Size: 2.625rem (42px)
+- Letter Spacing: -0.02em
+- Margin: 0.5rem 0
+
+### Time Display
+- Position: Right side of header
+- Size: 3rem (48px)
+- Color: #FFFFFF
+- Letter Spacing: -0.02em
+- Font Weight: Bold
+- Margin Left: auto
+
+### Schedule Grid
+- Display: Grid
+- Grid Template: repeat(4, 1fr)
+- Column Gap: 1rem (16px)
+- Row Gap: 0.5rem (8px)
+- Padding: 1rem 0.8rem
+- Border Bottom: 0.0625rem (1px) solid #333
+- Font: Polaris Light, 2.25rem (36px)
+
+### Control Panel
+- Max Width: 50rem (800px)
+- Margin: 2rem auto
+- Padding: 1.25rem
+- Form Elements Gap: 1rem
+- Button Padding: 0.625rem 1rem
+
+## Responsive Breakpoints
+
+Large Screens (>75rem/1200px):
+- Default sizes apply
+
+Medium Screens (≤75rem/1200px):
+- Station Name: 2.25rem (36px)
+- Time Display: 2.25rem (36px)
+- Schedule Text: 1.75rem (28px)
+
+Small Screens (≤48rem/768px):
+- Station Name: 1.75rem (28px)
+- Time Display: 1.75rem (28px)
+- Schedule Text: 1.5rem (24px)
+- Grid: 1fr 1fr 1fr 0.5fr
+- Padding: 1rem
+
+## Accessibility
+
+- Minimum Contrast Ratio: 4.5:1
+- Focus Indicators: 0.125rem (2px) solid outline
+- Alert Messages: Background #FF0000, White text
+- Interactive Elements:
+  - Minimum Touch Target: 2.75rem (44px)
+  - Focus Ring Offset: 0.25rem (4px)
