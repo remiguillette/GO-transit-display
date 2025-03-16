@@ -95,7 +95,8 @@ def get_schedules():
     station = request.args.get('station', 'Union Station')
     try:
         # Get schedules from scraper
-        schedule_data = scraper.get_station_schedule(station)
+        from stop_scraper import stop_scraper
+        schedule_data = stop_scraper.generate_schedule(station)
 
         # Format schedules for display
         formatted_schedules = []

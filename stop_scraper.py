@@ -3,6 +3,7 @@ import requests
 import logging
 import csv
 import os
+from datetime import datetime, timedelta
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -21,19 +22,23 @@ class StopScraper:
             with open(routes_file, 'r', encoding='utf-8') as f:
                 reader = csv.DictReader(f)
                 for row in reader:
-                    route_id = row['route_id'].split('-')[1] if '-' in row['route_id'] else row['route_id']
-                    if route_id in ['LW', 'LE', 'ST', 'RH', 'BR', 'KI', 'MI']:
-                        self.routes[route_id] = row['route_long_name']
+                    route_id = row['route_id']
+                    if route_id:
+                        self.routes[route_id] = {
+                            'name': row['route_long_name'],
+                            'code': row.get('route_short_name', ''),
+                            'color': row.get('route_color', '')
+                        }
         except FileNotFoundError:
             logger.warning("Routes file not found, using default routes")
             self.routes = {
-                'LW': 'Lakeshore West',
-                'LE': 'Lakeshore East',
-                'ST': 'Stouffville',
-                'RH': 'Richmond Hill',
-                'BR': 'Barrie',
-                'KI': 'Kitchener',
-                'MI': 'Milton'
+                'LW': {'name': 'Lakeshore West', 'code': 'LW', 'color': '00A0DF'},
+                'LE': {'name': 'Lakeshore East', 'code': 'LE', 'color': '00853F'},
+                'ST': {'name': 'Stouffville', 'code': 'ST', 'color': 'F5A623'},
+                'RH': {'name': 'Richmond Hill', 'code': 'RH', 'color': '8DC63F'},
+                'BR': {'name': 'Barrie', 'code': 'BR', 'color': '911D74'},
+                'KI': {'name': 'Kitchener', 'code': 'KI', 'color': 'DA291C'},
+                'MI': {'name': 'Milton', 'code': 'MI', 'color': '0052A5'}
             }
 
         # Load stops
@@ -43,15 +48,17 @@ class StopScraper:
             with open(stops_file, 'r', encoding='utf-8') as f:
                 reader = csv.DictReader(f)
                 for row in reader:
-                    self.station_data[row['stop_id']] = {
-                        'name': row['stop_name'],
-                        'lat': float(row['stop_lat']),
-                        'lon': float(row['stop_lon']),
-                        'zone_id': row.get('zone_id', ''),
-                        'wheelchair_boarding': int(row.get('wheelchair_boarding', 0)) == 1
-                    }
+                    stop_id = row['stop_id']
+                    if stop_id:
+                        self.station_data[stop_id] = {
+                            'name': row['stop_name'],
+                            'lat': float(row['stop_lat']),
+                            'lon': float(row['stop_lon']),
+                            'zone_id': row.get('zone_id', ''),
+                            'wheelchair_boarding': int(row.get('wheelchair_boarding', 0)) == 1
+                        }
         except FileNotFoundError:
-            logger.warning("Stops file not found, using backup station data")
+            logger.warning("Stops file not found")
 
     def get_stops_for_route(self, line_code):
         """Get all stops for a given route"""
@@ -81,47 +88,64 @@ class StopScraper:
                    'Streetsville GO', 'Meadowvale GO', 'Lisgar GO', 'Milton GO']
         return []
 
-    def clean_station_name(self, station_name):
-        """Clean station name by removing line codes and standardizing format"""
-        name = station_name.replace('(BR)', '').replace('(LW)', '').replace('(LE)', '').strip()
-        if not name.endswith(' GO') and name != 'Union Station':
-            name = f"{name} GO"
-        return name
+    def generate_schedule(self, station_name, num_trains=48):
+        """Generate a schedule for the given station"""
+        current_time = datetime.now()
+        schedule = []
+        
+        # Get station info
+        station_info = None
+        for info in self.station_data.values():
+            if info['name'] == station_name:
+                station_info = info
+                break
 
-    def get_upcoming_stops(self, current_station, destination, line_code):
-        """Get upcoming stops between current station and destination"""
-        all_stops = self.get_stops_for_route(line_code)
-        try:
-            current_idx = all_stops.index(current_station)
-            dest_idx = all_stops.index(destination)
+        # Get all possible lines for this station
+        available_lines = []
+        for line_code in ['LW', 'LE', 'ST', 'RH', 'BR', 'KI', 'MI']:
+            if station_name in self.get_stops_for_route(line_code):
+                available_lines.append(line_code)
 
-            if current_idx < dest_idx:
-                return all_stops[current_idx + 1:dest_idx + 1]
-            else:
-                return all_stops[dest_idx:current_idx][::-1]
-        except ValueError:
-            logger.error(f"Station not found: {current_station} or {destination}")
-            return []
+        if not available_lines:
+            available_lines = ['LW']  # Default to Lakeshore West
 
-    def format_stops_display(self, stops):
-        """Format stops for display with improved formatting"""
-        if not stops:
-            return ""
-        return " • ".join([self.clean_station_name(stop) for stop in stops])
+        for i in range(num_trains):
+            line_code = available_lines[i % len(available_lines)]
+            route_stops = self.get_stops_for_route(line_code)
+            
+            # Determine direction and destination
+            station_index = route_stops.index(station_name)
+            if i % 2 == 0:  # Outbound
+                if station_index >= len(route_stops) - 1:
+                    continue
+                destination = route_stops[-1]
+            else:  # Inbound
+                if station_index == 0:
+                    continue
+                destination = route_stops[0]
 
-    def get_all_stations(self):
-        """Get a list of all unique stations across all routes"""
-        all_stations = set()
-        for line_code in self.routes.keys():
-            all_stations.update(self.get_stops_for_route(line_code))
-        return sorted(list(all_stations))
+            # Generate departure time
+            departure_time = current_time + timedelta(minutes=15 * i)
+            
+            # Random status generation (mostly on time)
+            status = "On time"
+            platform = str(random.randint(1, 12))
+            
+            # Create schedule entry
+            schedule.append({
+                "departure_time": departure_time,
+                "destination": destination,
+                "route_code": line_code,
+                "status": status,
+                "platform": platform,
+                "accessible": station_info['wheelchair_boarding'] if station_info else True,
+                "train_number": f"{line_code}{random.randint(100, 999)}",
+                "color": f"#{self.routes[line_code]['color']}" if line_code in self.routes else "#000000"
+            })
 
-    def get_station_info(self, station_name):
-        """Get detailed information about a station"""
-        for stop_id, info in self.station_data.items():
-            if info['name'].replace(' GO', '') == station_name.replace(' GO', ''):
-                return info
-        return None
+        # Sort by departure time
+        schedule.sort(key=lambda x: x["departure_time"])
+        return schedule
 
 # Create an instance for importing
 stop_scraper = StopScraper()
