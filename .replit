@@ -75,6 +75,15 @@ mode = "sequential"
 task = "shell.exec"
 args = "python app.py"
 
+[[workflows.workflow]]
+name = "Dev Server"
+author = 40568190
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python app.py --debug"
+
 [deployment]
 run = ["sh", "-c", "python analyze_repo.py"]
 
