@@ -150,19 +150,23 @@ class StopScraper:
                         logger.warning(f"Route {line_code} not found in routes data")
                         continue
 
-                    # Create schedule entry
-                    schedule_entry = {
-                        "departure_time": departure_time,
-                        "destination": destination,
-                        "route_code": line_code,
-                        "route_id": line_code,  # Add route_id for compatibility
-                        "status": status,
-                        "platform": platform,
-                        "accessible": station_info.get('wheelchair_boarding', True),
-                        "train_number": f"{line_code}{random.randint(100, 999)}",
-                        "color": f"#{self.routes[line_code]['color']}"
-                    }
-                    schedule.append(schedule_entry)
+                    # Create schedule entry with proper route handling
+                    try:
+                        route_data = self.routes.get(line_code, {})
+                        schedule_entry = {
+                            "departure_time": departure_time,
+                            "destination": destination,
+                            "route_code": line_code,
+                            "status": status,
+                            "platform": platform,
+                            "accessible": station_info.get('wheelchair_boarding', True),
+                            "train_number": f"{line_code}{random.randint(100, 999)}",
+                            "color": f"#{route_data.get('color', '000000')}"
+                        }
+                        schedule.append(schedule_entry)
+                    except Exception as e:
+                        logger.error(f"Error creating schedule entry: {e}")
+                        continue
                 except Exception as e:
                     logger.error(f"Error generating schedule entry: {e}")
                     continue
