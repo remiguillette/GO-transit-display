@@ -3,6 +3,7 @@ import requests
 import logging
 import csv
 import os
+import random
 from datetime import datetime, timedelta
 
 logging.basicConfig(level=logging.INFO)
@@ -90,58 +91,88 @@ class StopScraper:
 
     def generate_schedule(self, station_name, num_trains=48):
         """Generate a schedule for the given station"""
-        current_time = datetime.now()
-        schedule = []
-        
-        # Get station info
-        station_info = None
-        for info in self.station_data.values():
-            if info['name'] == station_name:
-                station_info = info
-                break
-
-        # Get all possible lines for this station
-        available_lines = []
-        for line_code in ['LW', 'LE', 'ST', 'RH', 'BR', 'KI', 'MI']:
-            if station_name in self.get_stops_for_route(line_code):
-                available_lines.append(line_code)
-
-        if not available_lines:
-            available_lines = ['LW']  # Default to Lakeshore West
-
-        for i in range(num_trains):
-            line_code = available_lines[i % len(available_lines)]
-            route_stops = self.get_stops_for_route(line_code)
+        try:
+            current_time = datetime.now()
+            schedule = []
             
-            # Determine direction and destination
-            station_index = route_stops.index(station_name)
-            if i % 2 == 0:  # Outbound
-                if station_index >= len(route_stops) - 1:
+            # Get station info
+            station_info = None
+            for info in self.station_data.values():
+                if info['name'] == station_name:
+                    station_info = info
+                    break
+
+            if not station_info:
+                logger.warning(f"Station info not found for {station_name}, using defaults")
+                station_info = {'wheelchair_boarding': True}
+
+            # Get all possible lines for this station
+            available_lines = []
+            for line_code in ['LW', 'LE', 'ST', 'RH', 'BR', 'KI', 'MI']:
+                if station_name in self.get_stops_for_route(line_code):
+                    available_lines.append(line_code)
+
+            if not available_lines:
+                available_lines = ['LW']  # Default to Lakeshore West
+                logger.info(f"No lines found for {station_name}, defaulting to LW")
+
+            for i in range(num_trains):
+                try:
+                    line_code = available_lines[i % len(available_lines)]
+                    route_stops = self.get_stops_for_route(line_code)
+                    
+                    if not route_stops:
+                        continue
+
+                    try:
+                        station_index = route_stops.index(station_name)
+                    except ValueError:
+                        logger.warning(f"Station {station_name} not found in route {line_code}")
+                        continue
+
+                    # Determine direction and destination
+                    if i % 2 == 0:  # Outbound
+                        if station_index >= len(route_stops) - 1:
+                            continue
+                        destination = route_stops[-1]
+                    else:  # Inbound
+                        if station_index == 0:
+                            continue
+                        destination = route_stops[0]
+
+                    # Generate departure time
+                    departure_time = current_time + timedelta(minutes=15 * i)
+                    
+                    # Random status generation (mostly on time)
+                    status = "On time"
+                    platform = str(random.randint(1, 12))
+                    
+                    if line_code not in self.routes:
+                        logger.warning(f"Route {line_code} not found in routes data")
+                        continue
+
+                    # Create schedule entry
+                    schedule.append({
+                        "departure_time": departure_time,
+                        "destination": destination,
+                        "route_code": line_code,
+                        "status": status,
+                        "platform": platform,
+                        "accessible": station_info.get('wheelchair_boarding', True),
+                        "train_number": f"{line_code}{random.randint(100, 999)}",
+                        "color": f"#{self.routes[line_code]['color']}"
+                    })
+                except Exception as e:
+                    logger.error(f"Error generating schedule entry: {e}")
                     continue
-                destination = route_stops[-1]
-            else:  # Inbound
-                if station_index == 0:
-                    continue
-                destination = route_stops[0]
 
-            # Generate departure time
-            departure_time = current_time + timedelta(minutes=15 * i)
-            
-            # Random status generation (mostly on time)
-            status = "On time"
-            platform = str(random.randint(1, 12))
-            
-            # Create schedule entry
-            schedule.append({
-                "departure_time": departure_time,
-                "destination": destination,
-                "route_code": line_code,
-                "status": status,
-                "platform": platform,
-                "accessible": station_info['wheelchair_boarding'] if station_info else True,
-                "train_number": f"{line_code}{random.randint(100, 999)}",
-                "color": f"#{self.routes[line_code]['color']}" if line_code in self.routes else "#000000"
-            })
+            # Sort by departure time
+            schedule.sort(key=lambda x: x["departure_time"])
+            return schedule
+
+        except Exception as e:
+            logger.error(f"Error generating schedule: {e}")
+            return []
 
         # Sort by departure time
         schedule.sort(key=lambda x: x["departure_time"])
