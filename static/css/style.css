@@ -215,13 +215,21 @@ header {
 
 /* Accessibility Icon */
 .accessibility-icon {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     vertical-align: middle;
     margin-left: 5px;
     width: 24px;
     height: 24px;
     background-color: var(--go-primary);
     border-radius: 2px;
+}
+
+.accessibility-icon svg {
+    width: 18px;
+    height: 18px;
+    fill: #FFFFFF;
 }
 
 /* Bilingual Display */
