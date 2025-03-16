@@ -6,11 +6,13 @@
         <div class="go-logo">
             <img src="{{ url_for('static', filename='images/go-transit-logo.svg') }}" alt="GO Transit Logo">
             <div class="station-info">
-                <span class="station-icon"> </span>
                 <h1 class="station-name">{{ station }} - Train Departures | Départs des Trains</h1>
             </div>
         </div>
-        <div class="time" id="currentTime">23:22:36</div>
+        <div class="time-container">
+            <span class="station-icon"></span>
+            <div class="time" id="currentTime">23:22:36</div>
+        </div>
     </header>
 
     <main class="schedule-container">
