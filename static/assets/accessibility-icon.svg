@@ -1,3 +1,67 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-  <path fill="#FFFFFF" d="M12 2a2 2 0 100 4 2 2 0 000-4zm-1.5 6h3a1.5 1.5 0 011.493 1.356L15 9.5l-.26 3.07-1.674-.743L11.999 22h-1.5l.762-8.387-1.47.653L9.32 11.5h-1.827l2.298-3.22a1.5 1.5 0 011.174-.777L11.5 7.5a1.5 1.5 0 011.5 1.5 1.5 1.5 0 01-1.5 1.5 1.5 1.5 0 01-1.06-.44l-1-1 .72-1.01 1 1a1.5 1.5 0 01.34.45h.002L10.148 11h1.128l.105-.021.62.274.181-2.106a1.5 1.5 0 01-1.18-1.266L11 7.667a1.5 1.5 0 01-.5-.167z"/>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.0"
+   width="400"
+   height="400"
+   id="svgWheelchair"
+   inkscape:version="0.48.4 r9939">
+  <metadata
+     id="metadataWheelchair">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <cc:license
+           rdf:resource="http://web.resource.org/cc/PublicDomain" />
+        <dc:title></dc:title>
+        <dc:date>2020-08-20</dc:date>
+        <dc:creator>
+          <cc:Agent>
+            <dc:title>Raffaello Di Napoli (with later modifications by others)</dc:title>
+          </cc:Agent>
+        </dc:creator>
+        <dc:rights>
+          <cc:Agent>
+            <dc:title>Raffaello Di Napoli</dc:title>
+          </cc:Agent>
+        </dc:rights>
+        <dc:publisher>
+          <cc:Agent>
+            <dc:title>Raffaello Di Napoli</dc:title>
+          </cc:Agent>
+        </dc:publisher>
+        <dc:language>en-US</dc:language>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li>accessibile</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+        <dc:description>Wheelchair accessible icon</dc:description>
+      </cc:Work>
+      <cc:License
+         rdf:about="http://web.resource.org/cc/PublicDomain">
+        <cc:permits
+           rdf:resource="http://web.resource.org/cc/Reproduction" />
+        <cc:permits
+           rdf:resource="http://web.resource.org/cc/Distribution" />
+        <cc:permits
+           rdf:resource="http://web.resource.org/cc/DerivativeWorks" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defsWheelchair" />
+  <path
+     id="pathBlackWheelchair"
+     style="fill:#000000;fill-opacity:1;fill-rule:evenodd"
+     d="M 156,103 C 170,101 181,89 181,76 C 181,61 169,49 154,49 C 139,49 127,61 127,76 C 127,80 128,85 130,89 L 140,224 L 239,224 L 279,319 L 333,298 L 324,279 L 295,289 L 255,199 L 163,199 L 162,182 L 229,182 L 229,157 L 159,157 L 156,103 L 156,106 L 156,103 z M 256,297 C 239,330 204,351 167,351 C 112,351 67,307 67,252 C 67,213 91,178 126,162 L 128,191 C 107,204 94,228 94,252 C 94,292 127,324 167,324 C 203,324 234,296 238,260 L 256,297 L 256,297 L 256,297 L 256,297 z " />
 </svg>
