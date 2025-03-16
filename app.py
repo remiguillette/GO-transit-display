@@ -1,7 +1,10 @@
 import os
 import logging
+import time
 from datetime import datetime
-from flask import Flask, render_template, jsonify, request, session
+from functools import wraps
+from flask import Flask, render_template, jsonify, request, session, Response, stream_with_context
+from flask_socketio import SocketIO, emit
 from db_init import create_app, db
 
 # Configure logging
@@ -10,6 +13,7 @@ logger = logging.getLogger(__name__)
 
 # Initialize Flask app
 app = create_app()
+socketio = SocketIO(app, cors_allowed_origins="*")
 
 # Import models and data modules after db initialization to avoid circular imports
 from models import Station, Schedule
@@ -20,6 +24,49 @@ from go_scraper import scraper
 
 # Make sure GTFS data is loaded
 gtfs_data.load_data()
+
+# Rate limiting implementation
+class RateLimiter:
+    def __init__(self, limit=30, window=60):
+        self.limit = limit  # Number of requests allowed
+        self.window = window  # Time window in seconds
+        self.clients = {}  # {ip: [timestamps]}
+    
+    def is_rate_limited(self, ip):
+        current_time = time.time()
+        
+        # If client IP not in dictionary, add it
+        if ip not in self.clients:
+            self.clients[ip] = []
+        
+        # Clean up old timestamps
+        self.clients[ip] = [t for t in self.clients[ip] if current_time - t < self.window]
+        
+        # Check if rate limit exceeded
+        if len(self.clients[ip]) >= self.limit:
+            return True
+        
+        # Add current timestamp
+        self.clients[ip].append(current_time)
+        return False
+
+# Create rate limiter instances
+api_limiter = RateLimiter(limit=60, window=60)  # 60 requests per minute for API
+sse_limiter = RateLimiter(limit=10, window=60)  # 10 SSE connections per minute
+
+# Rate limit decorator
+def rate_limit(limiter):
+    def decorator(f):
+        @wraps(f)
+        def wrapped(*args, **kwargs):
+            client_ip = request.remote_addr
+            
+            if limiter.is_rate_limited(client_ip):
+                return jsonify({'error': 'Rate limit exceeded. Please try again later.'}), 429
+            
+            return f(*args, **kwargs)
+        return wrapped
+    return decorator
 
 @app.route('/')
 def display():
@@ -75,13 +122,56 @@ def get_schedules():
         return jsonify({'error': 'Failed to fetch schedules'}), 500
 
 @app.route('/api/set_station', methods=['POST'])
+@rate_limit(api_limiter)
 def set_station():
     """Set the station for display"""
     station = request.form.get('station')
     if station in scraper.get_available_stations():
         session['selected_station'] = station
+        # Emit station update via WebSocket
+        socketio.emit('station_update', {'station': station})
         return jsonify({'status': 'success'})
     return jsonify({'status': 'error', 'message': 'Invalid station'}), 400
+
+@app.route('/api/sse/station_updates')
+@rate_limit(sse_limiter)
+def sse_station_updates():
+    """Server-Sent Events endpoint for real-time station updates"""
+    def event_stream():
+        # Send initial event
+        yield f"data: {{'event': 'connected'}}\n\n"
+        
+        # Keep the connection alive
+        while True:
+            # Check if session has a selected station
+            station = session.get('selected_station', 'Union Station')
+            
+            # Send station update every 5 seconds
+            yield f"data: {{'event': 'station_update', 'station': '{station}'}}\n\n"
+            time.sleep(5)  # Sleep to avoid too frequent updates
+    
+    response = Response(stream_with_context(event_stream()),
+                      mimetype="text/event-stream")
+    response.headers['Cache-Control'] = 'no-cache'
+    response.headers['X-Accel-Buffering'] = 'no'
+    return response
+
+# WebSocket events
+@socketio.on('connect')
+def handle_connect():
+    """Handle WebSocket connection"""
+    logger.debug('Client connected via WebSocket')
+    
+@socketio.on('disconnect')
+def handle_disconnect():
+    """Handle WebSocket disconnection"""
+    logger.debug('Client disconnected from WebSocket')
+
+@socketio.on('request_station')
+def handle_station_request():
+    """Handle request for current station via WebSocket"""
+    station = session.get('selected_station', 'Union Station')
+    emit('station_update', {'station': station})
 
 @app.route('/api/stations')
 def get_stations():
