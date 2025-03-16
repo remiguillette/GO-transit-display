@@ -46,6 +46,17 @@ async function updateSchedules() {
             // Route code colored span
             const routeCodeSpan = `<span class="route-code" style="background-color: ${schedule.color}">${routeCode}</span>`;
             
+            // Format platform display
+            let platformDisplay = schedule.status;
+            
+            // If the status is a platform number (when train is on time)
+            if (schedule.status !== 'Delayed' && schedule.status !== 'Cancelled') {
+                platformDisplay = `<span class="platform-number">${schedule.status}</span>`;
+                if (schedule.accessible) {
+                    platformDisplay += ` ${accessibilityIcon}`;
+                }
+            }
+
             row.innerHTML = `
                 <div class="col-scheduled">${schedule.departure}</div>
                 <div class="col-to">
@@ -56,7 +67,7 @@ async function updateSchedules() {
                     ${destinationParts.join(' ')}
                 </div>
                 <div class="col-platform ${statusClass}">
-                    ${schedule.status} ${schedule.accessible ? accessibilityIcon : ''}
+                    ${platformDisplay}
                 </div>
             `;
             container.appendChild(row);

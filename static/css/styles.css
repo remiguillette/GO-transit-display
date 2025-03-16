@@ -122,16 +122,19 @@ body {
 .route-code {
     font-family: 'Polaris Bold', sans-serif;
     font-size: 22px;
-    padding: 2px;
+    padding: 4px 8px;
     border-radius: 4px;
-    margin-right: 8px;
+    margin-right: 10px;
     letter-spacing: -0.5px;
     line-height: 1;
-    min-width: 36px;
-    min-height: 36px;
+    min-width: 32px;
+    min-height: 32px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    color: white;
+    text-shadow: 0 0 1px rgba(0,0,0,0.7);
+    vertical-align: middle;
 }
 
 .status-delayed {
@@ -161,6 +164,12 @@ body {
 
 .accessibility-icon svg {
     fill: var(--go-white);
+}
+
+.platform-number {
+    font-family: 'Polaris Bold', sans-serif;
+    font-size: 32px;
+    font-weight: bold;
 }
 
 /* Responsive Design */
