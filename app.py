@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 # Initialize Flask app
 app = create_app()
-socketio = SocketIO(app, cors_allowed_origins="*")
+socketio = SocketIO(app, cors_allowed_origins="*", ping_timeout=10, ping_interval=5)
 
 # Import models and data modules after db initialization to avoid circular imports
 from models import Station, Schedule
@@ -166,12 +166,11 @@ def handle_connect():
 def handle_disconnect():
     """Handle WebSocket disconnection"""
     logger.debug('Client disconnected from WebSocket')
-    # Attempt reconnection
-    socketio.sleep(1)
+    # Proper error handling for disconnection
     try:
-        emit('reconnect')
-    except:
-        pass
+        emit('reconnect', broadcast=False)
+    except Exception as e:
+        logger.error(f"Reconnection error: {e}")
 
 @socketio.on('request_station') 
 def handle_station_request():
