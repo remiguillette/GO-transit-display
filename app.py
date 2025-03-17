@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 # Initialize Flask app
 app = create_app()
-socketio = SocketIO(app, cors_allowed_origins="*")
+socketio = SocketIO(app, cors_allowed_origins="*", ping_timeout=60, ping_interval=25)
 
 # Import models and data modules after db initialization to avoid circular imports
 from models import Station, Schedule
@@ -27,7 +27,7 @@ gtfs_data.load_data()
 
 # Rate limiting implementation
 class RateLimiter:
-    def __init__(self, limit=30, window=60):
+    def __init__(self, limit=120, window=60):
         self.limit = limit  # Number of requests allowed
         self.window = window  # Time window in seconds
         self.clients = {}  # {ip: [timestamps]}
