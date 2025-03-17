@@ -180,19 +180,24 @@
 
 .board-footer {
     background-color: #000000;
+    
     height: 2.8rem;
-    width: 100%;
+    overflow: hidden;
     position: fixed;
     bottom: 0;
     left: 0;
+    width: 100%;
     z-index: 9999;
-    overflow: hidden;
+    display: flex;
+    align-items: center;
 }
 
 .scrolling-container {
-    height: 100%;
     width: 100%;
+    height: 100%;
     position: relative;
+    overflow: hidden;
+    padding: 0 1rem;
 }
 
 .scrolling-text {
@@ -200,10 +205,10 @@
     font-weight: bold;
     white-space: nowrap;
     position: absolute;
-    font-size: 1.8rem;
-    line-height: 2.8rem;
-    padding: 0 1rem;
-    animation: scroll-left 30s linear infinite;
+    animation: scroll-left 20s linear infinite;
+    font-size: 2rem;
+    line-height: 2.5rem;
+    bottom: 0;
 }
 
 @keyframes scroll-left {
