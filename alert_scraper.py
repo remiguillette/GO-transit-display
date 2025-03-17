@@ -91,17 +91,21 @@ class AlertScraper:
             soup = BeautifulSoup(response.text, 'html.parser')
             alerts = []
             
-            # Find service update containers
-            update_containers = soup.find_all('div', class_='service-update-container')
+            # Find service updates using broader selectors
+            update_containers = soup.find_all(['div', 'article'], class_=['service-update-container', 'service-update', 'alert'])
             
             for container in update_containers:
                 link_elem = container.find('a')
+                message_elem = container.find(['div', 'p'], class_=['message', 'description', 'alert-text'])
+                
+                link = ''
                 if link_elem:
                     link = link_elem.get('href', '')
                     if not link.startswith('http'):
                         link = 'https://www.gotransit.com' + link
-                    
-                    message = container.get_text(strip=True)
+                
+                message = message_elem.get_text(strip=True) if message_elem else container.get_text(strip=True)
+                if message:
                     alerts.append({
                         'message': message,
                         'link': link
