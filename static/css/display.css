@@ -178,10 +178,4 @@
     z-index: 1000;
 }
 
-.scrolling-container {
-    width: 100%;
-    overflow: hidden;
-    white-space: nowrap;
-}
-
-/* Scrolling text removed */
+/* Clean layout - no scrolling text */
