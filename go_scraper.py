@@ -101,15 +101,16 @@ class GoScraper:
                 status = "At Platform"
             estimated = "On time" if status == "On time" else (f"{delay_minutes} min delay" if status == "Delayed" else status)
 
-            # Platform display logic
+            # Calculate platform reveal time (5 minutes before departure)
+            reveal_time = departure_time - timedelta(minutes=5)
             current_time = datetime.now()
-            time_to_departure = (departure_time - current_time).total_seconds() / 60
+            
+            # Determine if this is the first train
             is_first_train = len(train_schedule) == 0
             
-            # Show platform if first train or within 5 minutes of departure
-            show_platform = is_first_train or time_to_departure <= 5
-            time_until_reveal = max(0, int(time_to_departure - 5)) if not show_platform else 0
-            platform_display = platform if show_platform and status != "Cancelled" else None
+            # Set platform display rules
+            show_platform = is_first_train or current_time >= reveal_time
+            time_until_reveal = int((reveal_time - current_time).total_seconds() / 60) if not show_platform else 0
             
             # Add schedule entry with empty stops column
             train_schedule.append({
@@ -118,18 +119,19 @@ class GoScraper:
                 "destination_fr": destination + ('  EXPRESS' if is_express else ''),
                 "status": status,
                 "estimated": estimated,
-                "platform": platform_display,
+                "platform": platform if show_platform and status != "Cancelled" else None,
                 "route_code": line_code,
                 "accessible": True,
                 "train_number": train_number,
                 "color": self.get_line_color(line_code),
                 "is_express": is_express,
+                "reveal_time": reveal_time.strftime('%H:%M'),
                 "time_until_reveal": time_until_reveal,
                 "stops": "" # Protected - stops not displayed by GO scraper
             })
 
-        # Sort schedule by departure time
-        train_schedule.sort(key=lambda x: x["departure_time"])
+        # Sort schedule by platform presence and time
+        train_schedule.sort(key=lambda x: (not x["at_platform"], x["departure_time"]))
 
         return train_schedule
 
