@@ -218,3 +218,52 @@ body {
     border-radius: 4px;
     font-family: 'Polaris Medium', sans-serif;
 }
+.alert-footer {
+    background-color: #111;
+    border-top: 2px solid #097F5C;
+    padding: 10px 0;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+.service-updates {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 5px 0;
+    background-color: #000;
+    border-bottom: 1px solid #097F5C;
+}
+
+.update-item {
+    color: #ffeb3b;
+    font-weight: bold;
+}
+
+.update-item a {
+    color: #ffeb3b;
+    text-decoration: none;
+}
+
+.update-item a:hover {
+    text-decoration: underline;
+}
+
+.alert-scroller {
+    margin-top: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.alert-message {
+    display: inline-block;
+    padding: 0 20px;
+    color: #ffeb3b;
+    animation: scroll-left 20s linear infinite;
+}
+
+@keyframes scroll-left {
+    0% { transform: translateX(100%); }
+    100% { transform: translateX(-100%); }
+}
