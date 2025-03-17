@@ -89,27 +89,18 @@ class GoScraper:
             destination = destination.replace(" GO", "").replace(" Station", "")
 
             # Generate train details
-            at_platform = random.random() < 0.1
-            status = "At Platform" if at_platform else random.choices(STATUS_OPTIONS, STATUS_WEIGHTS)[0]
+            status = random.choices(STATUS_OPTIONS, STATUS_WEIGHTS)[0]
             delay_minutes = random.randint(5, 30) if status == "Delayed" else 0
             platform = f"{random.randint(1, 12)}"
             train_number = f"{line_code}{random.randint(100, 999)}"
             is_express = random.random() < 0.3
+            at_platform = random.random() < 0.1
 
             # Status display
+            if at_platform:
+                status = "At Platform"
             estimated = "On time" if status == "On time" else (f"{delay_minutes} min delay" if status == "Delayed" else status)
 
-            # Calculate platform reveal time (5 minutes before departure)
-            reveal_time = departure_time - timedelta(minutes=5)
-            current_time = datetime.now()
-            
-            # Determine if this is the first train
-            is_first_train = len(train_schedule) == 0
-            
-            # Set platform display rules
-            show_platform = is_first_train or current_time >= reveal_time
-            time_until_reveal = int((reveal_time - current_time).total_seconds() / 60) if not show_platform else 0
-            
             # Add schedule entry with empty stops column
             train_schedule.append({
                 "departure_time": departure_time,
@@ -117,14 +108,13 @@ class GoScraper:
                 "destination_fr": destination + ('  EXPRESS' if is_express else ''),
                 "status": status,
                 "estimated": estimated,
-                "platform": platform if show_platform and status != "Cancelled" else None,
+                "platform": platform if status in ["On time", "At Platform"] else None,
                 "route_code": line_code,
                 "accessible": True,
                 "train_number": train_number,
                 "color": self.get_line_color(line_code),
                 "is_express": is_express,
-                "reveal_time": reveal_time.strftime('%H:%M'),
-                "time_until_reveal": time_until_reveal,
+                "at_platform": at_platform,
                 "stops": "" # Protected - stops not displayed by GO scraper
             })
 
