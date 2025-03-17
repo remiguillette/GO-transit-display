@@ -95,13 +95,17 @@ if __name__ == "__main__":
     go_transit_updates = get_go_transit_updates()
     metrolinx_updates = get_metrolinx_updates()
 
-    # Replace with your Twitter API credentials
-    api_key = 'YOUR_API_KEY'
-    api_secret = 'YOUR_API_SECRET'
-    access_token = 'YOUR_ACCESS_TOKEN'
-    access_secret = 'YOUR_ACCESS_SECRET'
+    # Get Twitter API credentials from environment variables
+    api_key = os.getenv('TWITTER_API_KEY')
+    api_secret = os.getenv('TWITTER_API_SECRET')
+    access_token = os.getenv('TWITTER_ACCESS_TOKEN')
+    access_secret = os.getenv('TWITTER_ACCESS_SECRET')
 
-    twitter_updates = get_twitter_updates(api_key, api_secret, access_token, access_secret)
+    if all([api_key, api_secret, access_token, access_secret]):
+        twitter_updates = get_twitter_updates(api_key, api_secret, access_token, access_secret)
+    else:
+        logger.warning("Twitter API credentials not found in environment variables")
+        twitter_updates = ["Twitter updates not available - API credentials not configured"]
 
     # Display all updates
     all_updates = go_transit_updates + metrolinx_updates + twitter_updates
