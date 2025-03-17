@@ -195,13 +195,18 @@ def api_schedule():
 @app.route('/api/alerts')
 @rate_limit(api_limiter)
 def get_alerts():
-    """Get current GO Transit alerts"""
-    try:
-        alerts = alert_scraper.get_alerts()
-        return jsonify(alerts)
-    except Exception as e:
-        logger.error(f"Error getting alerts: {str(e)}")
-        return jsonify([])
+    """Get current alerts"""
+    return jsonify(alert_scraper.get_alerts())
+
+@app.route('/api/alerts', methods=['POST'])
+@rate_limit(api_limiter)
+def add_alert():
+    """Add a new alert"""
+    data = request.get_json()
+    if data and 'message' in data:
+        alert_scraper.add_alert(data['message'], data.get('type', 'service_update'))
+        return jsonify({'status': 'success'})
+    return jsonify({'status': 'error', 'message': 'Invalid alert data'}), 400
     station = request.args.get('station', 'Union Station')
     
     try:
