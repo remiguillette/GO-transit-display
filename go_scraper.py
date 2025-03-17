@@ -101,6 +101,17 @@ class GoScraper:
                 status = "At Platform"
             estimated = "On time" if status == "On time" else (f"{delay_minutes} min delay" if status == "Delayed" else status)
 
+            # Calculate platform reveal time (5 minutes before departure)
+            reveal_time = departure_time - timedelta(minutes=5)
+            current_time = datetime.now()
+            
+            # Determine if this is the first train
+            is_first_train = len(train_schedule) == 0
+            
+            # Set platform display rules
+            show_platform = is_first_train or current_time >= reveal_time
+            time_until_reveal = int((reveal_time - current_time).total_seconds() / 60) if not show_platform else 0
+            
             # Add schedule entry with empty stops column
             train_schedule.append({
                 "departure_time": departure_time,
@@ -108,13 +119,14 @@ class GoScraper:
                 "destination_fr": destination + ('  EXPRESS' if is_express else ''),
                 "status": status,
                 "estimated": estimated,
-                "platform": platform if status in ["On time", "At Platform"] else None,
+                "platform": platform if show_platform and status != "Cancelled" else None,
                 "route_code": line_code,
                 "accessible": True,
                 "train_number": train_number,
                 "color": self.get_line_color(line_code),
                 "is_express": is_express,
-                "at_platform": at_platform,
+                "reveal_time": reveal_time.strftime('%H:%M'),
+                "time_until_reveal": time_until_reveal,
                 "stops": "" # Protected - stops not displayed by GO scraper
             })
 

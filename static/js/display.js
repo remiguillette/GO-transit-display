@@ -66,14 +66,21 @@ async function updateSchedules(force = false) {
             const routeCodeSpan = `<span class="route-code" style="background-color: ${schedule.color}">${routeCode}</span>`;
             
             // Format platform display
-            let platformDisplay = schedule.status;
+            let platformDisplay = '';
             
-            // If the status is a platform number (when train is on time)
-            if (schedule.status !== 'Delayed' && schedule.status !== 'Cancelled') {
-                platformDisplay = `<span class="platform-number">${schedule.status}</span>`;
+            if (schedule.platform) {
+                platformDisplay = `<span class="platform-number" style="color: #7db610">${schedule.platform}</span>`;
                 if (schedule.accessible) {
                     platformDisplay += ` ${accessibilityIcon}`;
                 }
+            } else if (!schedule.platform && schedule.status !== 'Cancelled') {
+                if (schedule.time_until_reveal > 0) {
+                    platformDisplay = `Info in ${schedule.time_until_reveal} min / Infos en ${schedule.time_until_reveal} min`;
+                } else {
+                    platformDisplay = '--';
+                }
+            } else {
+                platformDisplay = schedule.status;
             }
 
             row.innerHTML = `
