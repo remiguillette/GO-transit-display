@@ -198,6 +198,14 @@ function initializeWebSocket() {
         updateStationTitle(data.station);
     });
 
+    socket.on('alerts', function(data) {
+        if (!data || Object.keys(data).length === 0) {
+            console.log("No active alerts");
+            return;
+        }
+        console.log("Received alerts:", data);
+    });
+
     socket.on('connect_error', () => {
         initializeSSE();
     });
