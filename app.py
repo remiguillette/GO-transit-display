@@ -101,8 +101,12 @@ def get_schedules():
         formatted_schedules = []
         for schedule in schedule_data:
             status = schedule['status']
-            if status == 'On time':
-                status = schedule['platform'] if schedule['platform'] else '-'
+            platform = schedule['platform']
+            
+            # Determine what to show in the status/platform field
+            display_status = platform if status == 'On time' and platform else status
+            if display_status == "On time" and not platform:
+                display_status = "-"
 
             # Format the time from datetime object
             departure_time = schedule['departure_time'].strftime('%H:%M')
@@ -111,7 +115,7 @@ def get_schedules():
                 'departure': departure_time,
                 'destination': schedule['destination'].upper(),
                 'train': f"{schedule['route_code']} {schedule['destination']}",
-                'status': status,
+                'status': display_status,
                 'color': schedule['color'],
                 'accessible': schedule['accessible']
             })
