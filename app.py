@@ -23,9 +23,8 @@ from gtfs_parser import gtfs_data
 from go_scraper import scraper
 
 # Configure socket logging
-socketio.logger.setLevel(logging.ERROR)
-engineio_logger = logging.getLogger('engineio')
-engineio_logger.setLevel(logging.ERROR)
+logging.getLogger('socketio').setLevel(logging.ERROR)
+logging.getLogger('engineio').setLevel(logging.ERROR)
 
 # Make sure GTFS data is loaded
 gtfs_data.load_data()
