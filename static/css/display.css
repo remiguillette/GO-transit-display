@@ -62,7 +62,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    
+
     box-sizing: border-box;
     width: 100%;
 }
@@ -178,4 +178,4 @@
     z-index: 1000;
 }
 
-/* Clean layout - no scrolling text */
+/* Clean layout - removed scrolling elements */
