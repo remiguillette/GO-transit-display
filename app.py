@@ -166,12 +166,28 @@ def handle_connect():
 def handle_disconnect():
     """Handle WebSocket disconnection"""
     logger.debug('Client disconnected from WebSocket')
+    # Attempt reconnection
+    socketio.sleep(1)
+    try:
+        emit('reconnect')
+    except:
+        pass
 
-@socketio.on('request_station')
+@socketio.on('request_station') 
 def handle_station_request():
     """Handle request for current station via WebSocket"""
-    station = session.get('selected_station', 'Union Station')
-    emit('station_update', {'station': station})
+    try:
+        station = session.get('selected_station', 'Union Station')
+        emit('station_update', {'station': station})
+    except Exception as e:
+        logger.error(f"Error handling station request: {e}")
+        emit('error', {'message': 'Failed to get station'})
+
+@socketio.on_error_default
+def default_error_handler(e):
+    """Default error handler for all namespaces"""
+    logger.error(f"SocketIO error: {str(e)}")
+    return False
 
 @app.route('/api/stations')
 def get_stations():
