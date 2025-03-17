@@ -3,18 +3,21 @@
     font-family: 'Polaris';
     src: url('/static/fonts/Polaris-Trial-Medium.woff2') format('woff2');
     font-weight: normal;
+    font-display: swap;
 }
 
 @font-face {
     font-family: 'Polaris';
     src: url('/static/fonts/Polaris-Trial-Bold.woff2') format('woff2');
     font-weight: bold;
+    font-display: swap;
 }
 
 @font-face {
     font-family: 'Polaris';
     src: url('/static/fonts/Polaris-Trial-Light.woff2') format('woff2');
     font-weight: 300;
+    font-display: swap;
 }
 
 .display-board {
