@@ -1,3 +1,79 @@
+
+@font-face {
+    font-family: 'Polaris';
+    src: url('/static/fonts/Polaris Trial Medium.woff2') format('woff2');
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: 'Polaris';
+    src: url('/static/fonts/Polaris Trial Bold.woff2') format('woff2');
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: 'Polaris';
+    src: url('/static/fonts/Polaris Trial Light.woff2') format('woff2');
+    font-weight: 300;
+}
+
+.display-board {
+    font-family: 'Polaris', Arial, sans-serif;
+    background: #000000;
+    color: #FFFFFF;
+    min-height: 100vh;
+}
+
+.alert-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.9);
+    color: #FFD700;
+    padding: 1rem;
+    font-size: 1.2rem;
+    z-index: 1000;
+}
+
+.alert-scroller {
+    white-space: nowrap;
+    overflow: hidden;
+    animation: scroll-left 20s linear infinite;
+}
+
+@keyframes scroll-left {
+    0% { transform: translateX(100%); }
+    100% { transform: translateX(-100%); }
+}
+
+.schedule-header {
+    color: #FFFFFF;
+    background: #000000;
+    padding: 1rem;
+    font-size: 1.2rem;
+}
+
+.schedule-row {
+    color: #FFFFFF;
+    background: #000000;
+    padding: 1rem;
+    font-size: 1.2rem;
+    border-bottom: 1px solid #333;
+}
+
+.time {
+    color: #FFFFFF;
+    font-size: 2rem;
+    font-weight: bold;
+    background: #000000;
+    padding: 0.5rem;
+}
+
+.station-name {
+    color: #FFFFFF;
+}
+
 /* Add your CSS styles here */
 .display-board {
     font-family: 'Polaris', Arial, sans-serif;
