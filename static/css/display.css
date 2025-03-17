@@ -118,3 +118,25 @@
     font-size: 2.25rem;
     font-weight: 300;
 }
+.info-time {
+    color: #FFD700;
+    font-size: 0.9em;
+}
+
+.status-message {
+    color: #FF0000;
+    animation: blink 1s infinite;
+}
+
+.platform-number {
+    font-weight: bold;
+    color: #FFFFFF;
+}
+
+@keyframes blink {
+    50% { opacity: 0.5; }
+}
+
+.schedule-rows > div:nth-child(-n+3) {
+    display: flex !important;
+}

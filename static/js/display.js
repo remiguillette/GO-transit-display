@@ -67,13 +67,22 @@ async function updateSchedules(force = false) {
             
             // Format platform display
             let platformDisplay = schedule.status;
+            const now = new Date();
+            const departureTime = new Date(schedule.departure_time);
+            const timeUntilDeparture = Math.floor((departureTime - now) / (1000 * 60)); // Minutes until departure
             
-            // If the status is a platform number (when train is on time)
-            if (schedule.status !== 'Delayed' && schedule.status !== 'Cancelled') {
-                platformDisplay = `<span class="platform-number">${schedule.status}</span>`;
+            if (schedule.platform && timeUntilDeparture <= 5) {
+                // Show platform if within 5 minutes of departure
+                platformDisplay = `<span class="platform-number">${schedule.platform}</span>`;
                 if (schedule.accessible) {
                     platformDisplay += ` ${accessibilityIcon}`;
                 }
+            } else if (timeUntilDeparture > 5) {
+                // Show "Info in X min" message
+                const infoTime = timeUntilDeparture - 5;
+                platformDisplay = `<span class="info-time">Info in ${infoTime} min | Info dans ${infoTime} min</span>`;
+            } else if (schedule.status === 'Delayed' || schedule.status === 'Cancelled') {
+                platformDisplay = `<span class="status-message">${schedule.status}</span>`;
             }
 
             row.innerHTML = `
