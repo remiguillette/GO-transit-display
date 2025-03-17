@@ -75,12 +75,10 @@ async function updateSchedules(force = false) {
                 if (schedule.accessible) {
                     platformDisplay += ` ${accessibilityIcon}`;
                 }
+            } else if (schedule.time_until_reveal > 0) {
+                platformDisplay = `Info in ${schedule.time_until_reveal} min`;
             } else {
-                if (schedule.time_until_reveal > 0) {
-                    platformDisplay = `Info in ${schedule.time_until_reveal} min / Infos en ${schedule.time_until_reveal} min`;
-                } else {
-                    platformDisplay = '--';
-                }
+                platformDisplay = '--';
             }
 
             row.innerHTML = `

@@ -101,19 +101,14 @@ class GoScraper:
                 status = "At Platform"
             estimated = "On time" if status == "On time" else (f"{delay_minutes} min delay" if status == "Delayed" else status)
 
-            # Calculate platform reveal time (5 minutes before departure)
+            # Platform display logic
             current_time = datetime.now()
-            reveal_time = departure_time - timedelta(minutes=5)
-            
-            # Determine if this is the first train
+            time_to_departure = (departure_time - current_time).total_seconds() / 60
             is_first_train = len(train_schedule) == 0
             
-            # Calculate time until reveal
-            time_diff = (reveal_time - current_time).total_seconds() / 60
-            
-            # Set platform display rules
-            show_platform = is_first_train or current_time >= reveal_time
-            time_until_reveal = max(0, int(time_diff)) if not show_platform and status != "Cancelled" else 0
+            # Show platform if first train or within 5 minutes of departure
+            show_platform = is_first_train or time_to_departure <= 5
+            time_until_reveal = max(0, int(time_to_departure - 5)) if not show_platform else 0
             platform_display = platform if show_platform and status != "Cancelled" else None
             
             # Add schedule entry with empty stops column
