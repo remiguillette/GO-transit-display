@@ -1,3 +1,25 @@
+
+function updateAlerts() {
+  fetch('/api/alerts')
+    .then(response => response.json())
+    .then(alerts => {
+      const alertContainer = document.getElementById('alert-scroller');
+      if (alerts && alerts.length > 0) {
+        const messages = alerts.map(alert => alert.message).join(' • ');
+        alertContainer.textContent = messages;
+        document.getElementById('alert-footer').style.display = 'block';
+      } else {
+        document.getElementById('alert-footer').style.display = 'none';
+      }
+    })
+    .catch(err => console.error('Error updating alerts:', err));
+}
+
+// Update alerts every 30 seconds
+setInterval(updateAlerts, 30000);
+// Initial update
+updateAlerts();
+
 // Global variables for tracking update state
 let updateTimer = null;
 let lastUpdateTime = 0;
