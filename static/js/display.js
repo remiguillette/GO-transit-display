@@ -180,34 +180,19 @@ async function toggleLanguage() {
 
 // Initialize WebSocket connection
 function initializeWebSocket() {
-    try {
-        socket = io();
-        
-        socket.on('connect', () => {
-            console.log('Connected to WebSocket');
-            // Request current station on connection
-            socket.emit('request_station');
-        });
-        
-        socket.on('station_update', data => {
-            console.log('Received station update:', data);
-            updateStationTitle(data.station);
-        });
-        
-        socket.on('connect_error', error => {
-            console.error('WebSocket connection error:', error);
-            // Fallback to SSE if WebSocket fails
-            initializeSSE();
-        });
-        
-        socket.on('disconnect', () => {
-            console.log('WebSocket disconnected');
-        });
-    } catch (error) {
-        console.error('Error initializing WebSocket:', error);
-        // Fallback to SSE if WebSocket initialization fails
+    socket = io();
+    
+    socket.on('connect', () => {
+        socket.emit('request_station');
+    });
+    
+    socket.on('station_update', data => {
+        updateStationTitle(data.station);
+    });
+    
+    socket.on('connect_error', () => {
         initializeSSE();
-    }
+    });
 }
 
 // Initialize Server-Sent Events as fallback
