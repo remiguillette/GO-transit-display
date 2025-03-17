@@ -178,6 +178,7 @@
     z-index: 9999;
     display: flex;
     align-items: center;
+    overflow: hidden;
 }
 
 .scrolling-container {
@@ -185,13 +186,17 @@
     height: 100%;
     position: relative;
     overflow: hidden;
+    padding: 0 1rem;
 }
 
 .scrolling-text {
     color: #ffeb3b;
     font-weight: bold;
     white-space: nowrap;
+    position: absolute;
     animation: scroll-left 20s linear infinite;
+    font-size: 1rem;
+    line-height: 1.5rem;
 }
 
 @keyframes scroll-left {
