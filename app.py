@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 # Initialize Flask app
 app = create_app()
-socketio = SocketIO(app, cors_allowed_origins="*", ping_timeout=60, ping_interval=25, async_mode='gevent')
+socketio = SocketIO(app, cors_allowed_origins="*", ping_timeout=120, ping_interval=30, async_mode='gevent', logger=True, engineio_logger=True)
 
 # Import models and data modules after db initialization to avoid circular imports
 from models import Station, Schedule
