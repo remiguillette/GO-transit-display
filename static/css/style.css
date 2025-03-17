@@ -71,29 +71,23 @@ header {
     align-items: center;
 }
 
-.go-train-icon {
-    font-size: 24px;
-    color: var(--go-text-light);
-    margin-right: 10px;
-}
-
 .station-name {
     font-family: 'Polaris Bold', Arial, sans-serif;
-    font-size: 36px; /* Updated to minimum 36px as requested */
+    font-size: 36px;
     color: var(--go-text-light);
     font-weight: bold;
 }
 
 .header-separator {
     font-family: 'Polaris Medium', Arial, sans-serif;
-    font-size: 36px; /* Updated to match station name size */
+    font-size: 36px;
     color: var(--go-text-light);
     margin: 0 10px;
 }
 
 .departures-title {
     font-family: 'Polaris Bold', Arial, sans-serif;
-    font-size: 42px; /* Updated to 42px as requested for main headers */
+    font-size: 42px;
     color: var(--go-text-light);
     font-weight: bold;
     max-width: 500px;
@@ -102,20 +96,16 @@ header {
 .go-logo-time {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
     gap: 2rem;
     padding-right: 2rem;
 }
 
 .go-logo {
-    font-family: Arial, sans-serif;
-    font-size: 24px;
     font-weight: bold;
     color: var(--go-text-light);
     background-color: var(--go-primary);
     padding: 4px 8px;
     border-radius: 4px;
-    margin-right: 15px;
 }
 
 .current-time {
