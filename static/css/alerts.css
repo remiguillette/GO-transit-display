@@ -13,7 +13,7 @@
 .alert-scroller {
     white-space: nowrap;
     overflow: hidden;
-    animation: scroll-left 20s linear infinite;
+    animation: scroll-left 40s linear infinite;
 }
 
 @keyframes scroll-left {
@@ -24,6 +24,7 @@
 .alert-message {
     display: inline-block;
     padding: 0 2rem;
-    color: #FFD700;
+    color: #FFFFFF;
+    font-weight: bold;
     font-family: 'Polaris-Medium', sans-serif;
 }

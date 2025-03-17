@@ -30,5 +30,5 @@ class AlertScraper:
 # Create an instance for importing
 alert_scraper = AlertScraper()
 
-# Add some default alerts for testing
-alert_scraper.add_alert("Welcome to GO Transit Display", "info")
+# Add default alerts with GO Transit links
+alert_scraper.add_alert("Welcome to GO Transit Display | Visit GO Transit website: https://www.gotransit.com/en | Service Updates: https://www.gotransit.com/en/service-updates/service-updates", "info")
