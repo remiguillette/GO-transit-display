@@ -16,10 +16,14 @@
     font-weight: 300;
 }
 
+/* Display board layout */
 .display-board {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background: var(--go-background-dark);
     font-family: 'Polaris', Arial, sans-serif;
     color: #FFFFFF;
-    min-height: 100vh;
     font-weight: 300;
     letter-spacing: -0.02em;
     line-height: 1.2;
@@ -52,11 +56,13 @@
 
 /* Add your CSS styles here */
 .board-header {
+    background: var(--go-background-dark);
+    padding: 1rem;
+    border-bottom: 2px solid var(--go-primary);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem 0rem 1rem 0rem; 
-    height: 5rem;
+    
     box-sizing: border-box;
     width: 100%;
 }
@@ -129,10 +135,10 @@
 }
 
 .schedule-container {
-    flex-grow: 1;
+    flex: 1;
+    padding: 1rem;
+    overflow-y: auto;
     padding: 0 20px;
-    max-height: calc(100vh - 150px);
-    overflow: hidden;
 }
 
 .schedule-header {
@@ -160,13 +166,15 @@
 }
 
 .board-footer {
+    background: var(--go-background-dark);
+    border-top: 2px solid var(--go-primary);
+    padding: 0.5rem;
+    height: 2.5rem;
+    width: 100%;
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
-    background: #000000;
-    padding: 1rem;
-    width: 100%;
     z-index: 1000;
 }
 
@@ -178,7 +186,12 @@
 
 .scrolling-text {
     display: inline-block;
-    animation: scroll-left 20s linear infinite;
+    animation: scroll 20s linear infinite;
     color: #ffffff;
     font-size: 1.2rem;
+}
+
+@keyframes scroll {
+    from { transform: translateX(100%); }
+    to { transform: translateX(-100%); }
 }
