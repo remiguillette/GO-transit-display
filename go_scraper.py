@@ -97,8 +97,6 @@ class GoScraper:
             at_platform = random.random() < 0.1
 
             # Status display
-            if at_platform:
-                status = "At Platform"
             estimated = "On time" if status == "On time" else (f"{delay_minutes} min delay" if status == "Delayed" else status)
 
             # Add schedule entry with empty stops column
