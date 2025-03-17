@@ -24,28 +24,7 @@
     min-height: 100vh;
 }
 
-.alert-footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: rgba(0, 0, 0, 0.9);
-    color: #FFD700;
-    padding: 1rem;
-    font-size: 1.2rem;
-    z-index: 1000;
-}
 
-.alert-scroller {
-    white-space: nowrap;
-    overflow: hidden;
-    animation: scroll-left 20s linear infinite;
-}
-
-@keyframes scroll-left {
-    0% { transform: translateX(100%); }
-    100% { transform: translateX(-100%); }
-}
 
 .schedule-header {
     color: #FFFFFF;
