@@ -218,24 +218,3 @@ body {
     border-radius: 4px;
     font-family: 'Polaris Medium', sans-serif;
 }
-
-.alert-links {
-    text-align: center;
-    padding: 10px 0;
-}
-
-.alert-link {
-    color: white;
-    text-decoration: none;
-    margin: 0 15px;
-    font-family: 'Polaris-Trial', sans-serif;
-}
-
-.alert-link:hover {
-    text-decoration: underline;
-    color: white;
-}
-
-.alert-footer {
-
-}
