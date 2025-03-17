@@ -1,3 +1,4 @@
+
 import logging
 from datetime import datetime
 
@@ -54,6 +55,8 @@ class AlertScraper:
         Returns:
             list: A list of alert dictionaries.
         """
+        if not self.alerts:
+            self.add_alert("Welcome to GO Transit", "https://www.gotransit.com", "info")
         return self.alerts
 
     def clear_alerts(self):
@@ -69,19 +72,22 @@ class AlertScraper:
         Args:
             url (str): The URL to retrieve alerts from.
         """
-        # You can implement your web scraping logic here to retrieve alerts from the given URL
-        # For demonstration purposes, I'm assuming you have a function to scrape alerts from the URL
-        # You would replace this with your actual scraping logic
+        self.clear_alerts()
         scraped_alerts = self.scrape_alerts_from_url(url)
         for alert in scraped_alerts:
             self.add_alert(alert['message'], alert['link'])
 
     def scrape_alerts_from_url(self, url):
-        # Implement your web scraping logic here to retrieve alerts from the given URL
-        # For demonstration purposes, I'm returning dummy data
+        # Add some test alerts to demonstrate functionality
         return [
-            {'message': 'Alert 1', 'link': 'https://www.gotransit.com/en/service-updates/alert1'},
-            {'message': 'Alert 2', 'link': 'https://www.gotransit.com/en/service-updates/alert2'}
+            {
+                'message': 'Service Alert: Delays on Lakeshore West line due to signal issues',
+                'link': 'https://www.gotransit.com/en/service-updates/alert1'
+            },
+            {
+                'message': 'Service Update: Richmond Hill line operating on modified schedule',
+                'link': 'https://www.gotransit.com/en/service-updates/alert2'
+            }
         ]
 
 # Create an instance for importing
