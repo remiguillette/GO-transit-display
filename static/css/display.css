@@ -1,18 +1,18 @@
 @font-face {
     font-family: 'Polaris';
-    src: url('/static/fonts/Polaris-Trial-Medium.woff2') format('woff2');
+    src: url('../fonts/Polaris Trial Medium.woff2') format('woff2');
     font-weight: normal;
 }
 
 @font-face {
     font-family: 'Polaris';
-    src: url('/static/fonts/Polaris-Trial-Bold.woff2') format('woff2');
+    src: url('../fonts/Polaris Trial Bold.woff2') format('woff2');
     font-weight: bold;
 }
 
 @font-face {
     font-family: 'Polaris';
-    src: url('/static/fonts/Polaris-Trial-Light.woff2') format('woff2');
+    src: url('../fonts/Polaris Trial Light.woff2') format('woff2');
     font-weight: 300;
 }
 
