@@ -78,17 +78,40 @@ class AlertScraper:
             self.add_alert(alert['message'], alert['link'])
 
     def scrape_alerts_from_url(self, url):
-        # Add some test alerts to demonstrate functionality
-        return [
-            {
-                'message': 'Service Alert: Delays on Lakeshore West line due to signal issues',
-                'link': 'https://www.gotransit.com/en/service-updates/alert1'
-            },
-            {
-                'message': 'Service Update: Richmond Hill line operating on modified schedule',
-                'link': 'https://www.gotransit.com/en/service-updates/alert2'
-            }
-        ]
+        """Scrape service updates from GO Transit website"""
+        try:
+            import requests
+            from bs4 import BeautifulSoup
+            
+            headers = {'User-Agent': 'Mozilla/5.0'}
+            response = requests.get(url, headers=headers, timeout=10)
+            response.raise_for_status()
+            
+            soup = BeautifulSoup(response.text, 'html.parser')
+            alerts = []
+            
+            # Find service update containers
+            update_containers = soup.find_all('div', class_='service-update-container')
+            
+            for container in update_containers:
+                link_elem = container.find('a')
+                if link_elem:
+                    link = link_elem.get('href', '')
+                    if not link.startswith('http'):
+                        link = 'https://www.gotransit.com' + link
+                    
+                    message = container.get_text(strip=True)
+                    alerts.append({
+                        'message': message,
+                        'link': link
+                    })
+            
+            logger.info(f"Scraped {len(alerts)} alerts from GO Transit website")
+            return alerts
+            
+        except Exception as e:
+            logger.error(f"Error scraping alerts: {str(e)}")
+            return []
 
 # Create an instance for importing
 alert_scraper = AlertScraper()
