@@ -1,28 +1,38 @@
 
-const SCROLL_SPEED = 50; // Lower = faster
-let isScrolling = false;
+const socket = io();
+let lastUpdate = 0;
+const updateThreshold = 1000; // 1 second
 
-function setupScrollingText() {
-    fetch('/api/alerts')
-        .then(response => response.json())
-        .then(updates => {
-            const scrollingContainer = document.getElementById('scrolling-container');
-            if (!updates || updates.length === 0) {
-                scrollingContainer.innerHTML = '<div class="scrolling-text">GO Transit - All services operating normally</div>';
-            } else {
-                const scrollText = updates.map(update => 
-                    `${update.line}: ${update.status} - ${update.details}`
-                ).join(' • ');
-                scrollingContainer.innerHTML = `<div class="scrolling-text">${scrollText}</div>`;
-            }
-        })
-        .catch(error => {
-            console.error('Error updating alerts:', error);
-            const scrollingContainer = document.getElementById('scrolling-container');
-            scrollingContainer.innerHTML = '<div class="scrolling-text">GO Transit - All services operating normally</div>';
-        });
+function updateScrollingText(alerts) {
+    const container = document.getElementById('scrolling-container');
+    if (!container) return;
+    
+    if (!alerts || alerts.length === 0) {
+        container.innerHTML = '<div class="scrolling-text">No current service alerts</div>';
+        return;
+    }
+
+    const alertText = alerts.map(alert => alert.message).join(' • ');
+    container.innerHTML = `<div class="scrolling-text">${alertText}</div>`;
 }
 
-// Initialize and refresh every minute
-setupScrollingText();
-setInterval(setupScrollingText, 60000);
+socket.on('alerts', function(data) {
+    const now = Date.now();
+    if (now - lastUpdate < updateThreshold) {
+        console.log("Skipping update - too soon since last update");
+        return;
+    }
+    lastUpdate = now;
+    updateScrollingText(data.alerts);
+});
+
+// Initial load
+fetch('/api/alerts')
+    .then(response => response.json())
+    .then(data => {
+        updateScrollingText(data.alerts);
+    })
+    .catch(error => {
+        console.error('Error updating alerts:', error);
+        updateScrollingText([]);
+    });

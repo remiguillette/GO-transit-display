@@ -180,7 +180,6 @@
 
 .board-footer {
     background-color: #000000;
-    
     height: 2.8rem;
     overflow: hidden;
     position: fixed;
@@ -190,6 +189,8 @@
     z-index: 9999;
     display: flex;
     align-items: center;
+    justify-content: flex-start;
+    padding: 0 1rem;
 }
 
 .scrolling-container {
