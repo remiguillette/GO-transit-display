@@ -68,19 +68,19 @@ async function updateSchedules(force = false) {
             // Format platform display
             let platformDisplay = '';
             
-            if (schedule.platform) {
+            if (schedule.status === 'Cancelled') {
+                platformDisplay = 'Cancelled';
+            } else if (schedule.platform) {
                 platformDisplay = `<span class="platform-number" style="color: #7db610">${schedule.platform}</span>`;
                 if (schedule.accessible) {
                     platformDisplay += ` ${accessibilityIcon}`;
                 }
-            } else if (!schedule.platform && schedule.status !== 'Cancelled') {
+            } else {
                 if (schedule.time_until_reveal > 0) {
                     platformDisplay = `Info in ${schedule.time_until_reveal} min / Infos en ${schedule.time_until_reveal} min`;
                 } else {
                     platformDisplay = '--';
                 }
-            } else {
-                platformDisplay = schedule.status;
             }
 
             row.innerHTML = `
