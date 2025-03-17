@@ -1,4 +1,3 @@
-
 @font-face {
     font-family: 'Polaris';
     src: url('/static/fonts/Polaris-Trial-Medium.woff2') format('woff2');
@@ -22,6 +21,10 @@
     background: #000000;
     color: #FFFFFF;
     min-height: 100vh;
+    font-weight: 300;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    position: relative;
 }
 
 .alert-footer {
@@ -75,21 +78,11 @@
 }
 
 /* Add your CSS styles here */
-.display-board {
-    font-family: 'Polaris', Arial, sans-serif;
-    background: #000000;
-    color: #fff;
-    min-height: 100vh;
-    font-weight: 300;
-    letter-spacing: -0.02em;
-    line-height: 1.2;
-}
-
 .board-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem 0rem 1rem 0rem; /* Modification ici: padding gauche a 0 */
+    padding: 1rem 0rem 1rem 0rem; 
     background: #000000;
     height: 5rem;
     box-sizing: border-box;
@@ -104,14 +97,14 @@
 
 .go-logo img {
     height: 80px;
-    margin-right: 5px; /* Modification ici: reduit l'espace après le logo */
+    margin-right: 5px; 
 }
 
 .station-info {
     display: flex;
     align-items: center;
     flex: 1;
-    justify-content: left; /* Modification ici: aligne le texte a gauche */
+    justify-content: left; 
     padding: 0px;
 }
 
@@ -123,33 +116,33 @@
     margin-left: auto;
 }
 
-    .station-icon {
-        display: inline-block;
-        width: 100px;
-        height: 80px;
-        background-image: url('/static/images/Type_Standard_Brand_GO_State_Black_dmvcea (1).svg');
-        background-size: contain;
-        background-repeat: no-repeat;
-        filter: invert(100%);
-    }
+.station-icon {
+    display: inline-block;
+    width: 100px;
+    height: 80px;
+    background-image: url('/static/images/Type_Standard_Brand_GO_State_Black_dmvcea (1).svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    filter: invert(100%);
+}
 
-    .accessibility-icon {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        margin-left: 8px;
-        width: 24px;
-        height: 24px;
-        background-color: #0052A5;
-        border-radius: 4px;
-        padding: 4px;
-    }
+.accessibility-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 8px;
+    width: 24px;
+    height: 24px;
+    background-color: #0052A5;
+    border-radius: 4px;
+    padding: 4px;
+}
 
-    .accessibility-icon img {
-        width: 100%;
-        height: 100%;
-        filter: brightness(0) invert(1);
-    }
+.accessibility-icon img {
+    width: 100%;
+    height: 100%;
+    filter: brightness(0) invert(1);
+}
 
 .station-name {
     font-size: 2.125rem;
@@ -193,4 +186,28 @@
     background: #000000;
     font-size: 2.25rem;
     font-weight: 300;
+}
+
+.board-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #000000;
+    padding: 1rem;
+    width: 100%;
+    z-index: 1000;
+}
+
+.scrolling-container {
+    width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.scrolling-text {
+    display: inline-block;
+    animation: scroll-left 20s linear infinite;
+    color: #ffffff;
+    font-size: 1.2rem;
 }
