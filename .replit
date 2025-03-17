@@ -4,7 +4,7 @@ modules = ["python-3.11", "web", "nodejs-20", "nix"]
 channel = "stable-24_05"
 
 [workflows]
-runButton = "GO Transit Server"
+runButton = "Production Server"
 
 [[workflows.workflow]]
 name = "Project"
@@ -92,6 +92,15 @@ mode = "sequential"
 [[workflows.workflow.tasks]]
 task = "shell.exec"
 args = "python app.py"
+
+[[workflows.workflow]]
+name = "Production Server"
+author = 40580720
+mode = "sequential"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python app.py --production"
 
 [deployment]
 run = ["sh", "-c", "python analyze_repo.py"]

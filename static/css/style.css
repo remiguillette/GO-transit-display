@@ -41,7 +41,7 @@ body {
     padding: 0;
     background-color: var(--go-background-dark);
     color: var(--go-text-light);
-    font-family: 'Polaris Light', Arial, sans-serif;
+    font-family: Arial, Helvetica, sans-serif; /* Updated font family */
     overflow-x: hidden;
 }
 
@@ -72,21 +72,21 @@ header {
 }
 
 .station-name {
-    font-family: 'Polaris Bold', Arial, sans-serif;
+    font-family: Arial, Helvetica, sans-serif; /* Updated font family */
     font-size: 36px;
     color: var(--go-text-light);
     font-weight: bold;
 }
 
 .header-separator {
-    font-family: 'Polaris Medium', Arial, sans-serif;
+    font-family: Arial, Helvetica, sans-serif; /* Updated font family */
     font-size: 36px;
     color: var(--go-text-light);
     margin: 0 10px;
 }
 
 .departures-title {
-    font-family: 'Polaris Bold', Arial, sans-serif;
+    font-family: Arial, Helvetica, sans-serif; /* Updated font family */
     font-size: 42px;
     color: var(--go-text-light);
     font-weight: bold;
@@ -109,9 +109,9 @@ header {
 }
 
 .current-time {
-    font-family: 'Polaris Bold', 'Courier New', monospace, Arial, sans-serif;
-    font-size: 48px; /* Updated to 48px as requested for time display */
-    color: var(--go-time-display); /* Using time display color */
+    font-family: Arial, Helvetica, sans-serif; /* Updated font family */
+    font-size: 48px; 
+    color: var(--go-time-display); 
     font-weight: bold;
     letter-spacing: 2px;
     min-width: 100px;
@@ -120,7 +120,7 @@ header {
 
 .header-logo {
     height: 40px;
-    filter: brightness(0) invert(1); /* Invert colors to white */
+    filter: brightness(0) invert(1); 
     margin-right: 1rem;
 }
 
@@ -135,8 +135,8 @@ header {
 .schedule-table th {
     background-color: var(--go-primary);
     color: var(--go-text-light);
-    font-family: 'Polaris Bold', Arial, sans-serif;
-    font-size: 42px; /* Updated to 42px as requested for main headers */
+    font-family: Arial, Helvetica, sans-serif; /* Updated font family */
+    font-size: 42px; 
     text-align: left;
     padding: 8px 12px;
     border: none;
@@ -144,8 +144,8 @@ header {
 }
 
 .schedule-table td {
-    font-family: 'Polaris Medium', Arial, sans-serif;
-    font-size: 36px; /* Updated to 36px as requested for schedule text */
+    font-family: Arial, Helvetica, sans-serif; /* Updated font family */
+    font-size: 36px; 
     padding: 10px 12px;
     border: none;
     vertical-align: middle;
@@ -167,7 +167,7 @@ header {
     height: 36px;
     line-height: 34px;
     text-align: center;
-    font-family: 'Polaris Bold', Arial, sans-serif;
+    font-family: Arial, Helvetica, sans-serif; /* Updated font family */
     font-size: 20px;
     border-radius: 4px;
     color: var(--go-text-light);
@@ -179,7 +179,7 @@ header {
 
 /* Status Display */
 .status {
-    font-family: 'Polaris Bold', Arial, sans-serif;
+    font-family: Arial, Helvetica, sans-serif; /* Updated font family */
     padding: 5px 10px;
     border-radius: 4px;
     display: inline-block;
@@ -200,7 +200,7 @@ header {
 
 /* Platform Display */
 .platform {
-    font-family: 'Polaris Bold', Arial, sans-serif;
+    font-family: Arial, Helvetica, sans-serif; /* Updated font family */
 }
 
 /* Accessibility Icon */
@@ -244,7 +244,7 @@ header {
 }
 
 .control-panel h1 {
-    font-family: 'Polaris Bold', Arial, sans-serif;
+    font-family: Arial, Helvetica, sans-serif; /* Updated font family */
     color: var(--go-text-light);
     margin-top: 0;
 }
@@ -255,7 +255,7 @@ header {
 
 .control-form label {
     display: block;
-    font-family: 'Polaris Medium', Arial, sans-serif;
+    font-family: Arial, Helvetica, sans-serif; /* Updated font family */
     margin-bottom: 10px;
     color: var(--go-text-light);
 }
@@ -263,7 +263,7 @@ header {
 .control-form select,
 .control-form button {
     padding: 10px;
-    font-family: 'Polaris Medium', Arial, sans-serif;
+    font-family: Arial, Helvetica, sans-serif; /* Updated font family */
     border: none;
     border-radius: 4px;
     width: 100%;
@@ -274,7 +274,7 @@ header {
     background-color: var(--go-primary);
     color: var(--go-text-light);
     cursor: pointer;
-    font-family: 'Polaris Bold', Arial, sans-serif;
+    font-family: Arial, Helvetica, sans-serif; /* Updated font family */
     transition: background-color 0.3s;
 }
 
@@ -288,7 +288,7 @@ header {
     color: var(--go-text-light);
     text-decoration: none;
     margin-top: 20px;
-    font-family: 'Polaris Medium', Arial, sans-serif;
+    font-family: Arial, Helvetica, sans-serif; /* Updated font family */
 }
 
 .return-link:hover {
