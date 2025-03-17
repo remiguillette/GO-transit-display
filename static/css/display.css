@@ -142,6 +142,7 @@
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    margin-bottom: 2.8rem;
 }
 
 .schedule-rows {
@@ -165,6 +166,7 @@
 .schedule-rows {
     display: grid;
     gap: 0.5rem;
+    padding-bottom: 1rem;
 }
 
 .schedule-row {
