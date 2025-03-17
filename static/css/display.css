@@ -21,6 +21,7 @@
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    max-height: 100vh;
     background: var(--go-background-dark);
     font-family: 'Polaris', Arial, sans-serif;
     color: #FFFFFF;
@@ -28,6 +29,7 @@
     letter-spacing: -0.02em;
     line-height: 1.2;
     position: relative;
+    overflow: hidden;
 }
 
 .schedule-header {
@@ -170,14 +172,12 @@
     border-top: 2px solid #097F5C;
     height: 2.5rem;
     overflow: hidden;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    position: relative;
+    width: 100%;
+    margin-top: auto;
     z-index: 9999;
     display: flex;
     align-items: center;
-    padding-top: 0;
 }
 
 .scrolling-container {
