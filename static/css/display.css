@@ -42,7 +42,6 @@
     color: #FFFFFF;
     padding: 1rem;
     font-size: 1.2rem;
-    border-bottom: 1px solid #333;
 }
 
 .time {
@@ -64,7 +63,6 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-
     box-sizing: border-box;
     width: 100%;
 }
@@ -137,20 +135,21 @@
 }
 
 .schedule-container {
-    flex: 1;
+    flex-grow: 1;
     padding: 0 20px;
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    margin-bottom: 2.8rem;
 }
 
 .schedule-rows {
-    flex: 1;
+    flex-grow: 1;
     display: grid;
     gap: 0.5rem;
     grid-template-rows: repeat(auto-fill, minmax(3.5rem, 1fr));
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 .schedule-header {
@@ -163,12 +162,6 @@
     font-weight: 500;
 }
 
-.schedule-rows {
-    display: grid;
-    gap: 0.5rem;
-    padding-bottom: 1rem;
-}
-
 .schedule-row {
     display: grid;
     grid-template-columns: 1fr 2fr 2fr 1fr;
@@ -178,9 +171,12 @@
     font-weight: 300;
 }
 
+.schedule-row.last-row {
+    border-bottom: none;
+}
+
 .board-footer {
     background-color: #000000;
-    
     height: 2.8rem;
     overflow: hidden;
     position: fixed;
@@ -215,5 +211,3 @@
     0% { transform: translateX(100%); }
     100% { transform: translateX(-100%); }
 }
-
-/* Clean layout - removed scrolling elements */
