@@ -130,8 +130,8 @@ class GoScraper:
                 "stops": "" # Protected - stops not displayed by GO scraper
             })
 
-        # Sort schedule by platform presence and time
-        train_schedule.sort(key=lambda x: (not x["at_platform"], x["departure_time"]))
+        # Sort schedule by departure time
+        train_schedule.sort(key=lambda x: x["departure_time"])
 
         return train_schedule
 
