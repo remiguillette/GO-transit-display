@@ -178,8 +178,8 @@
 
 .board-footer {
     background-color: #000000;
-    border-top: 2px solid #097F5C;
-    height: 2.5rem;
+    
+    height: 2.8rem;
     overflow: hidden;
     position: fixed;
     bottom: 0;
@@ -204,7 +204,7 @@
     white-space: nowrap;
     position: absolute;
     animation: scroll-left 20s linear infinite;
-    font-size: 1.5rem;
+    font-size: 2rem;
     line-height: 2.5rem;
     bottom: 0;
 }
