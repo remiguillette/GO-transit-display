@@ -42,7 +42,6 @@ body {
     background-color: var(--go-background-dark);
     color: var(--go-text-light);
     font-family: 'Polaris Light', Arial, sans-serif;
-    overflow-x: hidden;
 }
 
 .container {
