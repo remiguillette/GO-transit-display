@@ -1,29 +1,24 @@
-function updateServiceInfo() {
-    fetch('/api/service-updates')
-        .then(response => response.json())
-        .catch(() => ({
-            updates: [
-                { line: 'Lakeshore West', message: 'Service operating normally' },
-                { line: 'Lakeshore East', message: 'Minor delays due to signal issues' },
-                { line: 'Milton', message: '10-15 minute delays expected' }
-            ]
-        }))
-        .then(data => {
-            const content = document.getElementById('serviceUpdatesContent');
-            content.innerHTML = data.updates
-                .map(update => `
-                    <span class="update-item">
-                        <span class="update-line">${update.line}:</span>
-                        ${update.message}
-                    </span>
-                `).join('');
-        })
-        .catch(console.error);
+
+function updateAlerts() {
+  fetch('/api/alerts')
+    .then(response => response.json())
+    .then(alerts => {
+      const alertContainer = document.getElementById('alert-scroller');
+      if (alerts && alerts.length > 0) {
+        const messages = alerts.map(alert => alert.message).join(' • ');
+        alertContainer.textContent = messages;
+        document.getElementById('alert-footer').style.display = 'block';
+      } else {
+        document.getElementById('alert-footer').style.display = 'none';
+      }
+    })
+    .catch(err => console.error('Error updating alerts:', err));
 }
 
-// Update service info every 2 minutes
-updateServiceInfo();
-setInterval(updateServiceInfo, 120000);
+// Update alerts every 30 seconds
+setInterval(updateAlerts, 30000);
+// Initial update
+updateAlerts();
 
 // Global variables for tracking update state
 let updateTimer = null;
@@ -63,7 +58,7 @@ async function updateSchedules(force = false) {
         console.log('Skipping update - too soon since last update');
         return;
     }
-
+    
     try {
         const stationName = document.querySelector('.station-name').textContent.split('-')[0].trim();
         const response = await fetch(`/api/schedules?station=${encodeURIComponent(stationName)}`);
@@ -88,13 +83,13 @@ async function updateSchedules(force = false) {
 
             // Format the train info with route code span
             const [routeCode, ...destinationParts] = schedule.train.split(' ');
-
+            
             // Route code colored span
             const routeCodeSpan = `<span class="route-code" style="background-color: ${schedule.color}">${routeCode}</span>`;
-
+            
             // Format platform display
             let platformDisplay = schedule.status;
-
+            
             // If the status is a platform number (when train is on time)
             if (schedule.status !== 'Delayed' && schedule.status !== 'Cancelled') {
                 platformDisplay = `<span class="platform-number">${schedule.status}</span>`;
@@ -118,14 +113,14 @@ async function updateSchedules(force = false) {
             `;
             container.appendChild(row);
         });
-
+        
         // Update last successful update time
         lastUpdateTime = Date.now();
         retryCount = 0;
     } catch (error) {
         console.error('Error updating schedules:', error);
         retryCount++;
-
+        
         if (retryCount > MAX_RETRIES) {
             // Show error message after multiple retries
             const container = document.getElementById('scheduleRows');
@@ -148,14 +143,14 @@ function updateStationTitle(stationName) {
     if (stationNameElement) {
         const currentText = stationNameElement.textContent;
         const parts = currentText.split('-');
-
+        
         if (parts.length > 1) {
             // Keep the part after the hyphen (typically "Train Departures | Départs des Trains")
             stationNameElement.textContent = `${stationName} - ${parts[1].trim()}`;
         } else {
             stationNameElement.textContent = `${stationName} - Train Departures | Départs des Trains`;
         }
-
+        
         // Trigger schedule update after station change
         updateSchedules(true);
     }
@@ -187,24 +182,24 @@ async function toggleLanguage() {
 function initializeWebSocket() {
     try {
         socket = io();
-
+        
         socket.on('connect', () => {
             console.log('Connected to WebSocket');
             // Request current station on connection
             socket.emit('request_station');
         });
-
+        
         socket.on('station_update', data => {
             console.log('Received station update:', data);
             updateStationTitle(data.station);
         });
-
+        
         socket.on('connect_error', error => {
             console.error('WebSocket connection error:', error);
             // Fallback to SSE if WebSocket fails
             initializeSSE();
         });
-
+        
         socket.on('disconnect', () => {
             console.log('WebSocket disconnected');
         });
@@ -221,20 +216,20 @@ function initializeSSE() {
     if (eventSource) {
         eventSource.close();
     }
-
+    
     try {
         console.log('Initializing SSE connection...');
         eventSource = new EventSource('/api/sse/station_updates');
-
+        
         eventSource.onopen = () => {
             console.log('SSE connection established');
         };
-
+        
         eventSource.onmessage = event => {
             try {
                 const data = JSON.parse(event.data);
                 console.log('SSE message received:', data);
-
+                
                 if (data.event === 'station_update') {
                     updateStationTitle(data.station);
                 }
@@ -242,11 +237,11 @@ function initializeSSE() {
                 console.error('Error parsing SSE message:', error);
             }
         };
-
+        
         eventSource.onerror = error => {
             console.error('SSE connection error:', error);
             eventSource.close();
-
+            
             // Attempt to reconnect after a delay
             setTimeout(initializeSSE, 5000);
         };
@@ -260,13 +255,13 @@ function initializeDisplay() {
     // Set up the clock update
     setInterval(updateClock, 1000);
     updateClock();
-
+    
     // Set up a regular schedule update (as a fallback)
     updateTimer = setInterval(() => updateSchedules(), 30000); // Update every 30 seconds
-
+    
     // Initial schedule update
     updateSchedules(true);
-
+    
     // Attempt WebSocket connection first
     initializeWebSocket();
 }
