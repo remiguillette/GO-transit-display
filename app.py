@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 # Initialize Flask app
 app = create_app()
-socketio = SocketIO(app, cors_allowed_origins="*", ping_timeout=120, ping_interval=30, async_mode='gevent', logger=True, engineio_logger=True)
+socketio = SocketIO(app, cors_allowed_origins="*")
 
 # Import models and data modules after db initialization to avoid circular imports
 from models import Station, Schedule
@@ -166,27 +166,12 @@ def handle_connect():
 def handle_disconnect():
     """Handle WebSocket disconnection"""
     logger.debug('Client disconnected from WebSocket')
-    # Proper error handling for disconnection
-    try:
-        emit('reconnect', broadcast=False)
-    except Exception as e:
-        logger.error(f"Reconnection error: {e}")
 
-@socketio.on('request_station') 
+@socketio.on('request_station')
 def handle_station_request():
     """Handle request for current station via WebSocket"""
-    try:
-        station = session.get('selected_station', 'Union Station')
-        emit('station_update', {'station': station})
-    except Exception as e:
-        logger.error(f"Error handling station request: {e}")
-        emit('error', {'message': 'Failed to get station'})
-
-@socketio.on_error_default
-def default_error_handler(e):
-    """Default error handler for all namespaces"""
-    logger.error(f"SocketIO error: {str(e)}")
-    return False
+    station = session.get('selected_station', 'Union Station')
+    emit('station_update', {'station': station})
 
 @app.route('/api/stations')
 def get_stations():
@@ -230,4 +215,4 @@ def after_request(response):
     return response
 
 if __name__ == "__main__":
-    socketio.run(app, host="0.0.0.0", port=5000, debug=True, allow_unsafe_werkzeug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)
