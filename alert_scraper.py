@@ -57,8 +57,7 @@ class AlertScraper:
         """
         if not self.alerts:
             self.add_alert("Welcome to GO Transit", "https://www.gotransit.com", "info")
-            self.add_alert("Test Alert: Delays on Lakeshore Line", "https://www.gotransit.com/alerts", "delay")
-            self.add_alert("Test Alert: Construction at Union Station", "https://www.gotransit.com/alerts", "construction")
+            self.retrieve_all_alerts("https://www.gotransit.com/en/service-updates/service-updates")
         return self.alerts
 
     def clear_alerts(self):
