@@ -100,23 +100,20 @@ def get_schedules():
         # Format schedules for display
         formatted_schedules = []
         for schedule in schedule_data:
+            status = schedule['status']
+            if status == 'On time':
+                status = schedule['platform'] if schedule['platform'] else '-'
+
             # Format the time from datetime object
             departure_time = schedule['departure_time'].strftime('%H:%M')
-
-            # Status handling based on schedule state
-            status = schedule.get('status', 'On time')
-            if status == 'On time' and schedule.get('platform'):
-                display_status = schedule['platform']
-            else:
-                display_status = status
 
             formatted_schedules.append({
                 'departure': departure_time,
                 'destination': schedule['destination'].upper(),
                 'train': f"{schedule['route_code']} {schedule['destination']}",
-                'status': display_status,
+                'status': status,
                 'color': schedule['color'],
-                'accessible': schedule.get('accessible', True)
+                'accessible': schedule['accessible']
             })
 
         return jsonify(formatted_schedules)
