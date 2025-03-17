@@ -89,16 +89,14 @@ class GoScraper:
             destination = destination.replace(" GO", "").replace(" Station", "")
 
             # Generate train details
-            status = random.choices(STATUS_OPTIONS, STATUS_WEIGHTS)[0]
+            at_platform = random.random() < 0.1
+            status = "At Platform" if at_platform else random.choices(STATUS_OPTIONS, STATUS_WEIGHTS)[0]
             delay_minutes = random.randint(5, 30) if status == "Delayed" else 0
             platform = f"{random.randint(1, 12)}"
             train_number = f"{line_code}{random.randint(100, 999)}"
             is_express = random.random() < 0.3
-            at_platform = random.random() < 0.1
 
             # Status display
-            if at_platform:
-                status = "At Platform"
             estimated = "On time" if status == "On time" else (f"{delay_minutes} min delay" if status == "Delayed" else status)
 
             # Calculate platform reveal time (5 minutes before departure)
