@@ -21,6 +21,7 @@ import sys
 sys.path.append('.')  # Ensure the current directory is in the path
 from gtfs_parser import gtfs_data
 from go_scraper import scraper
+from alert_scraper import alert_scraper
 
 # Make sure GTFS data is loaded
 gtfs_data.load_data()
@@ -31,21 +32,21 @@ class RateLimiter:
         self.limit = limit  # Number of requests allowed
         self.window = window  # Time window in seconds
         self.clients = {}  # {ip: [timestamps]}
-
+    
     def is_rate_limited(self, ip):
         current_time = time.time()
-
+        
         # If client IP not in dictionary, add it
         if ip not in self.clients:
             self.clients[ip] = []
-
+        
         # Clean up old timestamps
         self.clients[ip] = [t for t in self.clients[ip] if current_time - t < self.window]
-
+        
         # Check if rate limit exceeded
         if len(self.clients[ip]) >= self.limit:
             return True
-
+        
         # Add current timestamp
         self.clients[ip].append(current_time)
         return False
@@ -60,10 +61,10 @@ def rate_limit(limiter):
         @wraps(f)
         def wrapped(*args, **kwargs):
             client_ip = request.remote_addr
-
+            
             if limiter.is_rate_limited(client_ip):
                 return jsonify({'error': 'Rate limit exceeded. Please try again later.'}), 429
-
+            
             return f(*args, **kwargs)
         return wrapped
     return decorator
@@ -84,7 +85,7 @@ def control():
         # Remove " GO" from station names for cleaner display
         display_name = station_name.replace(" GO", "") if station_name.endswith(" GO") else station_name
         stations[station_name] = display_name
-
+    
     return render_template('control.html', 
                          stations=stations,
                          selected_station=session.get('selected_station', 'Union Station'))
@@ -140,16 +141,16 @@ def sse_station_updates():
     def event_stream():
         # Send initial event
         yield f"data: {{'event': 'connected'}}\n\n"
-
+        
         # Keep the connection alive
         while True:
             # Check if session has a selected station
             station = session.get('selected_station', 'Union Station')
-
+            
             # Send station update every 5 seconds
             yield f"data: {{'event': 'station_update', 'station': '{station}'}}\n\n"
             time.sleep(5)  # Sleep to avoid too frequent updates
-
+    
     response = Response(stream_with_context(event_stream()),
                       mimetype="text/event-stream")
     response.headers['Cache-Control'] = 'no-cache'
@@ -161,7 +162,7 @@ def sse_station_updates():
 def handle_connect():
     """Handle WebSocket connection"""
     logger.debug('Client connected via WebSocket')
-
+    
 @socketio.on('disconnect')
 def handle_disconnect():
     """Handle WebSocket disconnection"""
@@ -190,8 +191,24 @@ def current_time():
 @app.route('/api/schedule', methods=['GET'])
 def api_schedule():
     """JSON API for schedule data"""
-    station = request.args.get('station', 'Union Station')
 
+@app.route('/api/alerts')
+@rate_limit(api_limiter)
+def get_alerts():
+    """Get current alerts"""
+    return jsonify(alert_scraper.get_alerts())
+
+@app.route('/api/alerts', methods=['POST'])
+@rate_limit(api_limiter)
+def add_alert():
+    """Add a new alert"""
+    data = request.get_json()
+    if data and 'message' in data:
+        alert_scraper.add_alert(data['message'], data.get('type', 'service_update'))
+        return jsonify({'status': 'success'})
+    return jsonify({'status': 'error', 'message': 'Invalid alert data'}), 400
+    station = request.args.get('station', 'Union Station')
+    
     try:
         schedule_data = scraper.get_station_schedule(station)
         return jsonify(schedule_data)
