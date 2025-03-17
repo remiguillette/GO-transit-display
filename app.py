@@ -173,28 +173,6 @@ def handle_station_request():
     station = session.get('selected_station', 'Union Station')
     emit('station_update', {'station': station})
 
-@app.route('/api/service-updates')
-def get_service_updates():
-    """API endpoint to get service updates"""
-    try:
-        # This could be expanded to fetch real data from GO Transit APIs
-        updates = [
-            {
-                "line": "Lakeshore West",
-                "status": "Minor Delays",
-                "details": "Delays up to 10 minutes due to signal maintenance"
-            },
-            {
-                "line": "Milton",
-                "status": "Service Alert",
-                "details": "Platform changes at Cooksville GO"
-            }
-        ]
-        return jsonify(updates)
-    except Exception as e:
-        logger.error(f"Error fetching service updates: {str(e)}")
-        return jsonify([])
-
 @app.route('/api/stations')
 def get_stations():
     """API endpoint to get the list of available stations"""
