@@ -21,6 +21,7 @@ import sys
 sys.path.append('.')  # Ensure the current directory is in the path
 from gtfs_parser import gtfs_data
 from go_scraper import scraper
+from alert_scraper import alert_scraper
 
 # Make sure GTFS data is loaded
 gtfs_data.load_data()
@@ -190,6 +191,17 @@ def current_time():
 @app.route('/api/schedule', methods=['GET'])
 def api_schedule():
     """JSON API for schedule data"""
+
+@app.route('/api/alerts')
+@rate_limit(api_limiter)
+def get_alerts():
+    """Get current GO Transit alerts"""
+    try:
+        alerts = alert_scraper.get_alerts()
+        return jsonify(alerts)
+    except Exception as e:
+        logger.error(f"Error getting alerts: {str(e)}")
+        return jsonify([])
     station = request.args.get('station', 'Union Station')
     
     try:
