@@ -166,19 +166,18 @@
 }
 
 .board-footer {
-    background: var(--go-background-dark);
-    border-top: 2px solid var(--go-primary);
-    padding: 0.5rem;
+    background-color: #000000;
+    border-top: 2px solid #097F5C;
     height: 2.5rem;
-    width: 100%;
+    overflow: hidden;
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
     z-index: 9999;
     display: flex;
-    align-items: center;
-    overflow: hidden;
+    align-items: flex-start;
+    padding-top: 0.4rem;
 }
 
 .scrolling-container {
