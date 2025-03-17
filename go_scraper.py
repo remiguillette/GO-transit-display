@@ -124,7 +124,6 @@ class GoScraper:
                 "train_number": train_number,
                 "color": self.get_line_color(line_code),
                 "is_express": is_express,
-                "reveal_time": reveal_time.strftime('%H:%M'),
                 "time_until_reveal": time_until_reveal,
                 "stops": "" # Protected - stops not displayed by GO scraper
             })
