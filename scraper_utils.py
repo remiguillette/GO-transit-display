@@ -36,7 +36,6 @@ def crawl_transsee_page(url, visited=None):
         "https://www.transsee.ca/stoplist?a=gotrain&r=GT",
         "https://www.transsee.ca/stoplist?a=gotrain&r=LE",
         "https://www.transsee.ca/stoplist?a=gotrain&r=LW",
-        "https://www.transsee.ca/operatechart?a=gotrain&r=LW&date=2025-03-17&starttime=22:24",
         "https://www.transsee.ca/routemessagehistory?a=gotrain&r=LW"
     ]
 
