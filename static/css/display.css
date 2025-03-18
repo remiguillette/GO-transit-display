@@ -227,26 +227,17 @@
     100% { opacity: 0; }
 }
 
-@keyframes scroll-left {
-    0% { transform: translateX(100%); }
-    100% { transform: translateX(-100%); }
-}
-
-.scrolling-text-en {
+.alert-text {
     color: #ffeb3b;
     font-weight: bold;
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     text-align: center;
-}
-
-.scrolling-text-fr {
-    color: #999;
-    font-size: 1.25rem;
-    text-align: center;
-}
-
-@keyframes blink {
-    0% { opacity: 1; }
-    50% { opacity: 0.3; }
-    100% { opacity: 1; }
+    padding: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background: var(--go-background-dark);
 }

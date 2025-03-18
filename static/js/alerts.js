@@ -1,31 +1,22 @@
-// Alert ticker functionality
-function updateAlertTicker(alerts) {
-    const tickerContent = document.querySelector('.ticker-content');
-    if (!tickerContent) return;
 
-    const alertText = Array.isArray(alerts) && alerts.length > 0
-        ? alerts.map(alert => alert.text || 'Service operating normally').join(' • ')
-        : ''; // Removed default message
+const alertElement = document.getElementById('alert-message');
 
-    tickerContent.textContent = alertText || 'Loading alerts...';
-    tickerContent.style.display = 'block';
-    tickerContent.style.animation = 'ticker 30s linear infinite';
-}
-
-// Fetch alerts every 30 seconds
-function fetchAlerts() {
+function updateAlerts() {
     fetch('/api/alerts')
         .then(response => response.json())
         .then(data => {
-            console.log('Alerts data:', data);
-            updateAlertTicker(data.alerts);
+            if (data.alerts && data.alerts.length > 0) {
+                alertElement.textContent = data.alerts[0].text;
+            } else {
+                alertElement.textContent = 'GO Transit - All services operating normally';
+            }
         })
-        .catch(err => {
-            console.error('Error fetching alerts:', err);
-            updateAlertTicker([]);
+        .catch(error => {
+            console.error('Error updating alerts:', error);
+            alertElement.textContent = 'GO Transit - All services operating normally';
         });
 }
 
-// Initial fetch and setup interval
-fetchAlerts();
-setInterval(fetchAlerts, 30000);
+// Update alerts every 30 seconds
+setInterval(updateAlerts, 30000);
+updateAlerts();
