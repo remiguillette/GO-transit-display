@@ -1,89 +1,58 @@
-
 import logging
-from seleniumwire import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.by import By
 import json
+import asyncio
+from playwright.async_api import async_playwright
 import time
 import random
 
 logger = logging.getLogger(__name__)
 
-def get_go_transit_updates():
-    options = Options()
-    options.add_argument('--headless=new')
-    options.add_argument('--no-sandbox')
-    options.add_argument('--disable-dev-shm-usage')
-    options.add_argument('--disable-gpu')
-    options.add_argument('--disable-blink-features=AutomationControlled')
-    options.add_argument('--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36')
-    
-    wire_options = {
-        'disable_encoding': True,
-        'ignore_http_methods': ['OPTIONS', 'HEAD'],
-        'request_interceptor': lambda req: req.headers.update({
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
-            'Accept-Language': 'en-US,en;q=0.5',
-            'Accept-Encoding': 'gzip, deflate, br',
-            'DNT': '1',
-            'Connection': 'keep-alive',
-            'Upgrade-Insecure-Requests': '1',
-            'Sec-Fetch-Dest': 'document',
-            'Sec-Fetch-Mode': 'navigate',
-            'Sec-Fetch-Site': 'none',
-            'Sec-Fetch-User': '?1',
-            'Cache-Control': 'max-age=0'
-        })
-    }
-    
-    driver = None
-    max_retries = 3
-    retry_count = 0
-    
-    while retry_count < max_retries:
+async def get_go_transit_updates():
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(headless=True)
+        context = await browser.new_context(
+            user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'
+        )
+
+        page = await context.new_page()
+
         try:
-            driver = webdriver.Chrome(
-                options=options,
-                seleniumwire_options=wire_options
-            )
-            driver.set_page_load_timeout(30)
-            
-            time.sleep(2 + random.random() * 3)
-            
-            url = "https://www.gotransit.com/en/service-updates/service-updates"
-            driver.get(url)
-            
-            wait = WebDriverWait(driver, 10)
-            wait.until(EC.presence_of_element_located((By.CLASS_NAME, "service-updates")))
-            
-            updates = []
-            for request in driver.requests:
-                if request.response and "/api/service-updates" in request.url:
-                    data = json.loads(request.response.body.decode('utf-8'))
-                    if isinstance(data, list):
-                        for update in data:
-                            if 'message' in update:
-                                updates.append(update['message'])
-            
+            await page.goto("https://www.gotransit.com/en/service-updates/service-updates", wait_until='networkidle')
+            await page.wait_for_load_state('domcontentloaded')
+
+            # Wait for content to load
+            await page.wait_for_selector('.service-updates', timeout=10000)
+
+            # Extract updates from the page
+            updates = await page.evaluate('''() => {
+                const elements = document.querySelectorAll('.service-alert');
+                return Array.from(elements).map(el => el.textContent.trim());
+            }''')
+
+            # If no visible updates found, check network requests
             if not updates:
-                elements = driver.find_elements(By.CLASS_NAME, "service-alert")
-                updates = [elem.text for elem in elements if elem.text.strip()]
-            
+                await page.wait_for_response(lambda response: '/api/service-updates' in response.url)
+                responses = await page.evaluate('''() => {
+                    return window.performance.getEntries()
+                        .filter(entry => entry.name.includes('/api/service-updates'))
+                        .map(entry => entry.name);
+                }''')
+
+                for response_url in responses:
+                    response = await page.goto(response_url)
+                    if response.ok():
+                        data = await response.json()
+                        if isinstance(data, list):
+                            updates.extend([update['message'] for update in data if 'message' in update])
+
             return updates if updates else ["GO Transit - All services operating normally"]
 
         except Exception as e:
             logger.error(f"Error fetching updates: {str(e)}")
-            retry_count += 1
-            if retry_count >= max_retries:
-                return ["GO Transit - All services operating normally"]
-            time.sleep(2)  # Wait before retrying
-            
+            return ["GO Transit - All services operating normally"]
+
         finally:
-            if driver:
-                try:
-                    driver.quit()
-                except:
-                    pass
+            await browser.close()
+
+def get_updates():
+    return asyncio.run(get_go_transit_updates())
