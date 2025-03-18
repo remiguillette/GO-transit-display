@@ -9,6 +9,8 @@ function updateAlertTicker(alerts) {
         : 'GO Transit - All services operating normally';
     
     tickerContent.textContent = alertText;
+    tickerContent.style.display = 'block';
+    tickerContent.style.animation = 'ticker 30s linear infinite';
 }
 
 // Fetch alerts every 30 seconds

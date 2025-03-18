@@ -26,6 +26,10 @@ class GoScraper:
         """Return the list of available stations from GTFS data"""
         return gtfs_data.get_station_names()
 
+    def get_alerts(self):
+        """Get service alerts"""
+        return [{"text": "GO Transit - All services operating normally"}]
+
     def get_station_schedule(self, station_name):
         """Get schedule for a station, ensuring stops column is protected"""
         logger.debug(f"Generating schedule for {station_name}")
