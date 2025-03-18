@@ -50,17 +50,26 @@ def crawl_transsee_page(url, visited=None):
                 response = requests.get(base_url, timeout=10)
                 if response.status_code == 200:
                     soup = BeautifulSoup(response.text, 'html.parser')
-                    # Look for alerts in the past 7 days
                     alerts_elements = soup.select('.alert-message, .route-alert, .service-alert, div.MedAlert, .message')
-                    current_date = datetime.now()
-                    week_ago = current_date - timedelta(days=7)
-                    filtered_alerts = []
-                    for alert in alerts_elements:
-                        time_elem = alert.select_one('time.timedisp, .timestamp')
-                        if time_elem and time_elem.get('datetime'):
-                            alert_date = datetime.strptime(time_elem['datetime'].split('T')[0], '%Y-%m-%d')
-                            if alert_date >= week_ago:
+                    
+                    # Special handling for routemessagehistory
+                    if 'routemessagehistory' in base_url:
+                        filtered_alerts = []
+                        for alert in alerts_elements:
+                            alert_text = alert.get_text(strip=True)
+                            if 'to now' in alert_text.lower():
                                 filtered_alerts.append(alert)
+                    else:
+                        # Regular 7-day filter for other pages
+                        current_date = datetime.now()
+                        week_ago = current_date - timedelta(days=7)
+                        filtered_alerts = []
+                        for alert in alerts_elements:
+                            time_elem = alert.select_one('time.timedisp, .timestamp')
+                            if time_elem and time_elem.get('datetime'):
+                                alert_date = datetime.strptime(time_elem['datetime'].split('T')[0], '%Y-%m-%d')
+                                if alert_date >= week_ago:
+                                    filtered_alerts.append(alert)
                     alerts_elements = filtered_alerts
                     for alert in alerts_elements:
                         alert_text = alert.get_text(strip=True)
