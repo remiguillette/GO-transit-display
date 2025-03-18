@@ -219,11 +219,11 @@
     white-space: nowrap;
     position: absolute;
     will-change: transform;
-    animation: scroll-left 40s linear infinite;
+    animation: scroll-left 30s linear infinite;
     padding-right: 50px;
     line-height: 1.75rem;
-    transform: translateZ(0);
-    backface-visibility: hidden;
+    transform: translate3d(0,0,0);
+    visibility: hidden;
 }
 
 .scrolling-text-en {
@@ -240,4 +240,6 @@
 @keyframes scroll-left {
     0% { transform: translate3d(100%, 0, 0); }
     100% { transform: translate3d(-100%, 0, 0); }
+    0% { visibility: visible; }
+    100% { visibility: visible; }
 }
