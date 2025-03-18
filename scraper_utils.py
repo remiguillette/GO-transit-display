@@ -30,8 +30,39 @@ def crawl_transsee_page(url, visited=None):
     if url in visited:
         return []
     
+    # Base TransSee URLs for different routes
+    base_urls = [
+        "https://www.transsee.ca/stoplist?a=gotrain&r=BR",
+        "https://www.transsee.ca/stoplist?a=gotrain&r=GT",
+        "https://www.transsee.ca/stoplist?a=gotrain&r=LE",
+        "https://www.transsee.ca/stoplist?a=gotrain&r=LW",
+        "https://www.transsee.ca/stoplist?a=gotrain&r=ST",
+        "https://www.transsee.ca/operatechart?a=gotrain&r=LW",
+        "https://www.transsee.ca/routemessagehistory?a=gotrain&r=LW"
+    ]
+    
     visited.add(url)
     alerts = []
+    
+    # Add alerts from additional route pages
+    for base_url in base_urls:
+        if base_url not in visited:
+            try:
+                response = requests.get(base_url, timeout=10)
+                if response.status_code == 200:
+                    soup = BeautifulSoup(response.text, 'html.parser')
+                    # Look for alerts in the past 3 weeks
+                    alerts_elements = soup.select('.alert-message, .route-alert, .service-alert, div.MedAlert, .message')
+                    for alert in alerts_elements:
+                        alert_text = alert.get_text(strip=True)
+                        if alert_text and not alert_text.isspace():
+                            time_elem = alert.select_one('time.timedisp, .timestamp')
+                            started = time_elem.get('datetime', '').split('T')[0] if time_elem else None
+                            alert_info = extract_alert_info(alert_text)
+                            alerts.append(alert_info)
+                visited.add(base_url)
+            except Exception as e:
+                logger.error(f"Error fetching from {base_url}: {e}")
     
     try:
         response = requests.get(url, timeout=10)
