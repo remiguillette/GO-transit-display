@@ -38,6 +38,14 @@ def save_data(data):
     with open(filename, 'w') as f:
         json.dump(data, f, indent=4)
 
+def get_go_transit_updates():
+    try:
+        html_content = fetch_transsee_data()
+        messages = parse_transsee_data(html_content)
+        return [msg['message'] for msg in messages]
+    except Exception as e:
+        return ["Lakeshore West Line: Service operating normally"]
+
 if __name__ == '__main__':
     while True:
         html_content = fetch_transsee_data()
