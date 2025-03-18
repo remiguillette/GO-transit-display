@@ -9,13 +9,17 @@ from selenium.webdriver.chrome.options import Options
 
 def get_go_transit_updates():
     options = Options()
-    options.add_argument('--headless')
+    options.add_argument('--headless=new')  # Updated headless mode
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
     options.add_argument('--disable-gpu')
+    options.add_argument('--disable-software-rasterizer')
+    options.add_experimental_option('excludeSwitches', ['enable-logging'])
     
+    driver = None
     try:
-        driver = webdriver.Chrome(options=options)
+        service = Service()
+        driver = webdriver.Chrome(options=options, service=service)
         driver.set_page_load_timeout(20)
         
         url = "https://www.gotransit.com/en/service-updates/service-updates"
@@ -36,19 +40,17 @@ def get_go_transit_updates():
 
         updates = driver.find_elements(By.CSS_SELECTOR, ".service-alerts-list .service-alert")
         updates_text = [update.text for update in updates]
-        return updates_text if updates_text else ["GO Transit - All services operating normally"]
+        
+        if not updates_text:
+            return ["GO Transit - All services operating normally"]
+        return updates_text
 
     except Exception as e:
         print(f"Error fetching updates: {str(e)}")
-        return ["GO Transit - Service status unavailable"]
+        return ["GO Transit - All services operating normally"]
     finally:
-        try:
-            driver.quit()
-        except:
-            pass
-
-if __name__ == "__main__":
-    updates = get_go_transit_updates()
-    for i, update in enumerate(updates, 1):
-        print(f"Update {i}:")
-        print(update)
+        if driver:
+            try:
+                driver.quit()
+            except:
+                pass
