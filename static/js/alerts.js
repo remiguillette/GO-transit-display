@@ -1,49 +1,38 @@
+const socket = io();
 
 let currentAlertIndex = 0;
 let alerts = [];
 
-function showAlert() {
+function updateScrollingText(alerts) {
     const container = document.getElementById('scrolling-container');
-    if (!container || alerts.length === 0) {
-        container.textContent = 'GO Transit - All services operating normally';
+    if (!container) return;
+
+    if (!alerts || alerts.length === 0) {
+        container.innerHTML = '<div class="scrolling-text">GO Transit - All services operating normally</div>';
         return;
     }
 
-    // Remove existing alerts
-    container.innerHTML = '';
+    const alertText = alerts.map(alert => 
+        `${alert.line}: ${alert.status} - ${alert.details}`
+    ).join(' • ');
 
-    // Create new alert with fade effect
-    const alertText = document.createElement('div');
-    alertText.className = 'alert-text';
-    alertText.textContent = alerts[currentAlertIndex].text;
-    container.appendChild(alertText);
-
-    // Update index for next alert
-    currentAlertIndex = (currentAlertIndex + 1) % alerts.length;
+    container.innerHTML = `<div class="scrolling-text">${alertText}</div>`;
 }
 
-function updateAlerts() {
-    fetch('/api/alerts')
-        .then(response => response.json())
-        .then(data => {
-            alerts = data;
-            if (alerts.length === 0) {
-                alerts = [{ text: 'GO Transit - All services operating normally' }];
-            }
-            showAlert();
-        })
-        .catch(error => {
-            console.error('Error updating alerts:', error);
-            alerts = [{ text: 'GO Transit - All services operating normally' }];
-            showAlert();
-        });
-}
 
-// Initial update
-updateAlerts();
+socket.on('connect', () => {
+    console.log('Connected to server');
+});
 
-// Update alerts data every 30 seconds
-setInterval(updateAlerts, 30000);
+socket.on('alerts_update', (data) => {
+    updateScrollingText(data.alerts);
+});
 
-// Rotate display every 5 seconds
-setInterval(showAlert, 5000);
+// Initial fetch of alerts (fallback if socket is unavailable)
+fetch('/api/alerts')
+    .then(response => response.json())
+    .then(data => updateScrollingText(data.alerts))
+    .catch(err => console.error('Error updating alerts:', err));
+
+
+//setInterval(showAlert, 5000); // Removed as it conflicts with real-time updates
