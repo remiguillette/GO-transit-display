@@ -1,16 +1,19 @@
-
 // Alert ticker functionality
 function updateAlertTicker(alerts) {
     const tickerContent = document.querySelector('.ticker-content');
     if (!tickerContent) return;
-    
+
     const alertText = Array.isArray(alerts) && alerts.length > 0
         ? alerts.map(alert => alert.text || 'Service operating normally').join(' • ')
-        : 'GO Transit - All services operating normally';
-    
+        : ''; // Removed default message
+
     tickerContent.textContent = alertText;
-    tickerContent.style.display = 'block';
-    tickerContent.style.animation = 'ticker 30s linear infinite';
+    if (alertText) { //Only show if there is text
+        tickerContent.style.display = 'block';
+        tickerContent.style.animation = 'ticker 30s linear infinite';
+    } else {
+        tickerContent.style.display = 'none';
+    }
 }
 
 // Fetch alerts every 30 seconds
