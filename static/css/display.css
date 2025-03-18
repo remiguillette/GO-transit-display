@@ -227,6 +227,11 @@
     100% { opacity: 0; }
 }
 
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+
 .alert-text {
     color: #ffeb3b;
     font-weight: bold;
@@ -240,4 +245,22 @@
     bottom: 0;
     width: 100%;
     background: var(--go-background-dark);
+    animation: blink 2s infinite;
+}
+
+.alert-carousel {
+    height: 1.2em;
+    position: relative;
+    overflow: hidden;
+}
+
+.alert-item {
+    position: absolute;
+    width: 100%;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.alert-item.active {
+    opacity: 1;
 }
