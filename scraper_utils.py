@@ -63,6 +63,12 @@ class TransSeeScraper:
             print(f'- {alert}')
         print(self.footer)
 
+def get_go_transit_updates():
+    """Get GO Transit service updates"""
+    scraper = TransSeeScraper()
+    scraper.scrape()
+    return scraper.alerts
+
 # Create an instance for importing
 scraper = TransSeeScraper()
 
