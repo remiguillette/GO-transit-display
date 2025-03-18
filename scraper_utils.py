@@ -38,13 +38,36 @@ def crawl_transsee_page(url, visited=None):
         response.raise_for_status()
         soup = BeautifulSoup(response.text, 'html.parser')
         
-        # Find service alerts
-        alert_elements = soup.select('.message-text, .route-message, div.message')
-        for alert in alert_elements:
+        # Find MedAlert service alerts
+        med_alerts = soup.select('div.MedAlert')
+        for alert in med_alerts:
             alert_text = alert.get_text(strip=True)
             if alert_text and not alert_text.isspace():
-                alert_info = extract_alert_info(alert_text)
+                # Extract time elements
+                time_elem = alert.select_one('time.timedisp')
+                if time_elem:
+                    started = time_elem.get('datetime', '').split('T')[0]
+                else:
+                    started = None
+                
+                # Look for "Until" text
+                until_text = alert.text
+                until_match = re.search(r'Until\s+(.*?)(?=\s|$)', until_text)
+                until = until_match.group(1) if until_match else None
+                
+                alert_info = {
+                    'text': alert_text,
+                    'started': started,
+                    'until': until
+                }
                 alerts.append(alert_info)
+
+        # Check embedded service update links
+        update_links = soup.select('a[href*="service-updates"]')
+        for link in update_links[:3]:  # Limit to 3 to avoid too many requests
+            next_url = urljoin(url, link['href'])
+            if next_url not in visited:
+                alerts.extend(crawl_transsee_page(next_url, visited))
                 
         # Also check message history
         history_links = soup.select('a[href*="routemessagehistory"]')

@@ -11,21 +11,32 @@ function updateAlerts() {
             const scrollingText = document.createElement('div');
             scrollingText.className = 'scrolling-text';
 
-            // Check if data is an array (the format returned by get_go_transit_updates)
             if (Array.isArray(data) && data.length > 0) {
-                scrollingText.textContent = data.join(' • ');
+                const formattedAlerts = data.map(alert => {
+                    if (typeof alert === 'string' && alert.includes('Started') && alert.includes('Until')) {
+                        return alert.replace(/Started|Until/g, (match) => ` ${match} `);
+                    }
+                    return alert;
+                });
+                scrollingText.textContent = formattedAlerts.join(' • ');
             } else {
-                scrollingText.textContent = 'GO Transit - No Service Updates';
+                scrollingText.textContent = 'GO Transit - All services operating normally';
             }
 
             container.appendChild(scrollingText);
         })
         .catch(error => {
-            console.log('Error updating alerts:', error);
+            console.error('Error updating alerts:', error);
             const container = document.getElementById('scrolling-container');
-            container.innerHTML = '<div class="scrolling-text">GO Transit - No Service Updates</div>';
+            container.innerHTML = '<div class="scrolling-text">GO Transit - All services operating normally</div>';
         });
 }
+
+// Initial update
+updateAlerts();
+
+// Update every 30 seconds instead of 60
+setInterval(updateAlerts, 30000);
 
 // Initial update
 updateAlerts();
