@@ -1,33 +1,68 @@
+let currentAlertIndex = 0;
+let alerts = [];
+
+function showNextAlert() {
+    const container = document.getElementById('scrolling-container');
+    if (!container || alerts.length === 0) return;
+
+    // Remove existing alert
+    const oldAlert = container.querySelector('.scrolling-text');
+    if (oldAlert) {
+        oldAlert.classList.remove('active');
+        setTimeout(() => oldAlert.remove(), 500);
+    }
+
+    // Create new alert
+    const scrollingText = document.createElement('div');
+    scrollingText.className = 'scrolling-text';
+    
+    const alert = alerts[currentAlertIndex];
+    
+    const englishText = document.createElement('div');
+    englishText.className = 'scrolling-text-en';
+    englishText.textContent = alert;
+
+    scrollingText.appendChild(englishText);
+    container.appendChild(scrollingText);
+    
+    // Trigger fade in
+    setTimeout(() => scrollingText.classList.add('active'), 50);
+
+    // Update index
+    currentAlertIndex = (currentAlertIndex + 1) % alerts.length;
+}
+
 function updateAlerts() {
     fetch('/api/alerts')
         .then(response => response.json())
         .then(data => {
-            const container = document.getElementById('scrolling-container');
-            if (!container) return;
-
-            container.innerHTML = '';
-            const scrollingText = document.createElement('div');
-            scrollingText.className = 'scrolling-text';
-
             if (Array.isArray(data) && data.length > 0 && data[0] !== "GO Transit - All services operating normally") {
-                const formattedAlerts = data.map(alert => {
+                alerts = data.map(alert => {
                     if (typeof alert === 'string' && alert.includes('Started') && alert.includes('Until')) {
                         return alert.replace(/Started|Until/g, (match) => ` ${match} `);
                     }
                     return alert;
                 });
-                const alertText = formattedAlerts.join(' • ');
+            } else {
+                alerts = ["GO Transit - All services operating normally"];
+            }
+            showNextAlert();
+        })
+        .catch(error => {
+            console.error('Error updating alerts:', error);
+            alerts = ["GO Transit - All services operating normally"];
+            showNextAlert();
+        });
+}
 
-                // Add extra padding to ensure text fully exits screen
-                const paddedText = alertText + '     ';
+// Initial update
+updateAlerts();
 
-                const englishText = document.createElement('div');
-                englishText.className = 'scrolling-text-en';
-                englishText.textContent = paddedText;
+// Update alerts data every 30 seconds
+setInterval(updateAlerts, 30000);
 
-                const frenchText = document.createElement('div');
-                frenchText.className = 'scrolling-text-fr';
-                frenchText.textContent = paddedText;
+// Rotate through alerts every 5 seconds
+setInterval(showNextAlert, 5000);t;
 
                 scrollingText.appendChild(englishText);
                 scrollingText.appendChild(frenchText);
