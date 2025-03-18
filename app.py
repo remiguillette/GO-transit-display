@@ -193,6 +193,16 @@ def get_alerts():
         logger.error(f"Error in alerts API: {e}")
         return jsonify({"alerts": []})
 
+@app.route('/alerts')
+def alerts_page():
+    """Admin page to view all alerts"""
+    try:
+        alerts = scraper.get_alerts()
+        return render_template('alerts.html', alerts=alerts)
+    except Exception as e:
+        logger.error(f"Error in alerts page: {e}")
+        return render_template('alerts.html', alerts=[])
+
 @app.route('/api/current_time')
 def current_time():
     """API endpoint to get the current time (for AJAX updates)"""
