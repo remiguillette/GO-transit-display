@@ -11,13 +11,16 @@
 <body>
     {% block content %}{% endblock %}
     
-    <footer class="board-footer">
-        <div class="language-labels">
-            <div>En</div>
-            <div>Fr</div>
-        </div>
-        <div id="scrolling-container" class="scrolling-container">
-            <!-- Scrolling text will be inserted here -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="language-selector">
+                <span class="lang-label">En</span>
+                <span class="lang-divider">|</span>
+                <span class="lang-label">Fr</span>
+            </div>
+            <div id="alert-ticker" class="alert-ticker">
+                <div class="ticker-content"></div>
+            </div>
         </div>
     </footer>
 
