@@ -213,7 +213,7 @@
     flex-direction: column;
     white-space: nowrap;
     position: absolute;
-    animation: scroll-left 45s linear infinite;
+    animation: scroll-left 75s linear infinite;
     padding-right: 100px;
     line-height: 1.75rem;
 }
