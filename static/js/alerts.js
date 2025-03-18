@@ -1,3 +1,4 @@
+
 let currentAlertIndex = 0;
 let alerts = [];
 
@@ -6,11 +7,7 @@ function showAlert() {
     if (!container || alerts.length === 0) return;
 
     // Remove existing alerts
-    const existingAlerts = container.querySelectorAll('.alert-text');
-    existingAlerts.forEach(alert => {
-        alert.classList.remove('active');
-        alert.remove();
-    });
+    container.innerHTML = '';
 
     // Create new alert
     const alertText = document.createElement('div');
@@ -18,7 +15,10 @@ function showAlert() {
     alertText.textContent = alerts[currentAlertIndex];
     container.appendChild(alertText);
 
-    // Update index
+    // Animate the alert
+    alertText.style.animation = 'fadeInOut 5s ease-in-out';
+
+    // Update index for next alert
     currentAlertIndex = (currentAlertIndex + 1) % alerts.length;
 }
 
@@ -30,17 +30,21 @@ function updateAlerts() {
             if (alerts.length === 0) {
                 alerts = ['GO Transit - All services operating normally'];
             }
-            showAlert();
         })
         .catch(error => {
             console.error('Error updating alerts:', error);
             alerts = ['GO Transit - All services operating normally'];
-            showAlert();
         });
 }
 
 // Initial update
 updateAlerts();
 
-// Update every 30 seconds
+// Update alerts data every 30 seconds
 setInterval(updateAlerts, 30000);
+
+// Rotate display every 5 seconds
+setInterval(showAlert, 5000);
+
+// Show first alert immediately
+setTimeout(showAlert, 100);
