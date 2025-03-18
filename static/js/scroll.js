@@ -1,3 +1,4 @@
+
 const SCROLL_SPEED = 50; // Lower = faster
 
 function updateAlerts() {
@@ -10,9 +11,9 @@ function updateAlerts() {
             const scrollingText = document.createElement('div');
             scrollingText.className = 'scrolling-text';
 
-            // Add the alert text
-            if (data && data.alerts && data.alerts.length > 0) {
-                scrollingText.textContent = data.alerts.join(' • ');
+            // Check if data is an array (the format returned by get_go_transit_updates)
+            if (Array.isArray(data) && data.length > 0) {
+                scrollingText.textContent = data.join(' • ');
             } else {
                 scrollingText.textContent = 'GO Transit - No Service Updates';
             }
@@ -26,5 +27,8 @@ function updateAlerts() {
         });
 }
 
+// Initial update
 updateAlerts();
+
+// Update every minute
 setInterval(updateAlerts, 60000);
