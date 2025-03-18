@@ -5,12 +5,12 @@ function showNextAlert() {
     const container = document.getElementById('scrolling-container');
     if (!container || alerts.length === 0) return;
 
-    // Remove existing alert
-    const oldAlert = container.querySelector('.scrolling-text');
-    if (oldAlert) {
-        oldAlert.classList.remove('active');
-        setTimeout(() => oldAlert.remove(), 500);
-    }
+    // Remove all existing alerts first
+    const existingAlerts = container.querySelectorAll('.scrolling-text');
+    existingAlerts.forEach(alert => {
+        alert.classList.remove('active');
+        alert.remove();
+    });
 
     // Create new alert
     const scrollingText = document.createElement('div');
@@ -32,44 +32,21 @@ function showNextAlert() {
     currentAlertIndex = (currentAlertIndex + 1) % alerts.length;
 }
 
+// Add alerts update function
 function updateAlerts() {
     fetch('/api/alerts')
         .then(response => response.json())
         .then(data => {
-            const container = document.getElementById('scrolling-container');
-            if (!container) return;
-
-            container.innerHTML = '';
-            const scrollingText = document.createElement('div');
-            scrollingText.className = 'scrolling-text active';
-
-            if (Array.isArray(data) && data.length > 0 && data[0] !== "GO Transit - All services operating normally") {
-                alerts = data.map(alert => {
-                    if (typeof alert === 'string' && alert.includes('Started') && alert.includes('Until')) {
-                        return alert.replace(/Started|Until/g, (match) => ` ${match} `);
-                    }
-                    return alert;
-                });
-                const alert = alerts[currentAlertIndex];
-
-                const englishText = document.createElement('div');
-                englishText.className = 'scrolling-text-en';
-                englishText.textContent = alert;
-
-                scrollingText.appendChild(englishText);
-
-            } else {
-                scrollingText.textContent = 'GO Transit - All services operating normally';
+            alerts = data;
+            if (alerts.length === 0) {
+                alerts = ['GO Transit - All services operating normally'];
             }
-
-            container.appendChild(scrollingText);
+            showNextAlert();
         })
         .catch(error => {
             console.error('Error updating alerts:', error);
-            const container = document.getElementById('scrolling-container');
-            if (container) {
-                container.innerHTML = '<div class="scrolling-text">GO Transit - All services operating normally</div>';
-            }
+            alerts = ['GO Transit - All services operating normally'];
+            showNextAlert();
         });
 }
 
