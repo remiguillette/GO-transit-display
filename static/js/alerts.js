@@ -9,14 +9,11 @@ function showAlert() {
     // Remove existing alerts
     container.innerHTML = '';
 
-    // Create new alert
+    // Create new alert with fade effect
     const alertText = document.createElement('div');
     alertText.className = 'alert-text';
-    alertText.textContent = alerts[currentAlertIndex];
+    alertText.textContent = alerts[currentAlertIndex].text;
     container.appendChild(alertText);
-
-    // Animate the alert
-    alertText.style.animation = 'fadeInOut 5s ease-in-out';
 
     // Update index for next alert
     currentAlertIndex = (currentAlertIndex + 1) % alerts.length;
@@ -26,14 +23,17 @@ function updateAlerts() {
     fetch('/api/alerts')
         .then(response => response.json())
         .then(data => {
-            alerts = data;
+            // Remove duplicates by using Set
+            const uniqueAlerts = [...new Set(data.map(alert => JSON.stringify(alert)))];
+            alerts = uniqueAlerts.map(alert => JSON.parse(alert));
+            
             if (alerts.length === 0) {
-                alerts = ['GO Transit - All services operating normally'];
+                alerts = [{ text: 'GO Transit - All services operating normally' }];
             }
         })
         .catch(error => {
             console.error('Error updating alerts:', error);
-            alerts = ['GO Transit - All services operating normally'];
+            alerts = [{ text: 'GO Transit - All services operating normally' }];
         });
 }
 

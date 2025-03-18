@@ -215,10 +215,10 @@
 .alert-text {
     color: #ffeb3b;
     font-size: 1.5rem;
+    white-space: normal;
+    animation: fadeInOut 5s ease-in-out;
     text-align: center;
-    line-height: 1.75rem;
-    width: 100%;
-    opacity: 0;
+    padding: 10px;
 }
 
 @keyframes fadeInOut {
