@@ -16,6 +16,27 @@ def get_go_transit_updates():
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
     options.add_argument('--disable-gpu')
+    options.add_argument('--disable-blink-features=AutomationControlled')
+    options.add_argument('--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36')
+    
+    # Add additional headers to avoid detection
+    wire_options = {
+        'disable_encoding': True,
+        'ignore_http_methods': ['OPTIONS', 'HEAD'],
+        'request_interceptor': lambda req: req.headers.update({
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+            'Accept-Language': 'en-US,en;q=0.5',
+            'Accept-Encoding': 'gzip, deflate, br',
+            'DNT': '1',
+            'Connection': 'keep-alive',
+            'Upgrade-Insecure-Requests': '1',
+            'Sec-Fetch-Dest': 'document',
+            'Sec-Fetch-Mode': 'navigate',
+            'Sec-Fetch-Site': 'none',
+            'Sec-Fetch-User': '?1',
+            'Cache-Control': 'max-age=0'
+        })
+    }
     
     # Configure Selenium Wire to capture network requests
     wire_options = {
@@ -24,12 +45,19 @@ def get_go_transit_updates():
     }
     
     driver = None
-    try:
-        driver = webdriver.Chrome(
-            options=options,
-            seleniumwire_options=wire_options
-        )
-        driver.set_page_load_timeout(20)
+    max_retries = 3
+    retry_count = 0
+    
+    while retry_count < max_retries:
+        try:
+            driver = webdriver.Chrome(
+                options=options,
+                seleniumwire_options=wire_options
+            )
+            driver.set_page_load_timeout(30)
+            
+            # Add random delay between 2-5 seconds
+            time.sleep(2 + random.random() * 3)
         
         # Visit the page
         url = "https://www.gotransit.com/en/service-updates/service-updates"
