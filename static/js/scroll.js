@@ -1,4 +1,3 @@
-
 const SCROLL_SPEED = 50; // Lower = faster
 
 function updateAlerts() {
@@ -6,23 +5,24 @@ function updateAlerts() {
         .then(response => response.json())
         .then(data => {
             const container = document.getElementById('scrolling-container');
+            container.innerHTML = '';
+
             const scrollingText = document.createElement('div');
             scrollingText.className = 'scrolling-text';
-            
-            if (data && data.length > 0) {
-                scrollingText.textContent = data.map(update => 
-                    `${update.line}: ${update.status} - ${update.details}`).join(' • ');
+
+            // Add the alert text
+            if (data && data.alerts && data.alerts.length > 0) {
+                scrollingText.textContent = data.alerts.join(' • ');
             } else {
-                scrollingText.textContent = 'GO Transit - All services operating normally';
+                scrollingText.textContent = 'GO Transit - No Service Updates';
             }
-            
-            container.innerHTML = '';
+
             container.appendChild(scrollingText);
         })
         .catch(error => {
-            console.error("Error updating alerts:", error);
+            console.log('Error updating alerts:', error);
             const container = document.getElementById('scrolling-container');
-            container.innerHTML = '<div class="scrolling-text">GO Transit - All services operating normally</div>';
+            container.innerHTML = '<div class="scrolling-text">GO Transit - No Service Updates</div>';
         });
 }
 
