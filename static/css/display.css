@@ -16,7 +16,6 @@
     font-weight: 300;
 }
 
-/* Display board layout */
 .display-board {
     display: flex;
     flex-direction: column;
@@ -32,30 +31,6 @@
     overflow: hidden;
 }
 
-.schedule-header {
-    color: #FFFFFF;
-    padding: 1rem;
-    font-size: 1.2rem;
-}
-
-.schedule-row {
-    color: #FFFFFF;
-    padding: 1rem;
-    font-size: 1.2rem;
-}
-
-.time {
-    color: #FFFFFF;
-    font-size: 2rem;
-    font-weight: bold;
-    padding: 0.5rem;
-}
-
-.station-name {
-    color: #FFFFFF;
-}
-
-/* Add your CSS styles here */
 .board-header {
     background: var(--go-background-dark);
     padding: 1rem;
@@ -75,14 +50,14 @@
 
 .go-logo img {
     height: 80px;
-    margin-right: 5px; 
+    margin-right: 5px;
 }
 
 .station-info {
     display: flex;
     align-items: center;
     flex: 1;
-    justify-content: left; 
+    justify-content: left;
     padding: 0px;
 }
 
@@ -127,11 +102,14 @@
     margin: 0;
     font-weight: 700;
     line-height: 1.2;
+    color: #FFFFFF;
 }
 
 .time {
     font-size: 5rem;
     font-weight: 700;
+    color: #FFFFFF;
+    padding: 0.5rem;
 }
 
 .schedule-container {
@@ -148,8 +126,6 @@
     gap: 0.5rem;
     grid-template-rows: repeat(auto-fill, minmax(3.5rem, 1fr));
     overflow: hidden;
-    display: flex;
-    flex-direction: column;
 }
 
 .schedule-header {
@@ -160,6 +136,7 @@
     margin-bottom: 1rem;
     font-size: 2.25rem;
     font-weight: 500;
+    color: #FFFFFF;
 }
 
 .schedule-row {
@@ -169,67 +146,7 @@
     background: #000000;
     font-size: 2.25rem;
     font-weight: 300;
-}
-
-.schedule-row.last-row {
-    border-bottom: none;
-}
-
-.board-footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: #000;
-    color: #ffdb00;
-    padding: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    z-index: 1000;
-}
-
-.language-labels {
-    width: 60px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    color: #fff;
-    font-weight: bold;
-    border-right: 2px solid #097F5C;
-    background: #000;
-}
-
-.scrolling-container {
-    flex: 1;
-    height: 100%;
-    position: relative;
-    overflow: hidden;
-    padding: 0.5rem 1rem;
-    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
-    mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
-}
-
-.alert-text {
-    color: #ffeb3b;
-    font-size: 1.5rem;
-    white-space: normal;
-    animation: fadeInOut 5s ease-in-out;
-    text-align: center;
-    padding: 10px;
-}
-
-@keyframes fadeInOut {
-    0% { opacity: 0; }
-    10% { opacity: 1; }
-    90% { opacity: 1; }
-    100% { opacity: 0; }
-}
-
-@keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.3; }
+    color: #FFFFFF;
 }
 
 .alert-text {
@@ -238,29 +155,15 @@
     font-size: 1.2rem;
     text-align: center;
     padding: 10px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    position: fixed;
-    bottom: 0;
-    width: 100%;
     background: var(--go-background-dark);
-    animation: blink 2s infinite;
 }
 
-.alert-carousel {
-    height: 1.2em;
-    position: relative;
-    overflow: hidden;
-}
-
-.alert-item {
-    position: absolute;
+.board-footer {
+    background: #000;
+    color: #ffdb00;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     width: 100%;
-    opacity: 0;
-    transition: opacity 0.5s ease-in-out;
-}
-
-.alert-item.active {
-    opacity: 1;
 }
