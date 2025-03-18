@@ -16,4 +16,7 @@ dependencies = [
     "sqlalchemy>=2.0.39",
     "beautifulsoup4>=4.13.3",
     "requests>=2.32.3",
+    "selenium>=4.29.0",
+    "webdriver-manager>=4.0.2",
+    "tweepy>=4.15.0",
 ]

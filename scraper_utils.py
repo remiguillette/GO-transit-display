@@ -10,28 +10,50 @@ logger = logging.getLogger(__name__)
 
 def get_go_transit_updates():
     """
-    Get service updates from GO Transit website
+    Get service updates from GO Transit website using Selenium
     """
     try:
-        url = 'https://www.gotransit.com/en/service-updates'
-        response = requests.get(url, timeout=10)
-        soup = BeautifulSoup(response.content, 'html.parser')
+        from selenium import webdriver
+        from selenium.webdriver.common.by import By
+        from selenium.webdriver.support.ui import WebDriverWait
+        from selenium.webdriver.support import expected_conditions as EC
+        from selenium.webdriver.chrome.service import Service
+        from webdriver_manager.chrome import ChromeDriverManager
+        import time
 
-        updates = []
-        for item in soup.select('.service-update-list-item'):
+        # Set up Chrome WebDriver
+        options = webdriver.ChromeOptions()
+        options.add_argument('--headless')
+        options.add_argument('--no-sandbox')
+        options.add_argument('--disable-dev-shm-usage')
+        driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+
+        # Open GO Transit service updates page
+        url = "https://www.gotransit.com/en/service-updates/service-updates"
+        driver.get(url)
+
+        # Wait for and click 'View Updates' button
+        wait = WebDriverWait(driver, 10)
+        view_updates_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='View Updates']")))
+        view_updates_button.click()
+
+        # Load all updates
+        while True:
             try:
-                title = item.find('h3')
-                description = item.find('p')
+                load_more_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Load more updates']")))
+                load_more_button.click()
+                time.sleep(2)
+            except:
+                break
 
-                title_text = title.text.strip() if title else "GO Transit"
-                desc_text = description.text.strip() if description else "All services operating normally"
+        # Extract updates
+        updates = driver.find_elements(By.CSS_SELECTOR, ".service-alerts-list .service-alert")
+        updates_text = [update.text.strip() for update in updates]
+        
+        # Close driver
+        driver.quit()
 
-                updates.append(f"{title_text}: {desc_text}")
-            except (AttributeError, TypeError) as e:
-                logger.warning(f"Error parsing update item: {e}")
-                updates.append("GO Transit - All services operating normally")
-
-        return updates if updates else ["GO Transit - All services operating normally"]
+        return updates_text if updates_text else ["GO Transit - All services operating normally"]
 
     except Exception as e:
         logger.error(f"Error fetching GO Transit updates: {e}")
