@@ -1,0 +1,37 @@
+Clean up the CSS code and remove old, unnecessary changes and create a clean code.
+
+1. display-board and overflow: hidden;:
+
+You have correctly set overflow: hidden; on .display-board. This should prevent the entire display board from scrolling. However, this doesn't mean that the content inside can't have other layout issues that simulate scrolling.
+2. schedule-container and overflow: hidden; and schedule-rows and overflow: hidden;:
+
+You have also set overflow: hidden; on .schedule-container and .schedule-rows. This is a good practice for controlling content.
+However, if the content inside .schedule-rows exceeds the available height, it will be clipped, not scrolled. This may be the visual effect you perceive as scrolling. 3. scrolling-container and overflow: hidden;:
+
+You have a scrolling-container with a hidden overflow. This is normal, but it's important to note that this container is in the footer and is used to display the scrolling text in the footer.
+The mask-image is used to give a fade-in effect to the scrolling text. If the text exceeds the width of the container, it will be cut off, not scrolled.
+4. alert-text:
+
+Your alert-text has overflow: hidden; and text-overflow: ellipsis;. This means that if the text is too long, it will be cut off and an ellipsis (...) will be displayed.
+The white-space: nowrap; prevents the text from wrapping to the next line.
+5. alert-carousel and alert-item:
+
+Your alert carousel uses overflow: hidden; to hide items that are not active. This is normal. Potential Issues and Solutions:
+
+Content that Exceeds Height:
+Make sure the sum of the heights of the elements inside .schedule-rows does not exceed the available height.
+Use your browser's developer tools to inspect the elements and check their heights.
+If you have a variable number of rows in .schedule-rows, make sure your layout scales correctly.
+Layout Issues:
+Excessive margins or padding can cause layout issues that simulate scrolling.
+Check the margins and padding of all elements, especially within .schedule-container and .schedule-rows.
+Dynamic Content:
+If your display table content is loaded dynamically, make sure the code generating this content does not create elements that exceed the container's bounds. Check that the number of lines in the schedule does not exceed the screen height.
+Footer Scrolling Text:
+Footer scrolling text is designed to scroll horizontally, not vertically. If you see vertical scrolling in the footer, it could be a layout issue.
+Debugging Tips:
+
+Use your browser's developer tools to inspect elements and check their dimensions and styles.
+Add temporary borders to elements to visualize their layout.
+Reduce the content of your display table to see if the issue disappears.
+In short, the problem is probably not actual scrolling, but rather a layout issue where the content exceeds the bounds of the containers. Use your browser's developer tools to inspect elements and check their dimensions and styles.
