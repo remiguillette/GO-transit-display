@@ -15,7 +15,8 @@
     white-space: nowrap;
     padding: 0.5rem 0;
     font-size: 1.1rem;
-    animation: scroll-left 20s linear infinite;
+    width: max-content;
+    animation: scroll-left 30s linear infinite;
 }
 
 @keyframes scroll-left {
