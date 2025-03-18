@@ -1,78 +1,47 @@
-
 import requests
 from bs4 import BeautifulSoup
-from datetime import datetime, timedelta
+from datetime import datetime
+import time
+import json
 
-class TransSeeScraper:
-    def __init__(self):
-        self.base_urls = [
-            'https://www.transsee.ca/stoplist?a=gotrain&r=BR',
-            'https://www.transsee.ca/stoplist?a=gotrain&r=GT',
-            'https://www.transsee.ca/stoplist?a=gotrain&r=LE',
-            'https://www.transsee.ca/stoplist?a=gotrain&r=LW',
-            'https://www.transsee.ca/routemessagehistory?a=gotrain&r=LW'
-        ]
-        self.alerts = []
-        self.footer = '---\nScraper by [Your Name]'  # Keep this as is
+def fetch_transsee_data():
+    url = 'https://www.transsee.ca/tripmsg?a=go&route=LW'
+    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36'}
 
-    def fetch_data(self, url):
-        response = requests.get(url)
-        if response.status_code == 200:
-            return response.text
-        return None
+    response = requests.get(url, headers=headers)
+    response.raise_for_status()
 
-    def parse_alerts(self, html_content):
-        soup = BeautifulSoup(html_content, 'html.parser')
-        alerts = []
-        now = datetime.now()
-        seven_days_ago = now - timedelta(days=7)
+    return response.text
 
-        # Find all relevant messages and dates
-        messages = soup.find_all('div', class_='message')  # Adjust the class name if needed
-        for message in messages:
-            date_str = message.find('span', class_='date').text.strip()  # Adjust if different structure
-            message_text = message.text.strip()
+def parse_transsee_data(html_content):
+    soup = BeautifulSoup(html_content, 'html.parser')
+    messages = []
 
-            try:
-                alert_date = datetime.strptime(date_str, '%Y-%m-%d %H:%M')
-                if seven_days_ago <= alert_date <= now:
-                    alerts.append(message_text)
-            except ValueError:
-                continue
+    # Find all message entries
+    entries = soup.find_all('div', class_='msg')
+    for entry in entries:
+        timestamp_text = entry.find('span', class_='smaller').get_text(strip=True)
+        message_text = entry.find('span', class_='').get_text(strip=True)
 
-        return alerts
+        # Parse the timestamp
+        timestamp = datetime.strptime(timestamp_text, '%Y-%m-%d %H:%M:%S')
 
-    def get_go_transit_updates(self):
-        """Get GO Transit service updates"""
-        all_alerts = []
-        for url in self.base_urls:
-            html_content = self.fetch_data(url)
-            if html_content:
-                alerts = self.parse_alerts(html_content)
-                all_alerts.extend(alerts)
-        return list(set(all_alerts))  # Remove duplicates
+        messages.append({
+            'timestamp': timestamp.isoformat(),
+            'message': message_text
+        })
 
-    def scrape(self):
-        """Main scraping method"""
-        self.alerts = self.get_go_transit_updates()
+    return messages
 
-    def display_alerts(self):
-        """Display all alerts"""
-        print('Service Alerts from TransSee (Last 7 Days):')
-        for alert in self.alerts:
-            print(f'- {alert}')
-        print(self.footer)
-
-def get_go_transit_updates():
-    """Get GO Transit service updates"""
-    scraper = TransSeeScraper()
-    scraper.scrape()
-    return scraper.alerts
-
-# Create an instance for importing
-scraper = TransSeeScraper()
+def save_data(data):
+    filename = f'transsee_lw_{datetime.now().strftime("%Y%m%d_%H%M%S")}.json'
+    with open(filename, 'w') as f:
+        json.dump(data, f, indent=4)
 
 if __name__ == '__main__':
-    scraper = TransSeeScraper()
-    scraper.scrape()
-    scraper.display_alerts()
+    while True:
+        html_content = fetch_transsee_data()
+        messages = parse_transsee_data(html_content)
+        save_data(messages)
+        print(f'Successfully saved {len(messages)} messages.')
+        time.sleep(7200)  # Sleep for 2 hours
