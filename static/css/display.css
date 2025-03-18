@@ -182,11 +182,13 @@
     position: fixed;
     bottom: 0;
     left: 0;
+    right: 0;
     width: 100%;
     z-index: 9999;
     border-top: 2px solid #097F5C;
     display: flex;
-    transform: translateZ(0);
+    will-change: transform;
+    backface-visibility: hidden;
 }
 
 .language-labels {
@@ -217,9 +219,11 @@
     white-space: nowrap;
     position: absolute;
     will-change: transform;
-    animation: scroll-left 30s linear infinite;
+    animation: scroll-left 40s linear infinite;
     padding-right: 50px;
     line-height: 1.75rem;
+    transform: translateZ(0);
+    backface-visibility: hidden;
 }
 
 .scrolling-text-en {
