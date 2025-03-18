@@ -15,16 +15,16 @@ function showNextAlert() {
     // Create new alert
     const scrollingText = document.createElement('div');
     scrollingText.className = 'scrolling-text';
-    
+
     const alert = alerts[currentAlertIndex];
-    
+
     const englishText = document.createElement('div');
     englishText.className = 'scrolling-text-en';
     englishText.textContent = alert;
 
     scrollingText.appendChild(englishText);
     container.appendChild(scrollingText);
-    
+
     // Trigger fade in
     setTimeout(() => scrollingText.classList.add('active'), 50);
 
@@ -36,6 +36,13 @@ function updateAlerts() {
     fetch('/api/alerts')
         .then(response => response.json())
         .then(data => {
+            const container = document.getElementById('scrolling-container');
+            if (!container) return;
+
+            container.innerHTML = '';
+            const scrollingText = document.createElement('div');
+            scrollingText.className = 'scrolling-text active';
+
             if (Array.isArray(data) && data.length > 0 && data[0] !== "GO Transit - All services operating normally") {
                 alerts = data.map(alert => {
                     if (typeof alert === 'string' && alert.includes('Started') && alert.includes('Until')) {
@@ -43,29 +50,14 @@ function updateAlerts() {
                     }
                     return alert;
                 });
-            } else {
-                alerts = ["GO Transit - All services operating normally"];
-            }
-            showNextAlert();
-        })
-        .catch(error => {
-            console.error('Error updating alerts:', error);
-            alerts = ["GO Transit - All services operating normally"];
-            showNextAlert();
-        });
-}
+                const alert = alerts[currentAlertIndex];
 
-// Initial update
-updateAlerts();
-
-// Update alerts data every 30 seconds
-setInterval(updateAlerts, 30000);
-
-// Rotate through alerts every 5 seconds
-setInterval(showNextAlert, 5000);t;
+                const englishText = document.createElement('div');
+                englishText.className = 'scrolling-text-en';
+                englishText.textContent = alert;
 
                 scrollingText.appendChild(englishText);
-                scrollingText.appendChild(frenchText);
+
             } else {
                 scrollingText.textContent = 'GO Transit - All services operating normally';
             }
