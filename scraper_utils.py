@@ -182,19 +182,25 @@ def get_go_transit_updates():
             formatted_alerts.append(alert_text)
 
         try:
-            translator = Translator()
-            translated_alerts = []
-            for alert in formatted_alerts:
-                try:
-                    translation = translator.translate(alert, dest='fr')
-                    translated_alerts.append(translation.text)
-                except:
-                    translated_alerts.append(alert)  # Fallback to English if translation fails
+            try:
+                translated_alerts = []
+                for alert in formatted_alerts:
+                    try:
+                        # Use synchronous translation instead
+                        translator = Translator()
+                        translation = translator.translate(alert, dest='fr', _raise_for_status=True)
+                        if translation and translation.text:
+                            translated_alerts.append(translation.text)
+                        else:
+                            translated_alerts.append(alert)
+                    except Exception as e:
+                        logger.error(f"Translation error for alert: {e}")
+                        translated_alerts.append(alert)
 
-            return {
-                'en': formatted_alerts,
-                'fr': translated_alerts if translated_alerts else ['Service GO Transit - Aucune mise à jour']
-            }
+                return {
+                    'en': formatted_alerts,
+                    'fr': translated_alerts if translated_alerts else ['Service GO Transit - Aucune mise à jour']
+                }
         except Exception as e:
             logger.error(f"Translation error: {e}")
             return {

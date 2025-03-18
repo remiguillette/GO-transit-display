@@ -24,9 +24,12 @@ function updateAlerts() {
     fetch('/api/alerts')
         .then(response => response.json())
         .then(data => {
-            if (!data || !data.alerts) {
-                alertElementEn.textContent = 'GO Transit - All services operating normally';
-                alertElementFr.textContent = 'GO Transit - Tous les services fonctionnent normalement';
+            const alertElementEn = document.querySelector('.alert-text[data-lang="en"]');
+            const alertElementFr = document.querySelector('.alert-text[data-lang="fr"]');
+            
+            if (!data || !data.alerts || data.alerts.length === 0) {
+                if (alertElementEn) alertElementEn.textContent = 'GO Transit - All services operating normally';
+                if (alertElementFr) alertElementFr.textContent = 'GO Transit - Tous les services fonctionnent normalement';
                 return;
             }
 
