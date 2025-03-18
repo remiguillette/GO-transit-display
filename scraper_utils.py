@@ -38,19 +38,14 @@ def crawl_transsee_page(url, visited=None):
         response.raise_for_status()
         soup = BeautifulSoup(response.text, 'html.parser')
         
-        # Find MedAlert service alerts
-        med_alerts = soup.select('div.MedAlert')
-        for alert in med_alerts:
+        # Find all alert types
+        alert_elements = soup.select('.alert-message, .route-alert, .service-alert, div.MedAlert, .message')
+        for alert in alert_elements:
             alert_text = alert.get_text(strip=True)
             if alert_text and not alert_text.isspace():
-                # Extract time elements
-                time_elem = alert.select_one('time.timedisp')
-                if time_elem:
-                    started = time_elem.get('datetime', '').split('T')[0]
-                else:
-                    started = None
+                time_elem = alert.select_one('time.timedisp, .timestamp')
+                started = time_elem.get('datetime', '').split('T')[0] if time_elem else None
                 
-                # Look for "Until" text
                 until_text = alert.text
                 until_match = re.search(r'Until\s+(.*?)(?=\s|$)', until_text)
                 until = until_match.group(1) if until_match else None
