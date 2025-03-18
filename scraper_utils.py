@@ -1,3 +1,4 @@
+
 import requests
 from bs4 import BeautifulSoup
 from datetime import datetime, timedelta
@@ -41,21 +42,29 @@ class TransSeeScraper:
 
         return alerts
 
-    def scrape(self):
+    def get_go_transit_updates(self):
+        """Get GO Transit service updates"""
+        all_alerts = []
         for url in self.base_urls:
             html_content = self.fetch_data(url)
             if html_content:
-                new_alerts = self.parse_alerts(html_content)
-                for alert in new_alerts:
-                    if alert not in self.alerts:  # Avoid duplicates
-                        self.alerts.append(alert)
+                alerts = self.parse_alerts(html_content)
+                all_alerts.extend(alerts)
+        return list(set(all_alerts))  # Remove duplicates
+
+    def scrape(self):
+        """Main scraping method"""
+        self.alerts = self.get_go_transit_updates()
 
     def display_alerts(self):
+        """Display all alerts"""
         print('Service Alerts from TransSee (Last 7 Days):')
         for alert in self.alerts:
             print(f'- {alert}')
         print(self.footer)
 
+# Create an instance for importing
+scraper = TransSeeScraper()
 
 if __name__ == '__main__':
     scraper = TransSeeScraper()
