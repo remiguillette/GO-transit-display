@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import logging
 from datetime import datetime, timedelta
+from googletrans import Translator
 from urllib.parse import urljoin
 import re
 
@@ -178,8 +179,27 @@ def get_go_transit_updates():
                 alert_text += dates
             formatted_alerts.append(alert_text)
 
-        return formatted_alerts
+        try:
+            translator = Translator()
+            translated_alerts = []
+            for alert in formatted_alerts:
+                translation = translator.translate(alert, dest='fr')
+                translated_alerts.append(translation.text)
+            
+            return {
+                'en': formatted_alerts,
+                'fr': translated_alerts
+            }
+        except Exception as e:
+            logger.error(f"Translation error: {e}")
+            return {
+                'en': formatted_alerts,
+                'fr': ['Service GO Transit - Aucune mise à jour']
+            }
 
     except Exception as e:
         logger.error(f"Error fetching GO Transit updates: {e}")
-        return ["GO Transit - No Service Updates"]
+        return {
+            'en': ["GO Transit - No Service Updates"],
+            'fr': ["Service GO Transit - Aucune mise à jour"]
+        }
