@@ -32,10 +32,6 @@ def crawl_transsee_page(url, visited=None):
     # Only check main alerts URL
     base_urls = [
         "https://www.transsee.ca/routelist?a=gotransit",
-        "https://www.transsee.ca/stoplist?a=gotrain&r=BR",
-        "https://www.transsee.ca/stoplist?a=gotrain&r=GT",
-        "https://www.transsee.ca/stoplist?a=gotrain&r=LE",
-        "https://www.transsee.ca/stoplist?a=gotrain&r=LW",
         "https://www.transsee.ca/routemessagehistory?a=gotrain&r=LW"
     ]
 
