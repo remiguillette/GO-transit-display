@@ -202,23 +202,29 @@
     background: #000;
 }
 
-.alert-container {
+.scrolling-container {
     flex: 1;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
     padding: 0.5rem 1rem;
-    text-align: center;
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
 }
 
-.alert-text {
+.scrolling-text {
     color: #ffeb3b;
     font-size: 1.5rem;
+    white-space: nowrap;
+    position: absolute;
     line-height: 1.75rem;
-    animation: blink 2s ease-in-out infinite;
+    opacity: 1;
+    animation: scroll-left 20s linear infinite;
 }
 
-@keyframes blink {
-    0% { opacity: 1; }
-    50% { opacity: 0.3; }
-    100% { opacity: 1; }
+@keyframes scroll-left {
+    0% { transform: translateX(100%); }
+    100% { transform: translateX(-100%); }
 }
 
 @keyframes scroll-left {

@@ -55,38 +55,30 @@ updateAlerts();
 
 // Update every 30 seconds
 setInterval(updateAlerts, 30000);
-function updateAlertText(text) {
-    const container = document.getElementById('alert-container');
+function updateScrollingText(text) {
+    const container = document.getElementById('scrolling-container');
     if (!container) return;
+
+    // Clear existing content
+    container.innerHTML = '';
     
-    container.innerHTML = `<div class="alert-text">${text || 'Welcome to GO Transit'}</div>`;
+    // Create new scrolling text element
+    const scrollingText = document.createElement('div');
+    scrollingText.className = 'scrolling-text';
+    scrollingText.textContent = text || 'Welcome to GO Transit';
+    
+    // Add to container
+    container.appendChild(scrollingText);
 }
 
 // Initialize with default text
 document.addEventListener('DOMContentLoaded', () => {
-    updateAlertText();
+    updateScrollingText();
 });
 
 // Update text when alerts are received
-fetch('/api/alerts')
-    .then(response => response.json())
-    .then(data => {
-        if (data && data.length > 0) {
-            updateAlertText(data[0]);
-        }
-    })
-    .catch(() => {
-        updateAlertText('Welcome to GO Transit');
-    });
-
-// Update every 30 seconds
-setInterval(() => {
-    fetch('/api/alerts')
-        .then(response => response.json())
-        .then(data => {
-            if (data && data.length > 0) {
-                updateAlertText(data[0]);
-            }
-        })
-        .catch(() => {});
-}, 30000);
+window.socket.on('alerts', (data) => {
+    if (data && data.message) {
+        updateScrollingText(data.message);
+    }
+});
