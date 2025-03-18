@@ -186,6 +186,7 @@
     z-index: 9999;
     border-top: 2px solid #097F5C;
     display: flex;
+    transform: translateZ(0);
 }
 
 .language-labels {
@@ -206,6 +207,8 @@
     position: relative;
     overflow: hidden;
     padding: 0.5rem 1rem;
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
 }
 
 .scrolling-text {
@@ -213,8 +216,9 @@
     flex-direction: column;
     white-space: nowrap;
     position: absolute;
-    animation: scroll-left 75s linear infinite;
-    padding-right: 100px;
+    will-change: transform;
+    animation: scroll-left 30s linear infinite;
+    padding-right: 50px;
     line-height: 1.75rem;
 }
 
@@ -230,6 +234,6 @@
 }
 
 @keyframes scroll-left {
-    0% { transform: translateX(100%); }
-    100% { transform: translateX(-105%); }
+    0% { transform: translate3d(100%, 0, 0); }
+    100% { transform: translate3d(-100%, 0, 0); }
 }
