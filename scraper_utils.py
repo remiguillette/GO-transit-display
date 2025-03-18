@@ -39,12 +39,29 @@ def crawl_transsee_page(url, visited=None):
         soup = BeautifulSoup(response.text, 'html.parser')
         
         # Find service alerts
-        alert_elements = soup.select('.alert, .service-alert, .message, .route-message')
+        alert_elements = soup.select('.message-text, .route-message, div.message')
         for alert in alert_elements:
             alert_text = alert.get_text(strip=True)
-            if alert_text:
+            if alert_text and not alert_text.isspace():
                 alert_info = extract_alert_info(alert_text)
                 alerts.append(alert_info)
+                
+        # Also check message history
+        history_links = soup.select('a[href*="routemessagehistory"]')
+        for link in history_links[:3]:  # Limit to first 3 routes to avoid too many requests
+            history_url = urljoin(url, link['href'])
+            if history_url not in visited:
+                try:
+                    history_response = requests.get(history_url, timeout=10)
+                    history_soup = BeautifulSoup(history_response.text, 'html.parser')
+                    history_alerts = history_soup.select('.message-text, .route-message')
+                    for alert in history_alerts:
+                        alert_text = alert.get_text(strip=True)
+                        if alert_text and not alert_text.isspace():
+                            alert_info = extract_alert_info(alert_text)
+                            alerts.append(alert_info)
+                except Exception as e:
+                    logger.error(f"Error fetching history from {history_url}: {e}")
         
         # Find "More..." links and follow them
         more_links = soup.find_all('a', string=re.compile(r'More\.{3}|More$', re.I))
