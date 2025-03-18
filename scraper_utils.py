@@ -9,31 +9,26 @@ logger = logging.getLogger(__name__)
 
 def extract_alert_info(text):
     """Extract alert information including dates"""
-    # Split into lines and process each alert separately
-    lines = text.split('\n')
-    alerts = []
+    # Look for title in bold tags
+    title_match = re.search(r'<b>(.*?)</b>', text)
+    title = title_match.group(1) if title_match else ""
     
-    current_alert = ""
-    for line in lines:
-        line = line.strip()
-        if not line:
-            continue
-            
-        # Check if this is a new alert (usually starts with a title)
-        if any(keyword in line.lower() for keyword in ['elevator', 'started', 'service', 'update']):
-            if current_alert:
-                # Process previous alert
-                started_match = re.search(r'Started\s+(.*?)(?=Until|$)', current_alert)
-                until_match = re.search(r'Until\s+(.*?)(?=$)', current_alert)
-                alerts.append({
-                    'text': current_alert.strip(),
-                    'started': started_match.group(1).strip() if started_match else None,
-                    'until': until_match.group(1).strip() if until_match else None
-                })
-            current_alert = line
-        else:
-            # Append to current alert
-            current_alert += " " + line
+    # Extract timestamps
+    started_match = re.search(r'Started.*?<time.*?datetime="(.*?)"', text)
+    until_match = re.search(r'Until.*?<time.*?datetime="(.*?)"', text)
+    
+    # Extract main alert text
+    text_content = re.sub(r'<[^>]+>', '', text)  # Remove HTML tags
+    text_content = re.sub(r'Started.*?(?=Until|$)', '', text_content)  # Remove timestamp text
+    text_content = re.sub(r'Until.*?(?=\n|$)', '', text_content)  # Remove until text
+    text_content = re.sub(r'Shown.*?to now', '', text_content)  # Remove shown text
+    text_content = re.sub(r'\s+', ' ', text_content).strip()  # Clean up whitespace
+    
+    return {
+        'text': f"{title}: {text_content}" if title else text_content,
+        'started': started_match.group(1).split('.')[0] if started_match else None,
+        'until': until_match.group(1).split('.')[0] if until_match else None
+    }
     
     # Add the last alert
     if current_alert:
