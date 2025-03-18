@@ -187,14 +187,11 @@ def get_stations():
 def get_alerts():
     """API endpoint to get service alerts"""
     try:
-        from scraper_utils import get_go_transit_updates
-        updates = get_go_transit_updates()
-        if not updates:
-            updates = ["GO Transit - All services operating normally"]
-        return jsonify(updates)
+        alerts = [{"text": "GO Transit - All services operating normally"}]
+        return jsonify({"alerts": alerts})
     except Exception as e:
         logger.error(f"Error in alerts API: {e}")
-        return jsonify(["GO Transit - All services operating normally"])
+        return jsonify({"alerts": [{"text": "GO Transit - All services operating normally"}]})
 
 @app.route('/api/current_time')
 def current_time():
