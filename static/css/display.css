@@ -213,14 +213,18 @@
 }
 
 .scrolling-text {
-    display: flex;
-    flex-direction: column;
+    color: #ffeb3b;
+    font-size: 1.5rem;
     white-space: nowrap;
     position: absolute;
     line-height: 1.75rem;
     opacity: 1;
-    width: 100%;
     animation: scroll-left 20s linear infinite;
+}
+
+@keyframes scroll-left {
+    0% { transform: translateX(100%); }
+    100% { transform: translateX(-100%); }
 }
 
 @keyframes scroll-left {

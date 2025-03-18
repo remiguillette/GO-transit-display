@@ -55,3 +55,30 @@ updateAlerts();
 
 // Update every 30 seconds
 setInterval(updateAlerts, 30000);
+function updateScrollingText(text) {
+    const container = document.getElementById('scrolling-container');
+    if (!container) return;
+
+    // Clear existing content
+    container.innerHTML = '';
+    
+    // Create new scrolling text element
+    const scrollingText = document.createElement('div');
+    scrollingText.className = 'scrolling-text';
+    scrollingText.textContent = text || 'Welcome to GO Transit';
+    
+    // Add to container
+    container.appendChild(scrollingText);
+}
+
+// Initialize with default text
+document.addEventListener('DOMContentLoaded', () => {
+    updateScrollingText();
+});
+
+// Update text when alerts are received
+window.socket.on('alerts', (data) => {
+    if (data && data.message) {
+        updateScrollingText(data.message);
+    }
+});
