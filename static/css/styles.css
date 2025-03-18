@@ -252,29 +252,31 @@ body {
     bottom: 0;
     left: 0;
     right: 0;
-    background: rgba(0, 0, 0, 0.9);
-    padding: 10px;
+    background: #000;
+    color: #fff;
     z-index: 1000;
+    padding: 10px;
 }
 
 .footer-content {
     width: 100%;
+    padding: 10px;
 }
 
 .alerts-wrapper {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 5px;
 }
 
 .alert-row {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 10px;
 }
 
 .language-label {
-    width: 30px;
+    min-width: 30px;
     color: white;
     font-weight: bold;
     text-align: center;
@@ -287,5 +289,7 @@ body {
     font-size: 1rem;
     line-height: 1.2;
     flex: 1;
-    padding: 2px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

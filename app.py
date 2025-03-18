@@ -193,6 +193,23 @@ def get_alerts():
         logger.error(f"Error in alerts API: {e}")
         return jsonify({"alerts": []})
 
+@app.route('/api/alerts/stream')
+def stream_alerts():
+    """SSE endpoint for streaming alerts"""
+    def generate():
+        while True:
+            try:
+                alerts = scraper.get_alerts()
+                data = {"alerts": alerts}
+                yield f"data: {json.dumps(data)}\n\n"
+                time.sleep(30)  # Update every 30 seconds
+            except Exception as e:
+                logger.error(f"Error in alerts stream: {e}")
+                yield f"data: {json.dumps({'alerts': []})}\n\n"
+                time.sleep(5)
+    
+    return Response(generate(), mimetype="text/event-stream")
+
 @app.route('/alerts')
 def alerts_page():
     """Admin page to view all alerts"""

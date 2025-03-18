@@ -1,69 +1,59 @@
-const alertElementEn = document.getElementById('alert-message-en');
-const alertElementFr = document.getElementById('alert-message-fr');
 
-function cleanAlertText(text) {
-    // Remove date/time patterns
-    text = text.replace(/Started.*?(?=Until|$)/i, '');
-    text = text.replace(/Until.*?(?=\n|$)/i, '');
-    text = text.replace(/\d{1,2}:\d{2}\s*(?:AM|PM)/gi, '');
-    text = text.replace(/(?:Mon|Tue|Wed|Thu|Fri|Sat|Sun)\s+(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+\d{1,2}/gi, '');
-
-    // Clean up any remaining artifacts
-    text = text.replace(/\s+/g, ' ').trim();
-    text = text.replace(/\s*https?:\/\/\S+/g, ''); // Remove URLs
-
-    // If text starts with "Service alert:", keep it, otherwise add "Service alert:" if it's not a service adjustment
-    if (!text.toLowerCase().includes('service adjustment')) {
-        text = text.startsWith('Service alert:') ? text : 'Service alert: ' + text;
-    }
-
-    return text;
-}
+// Alert update handling
+let lastUpdate = 0;
+const updateInterval = 30000; // 30 seconds
 
 function updateAlerts() {
+    const now = Date.now();
+    if (now - lastUpdate < updateInterval) {
+        console.log("Skipping update - too soon since last update");
+        return;
+    }
+    
     fetch('/api/alerts')
         .then(response => response.json())
         .then(data => {
-            const alertElementEn = document.querySelector('.alert-text[data-lang="en"]');
-            const alertElementFr = document.querySelector('.alert-text[data-lang="fr"]');
-            
-            if (!data || !data.alerts || data.alerts.length === 0) {
-                if (alertElementEn) alertElementEn.textContent = 'GO Transit - All services operating normally';
-                if (alertElementFr) alertElementFr.textContent = 'GO Transit - Tous les services fonctionnent normalement';
-                return;
-            }
-
-            const alerts = data.alerts;
-            if (alerts.length === 0) {
-                alertElementEn.textContent = 'GO Transit - All services operating normally';
-                alertElementFr.textContent = 'GO Transit - Tous les services fonctionnent normalement';
+            if (data.alerts && data.alerts.length > 0) {
+                const alert = data.alerts[0];
+                document.getElementById('alert-message-en').textContent = alert.text || "No current alerts";
+                document.getElementById('alert-message-fr').textContent = alert.text || "Aucune alerte en cours";
             } else {
-                const enAlerts = alerts.map(alert => cleanAlertText(alert.text));
-                const frAlerts = alerts.map(alert => alert.fr || ''); //Handle missing translations gracefully
-
-                alertElementEn.textContent = enAlerts.join(' • ');
-                alertElementFr.textContent = frAlerts.join(' • ');
+                document.getElementById('alert-message-en').textContent = "Service operating normally";
+                document.getElementById('alert-message-fr').textContent = "Service fonctionne normalement";
             }
+            lastUpdate = now;
         })
         .catch(error => {
-            console.error('Error updating alerts:', error);
-            alertElementEn.textContent = 'GO Transit - All services operating normally';
-            alertElementFr.textContent = 'GO Transit - Tous les services fonctionnent normalement';
+            console.error("Error updating alerts:", error);
         });
 }
 
+// Initialize SSE connection
+function initializeSSE() {
+    console.log("Initializing SSE connection...");
+    const evtSource = new EventSource('/api/alerts/stream');
+    
+    evtSource.onmessage = function(event) {
+        const data = JSON.parse(event.data);
+        if (data.alerts && data.alerts.length > 0) {
+            const alert = data.alerts[0];
+            document.getElementById('alert-message-en').textContent = alert.text || "No current alerts";
+            document.getElementById('alert-message-fr').textContent = alert.text || "Aucune alerte en cours";
+        }
+    };
 
-// Update alerts every 30 seconds
-setInterval(updateAlerts, 30000);
+    evtSource.onerror = function() {
+        console.log("SSE connection error, retrying in 5 seconds...");
+        evtSource.close();
+        setTimeout(initializeSSE, 5000);
+    };
+}
+
+// Initial update
 updateAlerts();
 
-// Setup SSE connection for alerts
-const alertsSource = new EventSource('/api/alerts/stream');
-alertsSource.onmessage = (event) => {
-    try {
-        const data = JSON.parse(event.data);
-        updateAlerts(data);
-    } catch (error) {
-        console.error('Error updating alerts:', error);
-    }
-};
+// Set up periodic updates
+setInterval(updateAlerts, updateInterval);
+
+// Initialize SSE
+initializeSSE();
