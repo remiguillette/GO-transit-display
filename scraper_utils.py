@@ -13,24 +13,24 @@ def extract_alert_info(text):
     # Look for title in bold tags
     title_match = re.search(r'<b>(.*?)</b>', text)
     title = title_match.group(1) if title_match else ""
-    
+
     # Extract timestamps
     started_match = re.search(r'Started.*?<time.*?datetime="(.*?)"', text)
     until_match = re.search(r'Until.*?<time.*?datetime="(.*?)"', text)
-    
+
     # Extract main alert text
     text_content = re.sub(r'<[^>]+>', '', text)  # Remove HTML tags
     text_content = re.sub(r'Started.*?(?=Until|$)', '', text_content)  # Remove timestamp text
     text_content = re.sub(r'Until.*?(?=\n|$)', '', text_content)  # Remove until text
     text_content = re.sub(r'Shown.*?to now', '', text_content)  # Remove shown text
     text_content = re.sub(r'\s+', ' ', text_content).strip()  # Clean up whitespace
-    
+
     return {
         'text': f"{title}: {text_content}" if title else text_content,
         'started': started_match.group(1).split('.')[0] if started_match else None,
         'until': until_match.group(1).split('.')[0] if until_match else None
     }
-    
+
     # Add the last alert
     if current_alert:
         started_match = re.search(r'Started\s+(.*?)(?=Until|$)', current_alert)
@@ -40,7 +40,7 @@ def extract_alert_info(text):
             'started': started_match.group(1).strip() if started_match else None,
             'until': until_match.group(1).strip() if until_match else None
         })
-    
+
     return alerts[0] if alerts else {'text': text.strip(), 'started': None, 'until': None}
 
 def crawl_transsee_page(url, visited=None):
@@ -68,7 +68,7 @@ def crawl_transsee_page(url, visited=None):
                 if response.status_code == 200:
                     soup = BeautifulSoup(response.text, 'html.parser')
                     alerts_elements = soup.select('.alert-message, .route-alert, .service-alert, div.MedAlert, .message')
-                    
+
                     # Special handling for routemessagehistory
                     if 'routemessagehistory' in base_url:
                         filtered_alerts = []
@@ -92,7 +92,9 @@ def crawl_transsee_page(url, visited=None):
                         alert_text = alert.get_text(strip=True)
                         if alert_text and not alert_text.isspace():
                             time_elem = alert.select_one('time.timedisp, .timestamp')
-                            started = time_elem.get('datetime', '').split('T')[0] if time_elem else None
+                            if time_elem and time_elem.get('datetime'):
+                                date_str = time_elem['datetime'].split('T')[0]
+                                alert_text = f"{date_str}: {alert_text}"
                             alert_info = extract_alert_info(alert_text)
                             alerts.append(alert_info)
                 visited.add(base_url)
@@ -188,7 +190,7 @@ def get_go_transit_updates():
                     translated_alerts.append(translation.text)
                 except:
                     translated_alerts.append(alert)  # Fallback to English if translation fails
-            
+
             return {
                 'en': formatted_alerts,
                 'fr': translated_alerts if translated_alerts else ['Service GO Transit - Aucune mise à jour']
