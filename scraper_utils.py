@@ -30,15 +30,9 @@ def crawl_transsee_page(url, visited=None):
     if url in visited:
         return []
     
-    # Base TransSee URLs for different routes
+    # Only check main alerts URL
     base_urls = [
-        "https://www.transsee.ca/stoplist?a=gotrain&r=BR",
-        "https://www.transsee.ca/stoplist?a=gotrain&r=GT",
-        "https://www.transsee.ca/stoplist?a=gotrain&r=LE",
-        "https://www.transsee.ca/stoplist?a=gotrain&r=LW",
-        "https://www.transsee.ca/stoplist?a=gotrain&r=ST",
-        "https://www.transsee.ca/operatechart?a=gotrain&r=LW",
-        "https://www.transsee.ca/routemessagehistory?a=gotrain&r=LW"
+        "https://www.transsee.ca/routelist?a=gotransit"
     ]
     
     visited.add(url)
@@ -69,24 +63,14 @@ def crawl_transsee_page(url, visited=None):
         response.raise_for_status()
         soup = BeautifulSoup(response.text, 'html.parser')
         
-        # Find all alert types
-        alert_elements = soup.select('.alert-message, .route-alert, .service-alert, div.MedAlert, .message')
+        # Find alert messages and extract only the essential text
+        alert_elements = soup.select('.alert-message, .route-alert, .service-alert')
         for alert in alert_elements:
+            # Get only the main text content
             alert_text = alert.get_text(strip=True)
             if alert_text and not alert_text.isspace():
-                time_elem = alert.select_one('time.timedisp, .timestamp')
-                started = time_elem.get('datetime', '').split('T')[0] if time_elem else None
-                
-                until_text = alert.text
-                until_match = re.search(r'Until\s+(.*?)(?=\s|$)', until_text)
-                until = until_match.group(1) if until_match else None
-                
-                alert_info = {
-                    'text': alert_text,
-                    'started': started,
-                    'until': until
-                }
-                alerts.append(alert_info)
+                # Add only the text without timestamps
+                alerts.append({'text': alert_text})
 
         # Check embedded service update links
         update_links = soup.select('a[href*="service-updates"]')
