@@ -219,12 +219,12 @@
     white-space: nowrap;
     position: absolute;
     will-change: transform;
-    animation: scroll-left 45s linear infinite;
-    padding-right: 50px;
+    animation: scroll-left 90s linear infinite;
+    padding-right: 100px;
+    padding-left: 100px;
     line-height: 1.75rem;
     transform: translate3d(0,0,0);
-    opacity: 0;
-    transition: opacity 0.5s ease-in-out;
+    opacity: 1;
 }
 
 .scrolling-text-en {
