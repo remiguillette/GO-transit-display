@@ -9,17 +9,43 @@ logger = logging.getLogger(__name__)
 
 def extract_alert_info(text):
     """Extract alert information including dates"""
-    started_match = re.search(r'Started\s+(.*?)(?=Until|$)', text)
-    until_match = re.search(r'Until\s+(.*?)(?=$|\n)', text)
-
-    started = started_match.group(1).strip() if started_match else None
-    until = until_match.group(1).strip() if until_match else None
-
-    return {
-        'text': text.strip(),
-        'started': started,
-        'until': until
-    }
+    # Split into lines and process each alert separately
+    lines = text.split('\n')
+    alerts = []
+    
+    current_alert = ""
+    for line in lines:
+        line = line.strip()
+        if not line:
+            continue
+            
+        # Check if this is a new alert (usually starts with a title)
+        if any(keyword in line.lower() for keyword in ['elevator', 'started', 'service', 'update']):
+            if current_alert:
+                # Process previous alert
+                started_match = re.search(r'Started\s+(.*?)(?=Until|$)', current_alert)
+                until_match = re.search(r'Until\s+(.*?)(?=$)', current_alert)
+                alerts.append({
+                    'text': current_alert.strip(),
+                    'started': started_match.group(1).strip() if started_match else None,
+                    'until': until_match.group(1).strip() if until_match else None
+                })
+            current_alert = line
+        else:
+            # Append to current alert
+            current_alert += " " + line
+    
+    # Add the last alert
+    if current_alert:
+        started_match = re.search(r'Started\s+(.*?)(?=Until|$)', current_alert)
+        until_match = re.search(r'Until\s+(.*?)(?=$)', current_alert)
+        alerts.append({
+            'text': current_alert.strip(),
+            'started': started_match.group(1).strip() if started_match else None,
+            'until': until_match.group(1).strip() if until_match else None
+        })
+    
+    return alerts[0] if alerts else {'text': text.strip(), 'started': None, 'until': None}
 
 def crawl_transsee_page(url, visited=None):
     """Recursively crawl TransSee pages for alerts"""
