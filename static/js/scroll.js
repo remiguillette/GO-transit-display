@@ -10,7 +10,7 @@ function updateAlerts() {
             const scrollingText = document.createElement('div');
             scrollingText.className = 'scrolling-text';
             
-            if (Array.isArray(data) && data.length > 0 && data[0] !== "GO Transit - All services operating normally") {
+            if (Array.isArray(data) && data.length > 0) {
                 const formattedAlerts = data.map(alert => {
                     if (typeof alert === 'string' && alert.includes('Started') && alert.includes('Until')) {
                         return alert.replace(/Started|Until/g, (match) => ` ${match} `);
