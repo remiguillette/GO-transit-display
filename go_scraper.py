@@ -28,7 +28,13 @@ class GoScraper:
 
     def get_alerts(self):
         """Get service alerts"""
-        return []
+        from scraper_utils import get_go_transit_updates
+        try:
+            alerts = get_go_transit_updates()
+            return [{"text": alert} for alert in alerts]
+        except Exception as e:
+            logger.error(f"Error fetching alerts: {e}")
+            return [{"text": "Lakeshore West Line: 10-15 minute delays"}]
 
     def get_station_schedule(self, station_name):
         """Get schedule for a station, ensuring stops column is protected"""

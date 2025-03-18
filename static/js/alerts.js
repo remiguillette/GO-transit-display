@@ -7,13 +7,9 @@ function updateAlertTicker(alerts) {
         ? alerts.map(alert => alert.text || 'Service operating normally').join(' • ')
         : ''; // Removed default message
 
-    tickerContent.textContent = alertText;
-    if (alertText) { //Only show if there is text
-        tickerContent.style.display = 'block';
-        tickerContent.style.animation = 'ticker 30s linear infinite';
-    } else {
-        tickerContent.style.display = 'none';
-    }
+    tickerContent.textContent = alertText || 'Loading alerts...';
+    tickerContent.style.display = 'block';
+    tickerContent.style.animation = 'ticker 30s linear infinite';
 }
 
 // Fetch alerts every 30 seconds
