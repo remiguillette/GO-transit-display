@@ -4,7 +4,10 @@ let alerts = [];
 
 function showAlert() {
     const container = document.getElementById('scrolling-container');
-    if (!container || alerts.length === 0) return;
+    if (!container || alerts.length === 0) {
+        container.textContent = 'GO Transit - All services operating normally';
+        return;
+    }
 
     // Remove existing alerts
     container.innerHTML = '';
@@ -23,17 +26,16 @@ function updateAlerts() {
     fetch('/api/alerts')
         .then(response => response.json())
         .then(data => {
-            // Remove duplicates by using Set
-            const uniqueAlerts = [...new Set(data.map(alert => JSON.stringify(alert)))];
-            alerts = uniqueAlerts.map(alert => JSON.parse(alert));
-            
+            alerts = data;
             if (alerts.length === 0) {
                 alerts = [{ text: 'GO Transit - All services operating normally' }];
             }
+            showAlert();
         })
         .catch(error => {
             console.error('Error updating alerts:', error);
             alerts = [{ text: 'GO Transit - All services operating normally' }];
+            showAlert();
         });
 }
 
@@ -45,6 +47,3 @@ setInterval(updateAlerts, 30000);
 
 // Rotate display every 5 seconds
 setInterval(showAlert, 5000);
-
-// Show first alert immediately
-setTimeout(showAlert, 100);
