@@ -1,56 +1,36 @@
-
+import requests
+from bs4 import BeautifulSoup
 import time
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
+import logging
+
+logger = logging.getLogger(__name__)
 
 def get_go_transit_updates():
-    options = Options()
-    options.add_argument('--headless=new')  # Updated headless mode
-    options.add_argument('--no-sandbox')
-    options.add_argument('--disable-dev-shm-usage')
-    options.add_argument('--disable-gpu')
-    options.add_argument('--disable-software-rasterizer')
-    options.add_experimental_option('excludeSwitches', ['enable-logging'])
-    
-    driver = None
     try:
-        service = Service()
-        driver = webdriver.Chrome(options=options, service=service)
-        driver.set_page_load_timeout(20)
-        
-        url = "https://www.gotransit.com/en/service-updates/service-updates"
-        driver.get(url)
-        
-        wait = WebDriverWait(driver, 10)
-        view_updates_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='View Updates']")))
-        view_updates_button.click()
-        
-        # Keep clicking 'Load more updates' until all updates are loaded
-        while True:
-            try:
-                load_more_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[text()='Load more updates']")))
-                load_more_button.click()
-                time.sleep(2)
-            except:
-                break
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+        }
 
-        updates = driver.find_elements(By.CSS_SELECTOR, ".service-alerts-list .service-alert")
-        updates_text = [update.text for update in updates]
-        
-        if not updates_text:
+        url = "https://www.gotransit.com/en/service-updates/service-updates"
+        response = requests.get(url, headers=headers, timeout=10)
+        response.raise_for_status()
+
+        soup = BeautifulSoup(response.text, 'html.parser')
+
+        # Find service alerts
+        alerts = soup.find_all('div', class_='service-alert')
+        updates = []
+
+        for alert in alerts:
+            alert_text = alert.get_text(strip=True)
+            if alert_text:
+                updates.append(alert_text)
+
+        if not updates:
             return ["GO Transit - All services operating normally"]
-        return updates_text
+
+        return updates
 
     except Exception as e:
-        print(f"Error fetching updates: {str(e)}")
+        logger.error(f"Error fetching updates: {str(e)}")
         return ["GO Transit - All services operating normally"]
-    finally:
-        if driver:
-            try:
-                driver.quit()
-            except:
-                pass
