@@ -179,12 +179,12 @@
     background-color: #000000;
     min-height: 4.5rem;
     overflow: hidden;
-    position: fixed;
+    position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
     width: 100%;
-    z-index: 9999;
+    z-index: 100;
     border-top: 2px solid #097F5C;
     display: flex;
     align-items: center;
