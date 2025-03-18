@@ -18,13 +18,16 @@ function updateAlerts() {
                 });
                 const alertText = formattedAlerts.join(' • ');
 
+                // Add extra padding to ensure text fully exits screen
+                const paddedText = alertText + '     ';
+
                 const englishText = document.createElement('div');
                 englishText.className = 'scrolling-text-en';
-                englishText.textContent = alertText;
+                englishText.textContent = paddedText;
 
                 const frenchText = document.createElement('div');
                 frenchText.className = 'scrolling-text-fr';
-                frenchText.textContent = alertText; // TODO: Add French translation
+                frenchText.textContent = paddedText;
 
                 scrollingText.appendChild(englishText);
                 scrollingText.appendChild(frenchText);
